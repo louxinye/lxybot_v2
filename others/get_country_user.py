@@ -15,24 +15,24 @@ headers = {
 # user_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot\data\data_user_ru_list.pkl')
 user_list = []
 for pages in range(1,201):
-	url = 'https://osu.ppy.sh/p/pp/?c=CN&m=0&s=3&o=1&f=0&page=%s' % pages
-	req = request.Request(url, headers=headers)
-	page = request.urlopen(req).read()
-	html = page.decode("utf-8")
-	if len(html) < 500:
-		print('某页错误')
-		continue
-	check_id = re.findall(r'<a.*? href=\'/u/[0-9]*\'>', html)
-	check_pp = re.findall(r'<span style=\'font-weight:bold\'>(.*?)pp</span>', html)
-	for i in range(50):
-		if 'color:gray' in check_id[i]:
-			print('%s.%s跳过' % (pages, i))
-		else:
-			get_uid = re.findall(r'/u/([0-9]*)', check_id[i])
-			uid = int(get_uid[0])
-			pp = int(check_pp[i].replace(',', '', 1))
-			print('%s.%s成功, %s, %s' % (pages, i, uid, pp))
-			user_list.append({'uid': uid, 'pp': pp})
-	if pages%10 == 0:
-		bot_IOfile.write_pkl_data(user_list, 'D:\Python POJ\lxybot_v2\data\data_user_cn_list.pkl')
-		print('保存!')
+    url = 'https://osu.ppy.sh/p/pp/?c=CN&m=0&s=3&o=1&f=0&page=%s' % pages
+    req = request.Request(url, headers=headers)
+    page = request.urlopen(req).read()
+    html = page.decode("utf-8")
+    if len(html) < 500:
+        print('某页错误')
+        continue
+    check_id = re.findall(r'<a.*? href=\'/u/[0-9]*\'>', html)
+    check_pp = re.findall(r'<span style=\'font-weight:bold\'>(.*?)pp</span>', html)
+    for i in range(50):
+        if 'color:gray' in check_id[i]:
+            print('%s.%s跳过' % (pages, i))
+        else:
+            get_uid = re.findall(r'/u/([0-9]*)', check_id[i])
+            uid = int(get_uid[0])
+            pp = int(check_pp[i].replace(',', '', 1))
+            print('%s.%s成功, %s, %s' % (pages, i, uid, pp))
+            user_list.append({'uid': uid, 'pp': pp})
+    if pages%10 == 0:
+        bot_IOfile.write_pkl_data(user_list, 'D:\Python POJ\lxybot_v2\data\data_user_cn_list.pkl')
+        print('保存!')

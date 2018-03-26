@@ -10,8 +10,8 @@ bot = CQHttp(api_root='http://127.0.0.1:5700/')
 
 @bot.on_message()
 def handle_msg(context):
-	t = threading.Thread(target=bot_msg.MsgCenter, args=(bot, context))
-	t.start()
+    t = threading.Thread(target=bot_msg.MsgCenter, args=(bot, context))
+    t.start()
 
 
 # 定时任务
