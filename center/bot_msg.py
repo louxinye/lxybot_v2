@@ -422,22 +422,22 @@ def MsgCenter(bot, context):
             bot_global.user_card_list_lock.release()
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!pt_top':
-            msg = bot_card.rankAll(user_card_list, 11, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'pt_down', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!pt_last':
-            msg = bot_card.rankAll(user_card_list, 12, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'pt_up', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!mn_top':
-            msg = bot_card.rankAll(user_card_list, 21, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'mn_down', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!mn_last':
-            msg = bot_card.rankAll(user_card_list, 22, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'mn_up', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!lucky_top':
-            msg = bot_card.rankAll(user_card_list, 31, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'lucky_down', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!lucky_last':
-            msg = bot_card.rankAll(user_card_list, 32, maxnum=15)
+            msg = bot_card.rankAll(user_card_list, 'lucky_up', maxnum=15)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!card_p':
             msg = bot_card.gailv()
@@ -477,9 +477,9 @@ def MsgCenter(bot, context):
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         # 私聊解禁
         elif '!remove' in content:
-            (msg, num) = bot_msgcheck.remove(content)
-            if num > -1:
-                bot.set_group_ban(group_id=group_list[num], user_id=context['user_id'], duration=0)
+            (msg, remove_group_i) = bot_msgcheck.remove(content)
+            if remove_group_i > -1:
+                bot.set_group_ban(group_id=group_list[remove_group_i], user_id=context['user_id'], duration=0)
             bot.send_private_msg(user_id=context['user_id'], message=msg)
 
 
