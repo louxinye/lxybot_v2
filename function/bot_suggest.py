@@ -13,7 +13,7 @@ def infoMap(content):
     check_map = re.match(r'^!mapinfo ([1-9][0-9]*)$', content)
     if check_map:
         bid = int(check_map.group(1))
-        map_info = bot_osu.get_map(bid, '0', getlength=1)
+        map_info = bot_osu.getMapInfo(bid, '0', getlength=True)
         if not map_info:
             map_info =  '网络爆炸了,查询地图失败'
         sql = 'SELECT * FROM bp_mode0_msg WHERE `bid` = %s ORDER BY `mod` DESC' % bid
@@ -48,7 +48,7 @@ def infoMap(content):
                     user_num = user_num + 1
                     pp_total = pp_total + total_list[i_now][4]
                 else:
-                    msg = msg + '\n【%s】共%s条记录' % (bot_osu.get_mod(total_list[i_now-1][3]), user_num)
+                    msg = msg + '\n【%s】共%s条记录' % (bot_osu.getMod(total_list[i_now-1][3]), user_num)
                     msg = msg + '\n玩家%s-%s(平均%s)' % (user_last, user_top, int(user_total/user_num))
                     msg = msg + '\n成绩%s-%s(平均%s)' % (pp_last, pp_top, int(pp_total/user_num))
                     if i_now == i_max:
@@ -100,11 +100,11 @@ def searchMap(user_qq, content, suggest_num=5):
         (input_mod, input_user) = allCal(content)
         if input_mod < 0:
             return '您输入的Mod有误!'
-        (uid, name, pp, pc, tth, acc) = bot_osu.get_info(input_user, '0')
+        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(input_user, '0')
     elif check_msg2:
         input_mod = -999
         input_user = nameCal(content)
-        (uid, name, pp, pc, tth, acc) = bot_osu.get_info(input_user, '0')
+        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(input_user, '0')
     elif check_msg3 or check_msg4:
         if check_msg3:
             input_mod = modCal(content)
@@ -118,24 +118,21 @@ def searchMap(user_qq, content, suggest_num=5):
             msg = '您未绑定'
             return msg
         uid = result[0][1]
-        (uid, name, pp, pc, tth, acc) = bot_osu.get_info(uid, '0', type_mode='id')
-        if uid:
-            sql = 'UPDATE user SET name = \'%s\', pp = %d, pc = %d, tth = %d, acc= %.2f WHERE qq = %d and mode = 0' % (name, pp, pc, tth, acc, user_qq)
-            bot_SQL.action(sql)
+        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(uid, '0', type_mode='id')
     else:
         return '您的!getmap指令使用错误'
     if not uid:
         return '用户查询出错,请稍后再试'
     if pp > 6000 or pp < 800:
         return '本推荐只支持pp在800-6000的玩家'
-    bp_result = bot_osu.get_bp(uid, '0')
+    bp_result = bot_osu.getUserBp(uid, '0')
     if not bp_result:
         return 'bp查询出错,请稍后再试'
     bp_bid = []
     for bp in bp_result:
         bp_bid.append(int(bp['beatmap_id']))
-    pp_min = pp - 150
-    pp_max = pp + 350
+    pp_min = int(pp - 150)
+    pp_max = int(pp + 350)
     if input_mod == -999:
         sql = 'SELECT * FROM bp_mode0_msg WHERE `user_pp` > %d AND `user_pp` < %d ' \
               'AND bid NOT IN (SELECT bid FROM bp_ban WHERE uid = %s AND mode = 0) ORDER BY bid DESC' % \
@@ -179,7 +176,7 @@ def searchMap(user_qq, content, suggest_num=5):
     else:
         msg = '%s的推荐图如下:\nBid, Mod, pp, 推荐指数' % name
     for i in range(min(suggest_num, len(suggest_list))):
-        mod_name = bot_osu.get_mod(suggest_list[i]['mod'])
+        mod_name = bot_osu.getMod(suggest_list[i]['mod'])
         msg = msg + '\n%s, %s, %s, %s' % (
         suggest_list[i]['bid'], mod_name, suggest_list[i]['pp'], suggest_list[i]['good'])
     return msg

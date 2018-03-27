@@ -22,7 +22,7 @@ def getHelp():
 !月常活动
 !dog   查询bot权限者
 
-v1.60 正式版'''
+v1.99 测试版'''
     return txt
 
 

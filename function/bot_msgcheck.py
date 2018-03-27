@@ -125,7 +125,7 @@ def remove(content):
     if content == '!remove':
         msg = '您的!remove指令使用错误,格式应当如下\n!remove 群代码(1主群,2分群,等等)\n举例: !remove 2'
     elif '!remove ' in content:
-        check_num = re.match(r'!remove ([123456])', content)
+        check_num = re.match(r'!remove ([1234567])', content)
         if check_num:
             msg = '操作执行成功: 0秒'
             num = int(check_num.group(1)) - 1

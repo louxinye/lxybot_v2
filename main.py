@@ -15,8 +15,8 @@ def handle_msg(context):
 
 
 # 定时任务
-maxcount = 1000
-sched_t = threading.Thread(target=bot_job.JobCenter, args=(bot, maxcount))
+max_count = 1000
+sched_t = threading.Thread(target=bot_job.JobCenter, args=(bot, max_count))
 sched_t.setDaemon(True)
 sched_t.start()
 

@@ -18,7 +18,7 @@ headers = {
 bp_list = []
 
 
-def set_id(list_b, content):
+def setCare(list_b, content):
     if len(list_b) > 39:
         msg = '达到40人上限!'
     elif content == '!set_bp':
@@ -38,7 +38,7 @@ def set_id(list_b, content):
             else:
                 msg = '您的!set_bp指令使用错误'
                 return msg
-        (osu_id, real_name, pp, pc, tth, acc) = get_info(osu_name, osu_mode)
+        (osu_id, real_name, pp, pc, tth, acc) = getUserInfo(osu_name, osu_mode)
         if not osu_id:
             msg = '查不到这个人哎'
         elif pp < 300:
@@ -50,7 +50,7 @@ def set_id(list_b, content):
                     success = 0
                     break
             if success == 1:
-                bp_msg = get_bp(osu_id, osu_mode)
+                bp_msg = getUserBp(osu_id, osu_mode)
                 if len(bp_msg) > 19:
                     new_bp_msg = []
                     for i in range(20):
@@ -69,7 +69,7 @@ def set_id(list_b, content):
     return msg
 
 
-def stop_set_id(list_b, content):
+def stopCare(list_b, content):
     if content == '!reset_bp':
         msg = '倒是告诉我id啊'
     elif '!reset_bp ' in content:
@@ -85,7 +85,7 @@ def stop_set_id(list_b, content):
             else:
                 msg = '您的!reset_bp指令使用错误'
                 return msg
-        (osu_id, real_name, pp, pc, tth, acc) = get_info(osu_name, osu_mode)
+        (osu_id, real_name, pp, pc, tth, acc) = getUserInfo(osu_name, osu_mode)
         if not osu_id:
             msg = '查不到这个人哎'
         else:
@@ -107,9 +107,9 @@ def stop_set_id(list_b, content):
 
 
 # 输入用户名或uid(此时需要指明type_mode为id)，输出确切的用户信息
-def get_info(osu_name, osu_mode, type_mode='string'):
+def getUserInfo(osu_name, osu_mode, type_mode='string'):
     url = 'https://osu.ppy.sh/api/get_user?k=%s&u=%s&type=%s&m=%s&limit=1' % (osu_api_key, osu_name, type_mode, osu_mode)
-    res = get_url(url)
+    res = getUrl(url)
     if not res:
         return 0, 0, 0, 0, 0, 0
     result = json.loads(res.text)
@@ -126,9 +126,9 @@ def get_info(osu_name, osu_mode, type_mode='string'):
 
 
 # 输入uid，输出bp前50
-def get_bp(osu_id, osu_mode):
+def getUserBp(osu_id, osu_mode):
     url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=50' % (osu_api_key, osu_id, osu_mode)
-    res = get_url(url)
+    res = getUrl(url)
     if not res:
         return 0
     result = json.loads(res.text)
@@ -139,9 +139,9 @@ def get_bp(osu_id, osu_mode):
 
 
 # 输入bid，输出图的名字难度和长度(此时需要指明getlength为True)
-def get_map(bid, mode, getlength=False):
+def getMapInfo(bid, mode, getlength=False):
     url = 'https://osu.ppy.sh/api/get_beatmaps?k=%s&b=%s&m=%s&limit=1' % (osu_api_key, bid, mode)
-    res = get_url(url)
+    res = getUrl(url)
     if not res:
         return 0
     result = json.loads(res.text)
@@ -157,9 +157,9 @@ def get_map(bid, mode, getlength=False):
 
 
 # 输入uid，bid，输出此人打这图的pp
-def get_map_pp(uid, bid, mode):
+def getMapPlay(uid, bid, mode):
     url = 'https://osu.ppy.sh/api/get_scores?k=%s&b=%s&u=%s&type=id&m=%s&limit=1' % (osu_api_key, bid, uid, mode)
-    res = get_url(url)
+    res = getUrl(url)
     if not res:
         return 0
     result = json.loads(res.text)
@@ -171,7 +171,7 @@ def get_map_pp(uid, bid, mode):
 
 
 # request请求
-def get_url(url):
+def getUrl(url):
     try:
         res = requests.get(url=url, headers=headers, params=None, timeout=3)
         return res
@@ -180,7 +180,7 @@ def get_url(url):
 
 
 # 评分转化
-def get_rank(content):
+def getRank(content):
     if content == 'X' or content == 'XH':
         msg = 'SS'
     elif content == 'SH':
@@ -191,7 +191,7 @@ def get_rank(content):
 
 
 # acc计算
-def get_acc(num_33, num_22, num_11, num_00):
+def getAcc(num_33, num_22, num_11, num_00):
     num_300 = int(num_33)
     num_100 = int(num_22)
     num_50 = int(num_11)
@@ -207,7 +207,7 @@ def get_acc(num_33, num_22, num_11, num_00):
 
 
 # mod计算
-def get_mod(mod_id):
+def getMod(mod_id):
     mod = int(mod_id)
     mod_list = ['NF', 'EZ', '', 'HD', 'HR', 'SD', 'DT', 'RL', 'HT', 'NC', 'FL', 'AT', 'SO', 'AP', 'PF',
                 '4K', '5K', '6K', '7K', '8K', 'FI', 'RD', 'LM', '', '9K', '10K', '1K', '2K', '3K']
@@ -250,7 +250,7 @@ def getLength(len):
 
 
 # 打印mode
-def get_mode(mode_id):
+def getMode(mode_id):
     if mode_id == '0':
         msg = 'std'
     elif mode_id == '1':
@@ -273,7 +273,7 @@ def valueChange(a):
 
 
 # 绑定信息到数据库(目前仅用于pp图推荐)
-def setid_sql(user_qq, content):
+def setSQL(user_qq, content):
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
     result = bot_SQL.select(sql)
     if result:
@@ -286,11 +286,11 @@ def setid_sql(user_qq, content):
         check_id = re.match(r'^!myid (.*)$', content)
         if check_id:
             name = check_id.group(1)
-            (uid, name, pp, pc, tth, acc) = get_info(name, '0')
+            (uid, name, pp, pc, tth, acc) = getUserInfo(name, '0')
             if not uid:
                 msg = 'pp查询出错,请稍后再试'
                 return msg
-            sql = 'INSERT INTO user VALUES (%s, %d, \'%s\', %d, %d, %d, %.2f, 0)' % (user_qq, int(uid), name, int(pp), pc, tth, acc)
+            sql = 'INSERT INTO user VALUES (%s, %d, \'%s\', %.2f, %d, %d, %.2f, 0)' % (user_qq, int(uid), name, pp, pc, tth, acc)
             success = bot_SQL.action(sql)
             if success:
                 msg = '玩家信息:\nuid: %s\nname:%s\npp: %s\n绑定成功!' % (uid, name, pp)
@@ -300,4 +300,42 @@ def setid_sql(user_qq, content):
             msg = '您的!myid指令使用错误'
     else:
         msg = '无法识别,bot猜测您是想使用指令!myid x (x为参数)'
+    return msg
+
+
+# 查询并更新用户信息(临时功能,目前仅用于娱乐群)
+def searchUserInfo(user_qq):
+    sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
+    result = bot_SQL.select(sql)
+    if not result:
+        msg = '您未绑定!'
+        return msg
+    uid = result[0][1]
+    (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')
+    if not uid:
+        msg = 'pp查询出错,请稍后再试'
+        return msg
+    sql = 'UPDATE user SET name = \'%s\', pp = %.2f, pc = %d, tth = %d, acc= %.2f WHERE qq = %d and mode = 0' \
+          % (name, pp, pc, tth, acc, user_qq)
+    success = bot_SQL.action(sql)
+    if success:
+        pp_up = addCal(pp - result[0][3], floatnum=2)
+        pc_up = addCal(pc - result[0][4])
+        tth_up = addCal(tth - result[0][5])
+        acc_up = addCal(acc - result[0][6],floatnum=2)
+        msg = '玩家信息:\nname: %s\npp: %s (%s)\npc: %s (%s)\ntth: %s (%s)\nacc: %.2f%% (%s)\n括号内数据是对比上次查询后的变化'\
+              % (name, pp, pp_up, pc, pc_up, tth, tth_up, acc, acc_up)
+    else:
+        msg = '数据库记录出错，请联系Dalou!'
+    return msg
+
+
+# 增量显示
+def addCal(num, floatnum=0):
+    if floatnum == 2:
+        msg = '%.2f' % num
+    else:
+        msg = '%d' % num
+    if num > -0.001:
+        msg = '+' + msg
     return msg

@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
 import re
-import threading
 from function import bot_osu
 from function import bot_IOfile
 
 
-list_lock = threading.Lock()
 rare_name = ['MR', 'UR', 'SR', 'R', 'N']  # 稀有度种类
 rare_num = [8, 12, 16, 20, 50]  # 每个稀有度的图鉴数量
 rate_pick = [1, 12, 80, 280, 1000]  # 单抽或者11连概率,上限1000
@@ -37,11 +35,9 @@ card_next = ['fulinfang']
 
 # 注册并开始活动
 def startCard(card_member, list_c, content):
-    list_lock.acquire()
     for member in list_c:
         if card_member == member['qq']:
             msg = '此QQ号已被注册,活动进行中'
-            list_lock.release()
             return msg
     if content == '!start_card':
         msg = '倒是告诉我id啊'
@@ -57,7 +53,6 @@ def startCard(card_member, list_c, content):
             for i in range(4):
                 (osu_id, real_name, pp, pc[i], tth[i], acc) = bot_osu.get_info(osu_name, i)
                 if not osu_id:
-                    list_lock.release()
                     msg = '查询失败,可能为输入错误或网络延迟'
                     return msg
             money = 100
@@ -72,7 +67,6 @@ def startCard(card_member, list_c, content):
             msg = '您的!start_card指令使用错误'
     else:
         msg = '无法识别,bot猜测您是想使用指令!start_card x (x为参数)'
-    list_lock.release()
     return msg
 
 
@@ -84,15 +78,12 @@ def stopCard(list_c, content):
         check_qq = re.match(r'^!ban_card ([123456789][0123456789]*)$', content)
         if check_qq:
             qq = int(check_qq.group(1))
-            list_lock.acquire()
             for i in range(len(list_c)):
                 if list_c[i]['qq'] == qq:
                     del list_c[i]
                     bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
                     msg = '已删除此qq号活动数据'
-                    list_lock.release()
                     return msg
-            list_lock.release()
             msg = '该qq号并没有参加活动'
         else:
             msg = '您的!ban_card指令使用错误'
@@ -103,37 +94,30 @@ def stopCard(list_c, content):
 
 # 查看本QQ号的目前活动信息
 def userGameInfo(card_member, list_c):
-    list_lock.acquire()
     for member in list_c:
         if card_member == member['qq']:
             msg = '玩家活动信息:\nname: %s\n记录在案的pc: %s\n记录在案的tth: %s\nmoney: %s\n机票数: %s\n总金币: %s\n活动pt: %s'\
                   % (member['name'], member['pc'], member['tth'], member['money'], flyNumCal(member['fly']), member['total_money'], member['pt'])
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 查看本QQ号的目前图鉴信息
 def userCardInfo(card_member, list_c):
-    list_lock.acquire()
     for member in list_c:
         if card_member == member['qq']:
             card_list = member['card']
             msg = '玩家已得到的卡:'
             for rare_code in range(5):
                 msg = msg + '\n【%s系列】图鉴解锁%s/%s' % (rare_name[rare_code], len(card_list[rare_code]), rare_num[rare_code])
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 查看本QQ号的目前抽卡信息
 def userCardDetail(card_member, list_c, rare_code):
-    list_lock.acquire()
     for member in list_c:
         if card_member == member['qq']:
             card_list = member['card']
@@ -144,16 +128,13 @@ def userCardDetail(card_member, list_c, rare_code):
                 for card in card_list[rare_code]:
                     msg = msg + '\n%s (%s)' % (card['card_name'], card['card_number'])
                 msg = msg + '\n括号内数字代表数量'
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 查看本QQ号的目前成就信息
 def userMedalDetail(card_member, list_c):
-    list_lock.acquire()
     for member in list_c:
         if card_member == member['qq']:
             medal_list = member['medal']
@@ -165,29 +146,25 @@ def userMedalDetail(card_member, list_c):
             msg = msg + '\nN卡全收集: %s%%' % medal_list[4]
             msg = msg + '\n水王之王: %s%%' % medal_list[5]
             msg = msg + '\n天选之子: %s%%' % medal_list[6]
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 查看本QQ号的目前排名信息
 def userRank(card_member, list_c):
-    list_lock.acquire()
-    list_c.sort(key=lambda x: x['total_money'], reverse=True)
-    for i in range(len(list_c)):
-        if card_member == list_c[i]['qq']:
-            msg = '排名信息如下:\nname: %s\n金币榜: 第%s名 (%s)\n' % (list_c[i]['name'], i+1, list_c[i]['total_money'])
-            list_c.sort(key=lambda x: x['pt'], reverse=True)
-            for j in range(len(list_c)):
-                if card_member == list_c[j]['qq']:
-                    lucky_msg = '%.2f (期望%s)' % (float(list_c[j]['lucky_rate']), list_c[j]['lucky'])
-                    msg = msg + 'pt榜: 第%s名 (%s)\n欧皇系数: %s\n总人数: %s' % (j + 1, list_c[j]['pt'], lucky_msg, len(list_c))
-                    list_lock.release()
+    list_card = list_c
+    list_card.sort(key=lambda x: x['total_money'], reverse=True)
+    for i in range(len(list_card)):
+        if card_member == list_card[i]['qq']:
+            msg = '排名信息如下:\nname: %s\n金币榜: 第%s名 (%s)\n' % (list_card[i]['name'], i+1, list_card[i]['total_money'])
+            list_card.sort(key=lambda x: x['pt'], reverse=True)
+            for j in range(len(list_card)):
+                if card_member == list_card[j]['qq']:
+                    lucky_msg = '%.2f (期望%s)' % (float(list_card[j]['lucky_rate']), list_card[j]['lucky'])
+                    msg = msg + 'pt榜: 第%s名 (%s)\n欧皇系数: %s\n总人数: %s' % (j + 1, list_card[j]['pt'], lucky_msg, len(list_card))
                     return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
@@ -200,17 +177,14 @@ def otherCardInfo(list_c, content):
         check_name = re.match(r'^!card (.*)$', content)
         if check_name:
             osu_name = check_name.group(1)
-            list_lock.acquire()
             for member in list_c:
                 if osu_name == member['name']:
                     card_list = member['card']
                     msg = '玩家已得到的卡:'
                     for rare_code in range(5):
                         msg = msg + '\n【%s系列】图鉴解锁%s/%s' % (rare_name[rare_code], len(card_list[rare_code]), rare_num[rare_code])
-                    list_lock.release()
                     return msg
             msg = '此玩家并未参与活动'
-            list_lock.release()
         else:
             msg = '您的!card指令使用错误'
     else:
@@ -220,6 +194,7 @@ def otherCardInfo(list_c, content):
 
 # 查看某用户名的目前排名信息,一般用于他人查询
 def otherRank(list_c, content):
+    list_card = list_c
     if content == '!rank':
         msg = '你倒是告诉我要查谁啊'
         return msg
@@ -227,20 +202,17 @@ def otherRank(list_c, content):
         check_name = re.match(r'!rank (.*)', content)
         if check_name:
             osu_name = check_name.group(1)
-            list_lock.acquire()
-            list_c.sort(key=lambda x: x['total_money'], reverse=True)
-            for i in range(len(list_c)):
-                if osu_name == list_c[i]['name']:
-                    msg = '排名信息如下:\nname: %s\n金币榜: 第%s名 (%s)\n' % (list_c[i]['name'], i+1, list_c[i]['total_money'])
-                    list_c.sort(key=lambda x: x['pt'], reverse=True)
-                    for j in range(len(list_c)):
-                        if osu_name == list_c[j]['name']:
-                            lucky_msg = '%.2f (期望%s)' % (float(list_c[j]['lucky_rate']), list_c[j]['lucky'])
-                            msg = msg + 'pt榜: 第%s名 (%s)\n欧皇系数: %s\n总人数: %s' % (j + 1, list_c[j]['pt'], lucky_msg, len(list_c))
-                            list_lock.release()
+            list_card.sort(key=lambda x: x['total_money'], reverse=True)
+            for i in range(len(list_card)):
+                if osu_name == list_card[i]['name']:
+                    msg = '排名信息如下:\nname: %s\n金币榜: 第%s名 (%s)\n' % (list_card[i]['name'], i+1, list_card[i]['total_money'])
+                    list_card.sort(key=lambda x: x['pt'], reverse=True)
+                    for j in range(len(list_card)):
+                        if osu_name == list_card[j]['name']:
+                            lucky_msg = '%.2f (期望%s)' % (float(list_card[j]['lucky_rate']), list_card[j]['lucky'])
+                            msg = msg + 'pt榜: 第%s名 (%s)\n欧皇系数: %s\n总人数: %s' % (j + 1, list_card[j]['pt'], lucky_msg, len(list_card))
                             return msg
             msg = '此玩家并未参与活动'
-            list_lock.release()
         else:
             msg = '您的!rank指令使用错误'
     else:
@@ -284,24 +256,20 @@ def GameUpdate(user):
 
 # 针对本QQ号进行打图信息更新
 def oneUserUpdate(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         member = list_c[i]
         if card_member == member['qq']:
             msg = GameUpdate(member)
             list_c[i] = member
             bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 针对全体参与者进行打图信息更新
 def allUserUpdate(list_c):
     error_list = []
-    list_lock.acquire()
     for i in range(len(list_c)):
         member = list_c[i]
         msg = GameUpdate(member)
@@ -312,7 +280,6 @@ def allUserUpdate(list_c):
         else:
             print('完成%s, 成功' % member['name'])
     bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-    list_lock.release()
     msg = '下列玩家由于延迟爆炸查询失败:'
     for error_user in error_list:
         msg = msg + '\n%s' % error_user
@@ -321,7 +288,6 @@ def allUserUpdate(list_c):
 
 # 单抽
 def pick1(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             if list_c[i]['money'] < 10:
@@ -357,16 +323,13 @@ def pick1(card_member, list_c):
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
                 bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 11连
 def pick11(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             if list_c[i]['money'] < 100:
@@ -408,16 +371,13 @@ def pick11(card_member, list_c):
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
                 bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 全抽
 def pickall(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             if list_c[i]['money'] < 100:
@@ -470,16 +430,13 @@ def pickall(card_member, list_c):
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
                 bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
 # 飞机票
 def fly1(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             if list_c[i]['fly'] < 50:
@@ -513,10 +470,8 @@ def fly1(card_member, list_c):
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
                 bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg
 
 
@@ -647,31 +602,31 @@ def European(user):
 
 # 输出全体玩家排名情况
 def rankAll(list_c, keyVal, maxnum=5):
-    list_lock.acquire()
-    member_number = min(len(list_c), maxnum)
+    list_card = list_c
+    member_number = min(len(list_card), maxnum)
     if keyVal == 'pt_down':
-        list_c.sort(key=lambda x: x['pt'], reverse=True)
+        list_card.sort(key=lambda x: x['pt'], reverse=True)
         msg = 'pt排行榜(正序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i+1, list_c[i]['name'], list_c[i]['pt'])
+            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['pt'])
     elif keyVal == 'pt_up':
-        list_c.sort(key=lambda x: x['pt'], reverse=False)
+        list_card.sort(key=lambda x: x['pt'], reverse=False)
         msg = 'pt排行榜(倒序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i + 1, list_c[i]['name'], list_c[i]['pt'])
+            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['pt'])
     elif keyVal == 'mn_down':
-        list_c.sort(key=lambda x: x['total_money'], reverse=True)
+        list_card.sort(key=lambda x: x['total_money'], reverse=True)
         msg = '总金币排行榜(正序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i+1, list_c[i]['name'], list_c[i]['total_money'])
+            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['total_money'])
     elif keyVal == 'mn_up':
-        list_c.sort(key=lambda x: x['total_money'], reverse=False)
+        list_card.sort(key=lambda x: x['total_money'], reverse=False)
         msg = '总金币排行榜(倒序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i + 1, list_c[i]['name'], list_c[i]['total_money'])
+            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['total_money'])
     else:
         list_lucky = []
-        for user in list_c:
+        for user in list_card:
             if totalCardNum(user['card']) > 99:
                 list_lucky.append({'lucky': user['lucky_rate'], 'name': user['name']})
         member_number = min(len(list_lucky), maxnum)
@@ -688,7 +643,6 @@ def rankAll(list_c, keyVal, maxnum=5):
                 msg = msg + '\n%s: %s (%.2f)' % (i + 1, list_lucky[i]['name'], list_lucky[i]['lucky'])
             msg = msg + '\n有效人数(抽100张卡): %s' % len(list_lucky)
     msg = msg + '\n请大家继续加油!'
-    list_lock.release()
     return msg
 
 
@@ -733,15 +687,13 @@ N: 10(1)
     return txt
 
 
+# 测试指令,加1000金币
 def addMoney(card_member, list_c):
-    list_lock.acquire()
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             list_c[i]['money'] = list_c[i]['money'] + 1000
             bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
             msg = '金币+1000'
-            list_lock.release()
             return msg
     msg = '此玩家并未参与活动'
-    list_lock.release()
     return msg

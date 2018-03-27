@@ -47,7 +47,7 @@ for user in user_list:
     user_number = user_number + 1
     uid = user['uid']
     user_pp = user['pp']
-    result = bot_osu.get_bp(uid, 0)
+    result = bot_osu.getUserBp(uid, 0)
     if not result:
         error_list.append(user)
         print('%s. %s的成绩获取失败' % (user_number, uid))
