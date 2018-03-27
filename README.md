@@ -5,7 +5,7 @@ httpapi: https://github.com/richardchien/coolq-http-api (其中config配置文�
 pysdk: https://github.com/richardchien/cqhttp-python-sdk  
 
 个人配置(仅供参考, 系统及版本差异并不清楚):  
-操作系统: Window 10, 64位  
+操作系统: Windows 10, 64位  
 运行环境: Python 3.5.4  
 IDE: PyCharm Community Edition 2017.2.3  
 
