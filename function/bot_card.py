@@ -262,7 +262,7 @@ def GameUpdate(user):
         for j in range(4):
             if not update_success_detail[j]:
                 msg = msg + ' %s' % bot_osu.getMode(j)
-    return msg, update_success, update_success_detail
+    return user, msg, update_success, update_success_detail
 
 
 # 针对本QQ号进行打图信息更新
@@ -270,8 +270,7 @@ def oneUserUpdate(card_member, list_c):
     for i in range(len(list_c)):
         member = list_c[i]
         if card_member == member['qq']:
-            (msg, update_success, update_success_detail) = GameUpdate(member)
-            list_c[i] = member
+            (list_c[i], msg, update_success, update_success_detail) = GameUpdate(member)
             bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
@@ -281,23 +280,26 @@ def oneUserUpdate(card_member, list_c):
 # 针对全体参与者进行打图信息更新
 def allUserUpdate(list_c):
     error_list = []
-    update_success_detail = [1, 1, 1, 1]
+    error_detail = []
     for i in range(len(list_c)):
         member = list_c[i]
-        (msg, update_success, update_success_detail) = GameUpdate(member)
-        list_c[i] = member
+        (list_c[i], msg, update_success, update_success_detail) = GameUpdate(member)
         if not update_success:
             error_list.append(member['name'])
-            print('完成%s, 失败' % member['name'])
+            error_detail.append(update_success_detail)
+            print('%s. 完成%s, 失败' % (i+1, member['name']))
         else:
-            print('完成%s, 成功' % member['name'])
+            print('%s. 完成%s, 成功' % (i+1, member['name']))
     bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-    msg = '下列玩家由于延迟爆炸查询失败:'
-    for error_user in error_list:
-        msg = msg + '\n%s:' % error_user
-        for j in range(4):
-            if not update_success_detail[j]:
-                msg = msg + ' %s' % bot_osu.getMode(j)
+    if not error_list:
+        msg = '全体打图记录更新完毕,没有发生错误'
+    else:
+        msg = '下列玩家由于延迟爆炸查询失败:'
+        for i in range(len(error_list)):
+            msg = msg + '\n%s:' % error_list[i]
+            for j in range(4):
+                if not error_detail[i][j]:
+                    msg = msg + ' %s' % bot_osu.getMode(j)
     return msg
 
 
