@@ -59,7 +59,7 @@ def setCare(list_b, content):
                     new_bp_msg.append(user_msg)
                     list_b.append(new_bp_msg)
                     msg = '添加bp监视成功!'
-                    bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot\data\data_bp_care_list.pkl')
+                    bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
                 else:
                     msg = 'bp数量低于20个,不进行监视'
             else:
@@ -98,7 +98,7 @@ def stopCare(list_b, content):
                     break
             if success == 1:
                 msg = '移除bp监视成功!'
-                bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot\data\data_bp_care_list.pkl')
+                bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
             else:
                 msg = '此人并没在监视列表中'
     else:
