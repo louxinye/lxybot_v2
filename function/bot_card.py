@@ -51,7 +51,7 @@ def startCard(card_member, list_c, content):
             tth = [0, 0, 0, 0]
             medal = [0, 0, 0, 0, 0, 0, 0]
             for i in range(4):
-                (osu_id, real_name, pp, pc[i], tth[i], acc) = bot_osu.get_info(osu_name, i)
+                (osu_id, real_name, pp, pc[i], tth[i], acc) = bot_osu.getUserInfo(osu_name, i)
                 if not osu_id:
                     msg = '查询失败,可能为输入错误或网络延迟'
                     return msg
@@ -232,18 +232,24 @@ def totalCardNum(card_set):
 # 针对一条user记录，进行打图信息更新
 def GameUpdate(user):
     osu_uid = user['uid']
-    osu_name = '0'
+    osu_name = user['name']
+    update_success = True
+    update_success_detail = [1, 1, 1, 1]
     pc = [0, 0, 0, 0]
     tth = [0, 0, 0, 0]
     add_money = 0
     for i in range(4):
-        (osu_id, osu_name, pp, pc[i], tth[i], acc) = bot_osu.get_info(osu_uid, i, type_mode='id')
+        (osu_id, name, pp, pc[i], tth[i], acc) = bot_osu.getUserInfo(osu_uid, i, type_mode='id')
         if not osu_id:
-            msg = '网络延迟爆炸! 请稍后再试'
-            print('%s的mode%s查询失败' % (user['name'], i))
-            return msg
-        print('%s的mode%s查询成功' % (user['name'], i))
-        add_money = add_money + (pc[i] - user['pc'][i]) + (tth[i] - user['tth'][i]) // tth_Val[i]
+            print('%s的mode%s查询失败' % (osu_name, i))
+            pc[i] = user['pc'][i]
+            tth[i] = user['tth'][i]
+            update_success = False
+            update_success_detail[i] = 0
+        else:
+            osu_name = name
+            print('%s的mode%s查询成功' % (osu_name, i))
+            add_money = add_money + (pc[i] - user['pc'][i]) + (tth[i] - user['tth'][i]) // tth_Val[i]
     user['name'] = osu_name
     user['pc'] = pc
     user['tth'] = tth
@@ -251,7 +257,12 @@ def GameUpdate(user):
     user['total_money'] = user['total_money'] + add_money
     msg = '更新打图信息:\nname: %s\nmoney: %s (+%s)\n机票数: %s\n总金币: %s (+%s)\n活动pt: %s' \
           % (user['name'], user['money'], add_money, flyNumCal(user['fly']), user['total_money'], add_money, user['pt'])
-    return msg
+    if not update_success:
+        msg = msg + '\n注意,您有部分mode查询失败,因此下列数据没有更新:'
+        for j in range(4):
+            if not update_success_detail[j]:
+                msg = msg + ' %s' % bot_osu.getMode(j)
+    return msg, update_success, update_success_detail
 
 
 # 针对本QQ号进行打图信息更新
@@ -259,7 +270,7 @@ def oneUserUpdate(card_member, list_c):
     for i in range(len(list_c)):
         member = list_c[i]
         if card_member == member['qq']:
-            msg = GameUpdate(member)
+            (msg, update_success, update_success_detail) = GameUpdate(member)
             list_c[i] = member
             bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
             return msg
@@ -270,11 +281,12 @@ def oneUserUpdate(card_member, list_c):
 # 针对全体参与者进行打图信息更新
 def allUserUpdate(list_c):
     error_list = []
+    update_success_detail = [1, 1, 1, 1]
     for i in range(len(list_c)):
         member = list_c[i]
-        msg = GameUpdate(member)
+        (msg, update_success, update_success_detail) = GameUpdate(member)
         list_c[i] = member
-        if msg == '网络延迟爆炸! 请稍后再试':
+        if not update_success:
             error_list.append(member['name'])
             print('完成%s, 失败' % member['name'])
         else:
@@ -282,7 +294,10 @@ def allUserUpdate(list_c):
     bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
     msg = '下列玩家由于延迟爆炸查询失败:'
     for error_user in error_list:
-        msg = msg + '\n%s' % error_user
+        msg = msg + '\n%s:' % error_user
+        for j in range(4):
+            if not update_success_detail[j]:
+                msg = msg + ' %s' % bot_osu.getMode(j)
     return msg
 
 

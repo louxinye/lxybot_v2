@@ -251,16 +251,16 @@ def getLength(len):
 
 # 打印mode
 def getMode(mode_id):
-    if mode_id == '0':
+    if mode_id == '0' or mode_id == 0:
         msg = 'std'
-    elif mode_id == '1':
+    elif mode_id == '1' or mode_id == 1:
         msg = 'taiko'
-    elif mode_id == '2':
+    elif mode_id == '2' or mode_id == 2:
         msg = 'ctb'
-    elif mode_id == '3':
+    elif mode_id == '3' or mode_id == 3:
         msg = 'mania'
     else:
-        msg = 'unknown mode'
+        msg = 'unknown'
     return msg
 
 
