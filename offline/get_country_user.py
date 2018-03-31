@@ -19,7 +19,7 @@ for pages in range(1,201):
     req = request.Request(url, headers=headers)
     page = request.urlopen(req).read()
     html = page.decode("utf-8")
-    if len(html) < 500:
+    if len(html) < 300:
         print('某页错误')
         continue
     check_id = re.findall(r'<a.*? href=\'/u/[0-9]*\'>', html)

@@ -145,7 +145,7 @@ def userMedalDetail(card_member, list_c):
             msg = msg + '\nR卡全收集: %s%%' % medal_list[3]
             msg = msg + '\nN卡全收集: %s%%' % medal_list[4]
             msg = msg + '\n水王之王: %s%%' % medal_list[5]
-            msg = msg + '\n天选之子: %s%%' % medal_list[6]
+            msg = msg + '\n天命之子: %s%%' % medal_list[6]
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -274,6 +274,23 @@ def oneUserUpdate(card_member, list_c):
             bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
+    return msg
+
+
+# 针对指定玩家进行打图信息更新
+def certainUserUpdate(list_c, content):
+    check_name = re.match(r'^!update (.*)$', content)
+    if check_name:
+        osu_name = check_name.group(1)
+        for i in range(len(list_c)):
+            member = list_c[i]
+            if osu_name == member['name']:
+                (list_c[i], msg, success, success_detail) = GameUpdate(member)
+                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                return msg
+        msg = '此玩家并未参与活动'
+    else:
+        msg = '您的!update指令使用错误'
     return msg
 
 
@@ -558,14 +575,14 @@ def medalUpdate(old_unlock, new_unlock):
     if old_unlock[5] < 100 and new_unlock[5] >= 100:
         medal_list.append('水王之王')
     if old_unlock[6] < 100 and new_unlock[6] >= 100:
-        medal_list.append('天选之子')
+        medal_list.append('天命之子')
     if medal_list:
         for medal in medal_list:
             msg = msg + ' ☆%s' % medal
     return msg
 
 
-# 成就进度统计: 稀有MR,稀有UR,全体R,全体R,全体N,指定N,保底
+# 成就进度统计: 稀有MR,稀有UR,全体R,全体R,全体N,指定N,全N
 def medalUnlock(card_set):
     unlock = [0, 0, 0, 0, 0, 0, 0]
     for i in range(2, 5):

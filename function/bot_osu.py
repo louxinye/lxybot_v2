@@ -41,7 +41,7 @@ def setCare(list_b, content):
         (osu_id, real_name, pp, pc, tth, acc) = getUserInfo(osu_name, osu_mode)
         if not osu_id:
             msg = '查不到这个人哎'
-        elif pp < 300:
+        elif pp < 500:
             msg = '该号pp较低, 不进行监视'
         else:
             success = 1

@@ -11,7 +11,7 @@ def outputExcel():
     font.name = u'宋体'
     font.height = 240
     style.font = font
-    user_card_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+    user_card_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot\data\data_card_game_list.pkl')
     sheet.col(0).width = 256*15
     sheet.col(1).width = 256*20
     sheet.col(2).width = 256*9
@@ -52,7 +52,7 @@ def outputExcel():
         sheet.write(i+1, 8, eachCardNum(user_card_list[i]['card'], 4), style)
         sheet.write(i+1, 9, certainCardNum(user_card_list[i]['card'][4], 'whirLeeve'), style)  # 如果没有此成就请删掉这行即可
         if totalCardNum(user_card_list[i]['card']) > 0:
-            sheet.write(i+1, 10, '%.2f' % user_card_list[i]['lucky_rate'], style)
+            sheet.write(i+1, 10, '%.3f' % user_card_list[i]['lucky_rate'], style)
         else:
             sheet.write(i+1, 10, 0, style)
     wbk.save('output.xls')

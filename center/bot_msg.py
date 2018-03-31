@@ -20,7 +20,7 @@ dog_list = [3059841053]
 # 屏蔽qq号,无视这些人的发言
 ignore_list = [1061566571, 1677323371]
 # 当前复读次数, 若大于等于100则表示没有开启复读惩罚,和适用群一一对应
-repeat_num = [100, 100, 100, 100, 100, 100, 100]
+repeat_num = [0, 0, 0, 0, 0, 0, 0]
 # 当前复读语句, 和适用群一一对应
 repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message']
 # 咩羊游戏初始值
@@ -44,18 +44,19 @@ def MsgCenter(bot, context):
     content = content.replace('&#93;', ']')
     content = content.replace('&#44;', ',')
     content = content.replace('&amp;', '&')
-    if content == '!hello':
-        msg = '响应测试成功'
-        bot.send_group_msg(group_id=context['group_id'], message=msg)
-    elif content == '!help':
-        msg = bot_getmsg.getHelp()
-        bot.send_group_msg(group_id=context['group_id'], message=msg)
-    elif content == '!group':
-        msg = bot_getmsg.suitL(group_list)
-        bot.send_group_msg(group_id=context['group_id'], message=msg)
+    if context['message_type'] == 'group':
+        if content == '!hello':
+            msg = '响应测试成功'
+            bot.send_group_msg(group_id=context['group_id'], message=msg)
+        elif content == '!help':
+            msg = bot_getmsg.getHelp()
+            bot.send_group_msg(group_id=context['group_id'], message=msg)
+        elif content == '!group':
+            msg = bot_getmsg.suitL(group_list)
+            bot.send_group_msg(group_id=context['group_id'], message=msg)
 
     # 适用群的群聊消息
-    elif context['message_type'] == 'group' and context['group_id'] in group_list and context['user_id'] not in ignore_list:
+    if context['message_type'] == 'group' and context['group_id'] in group_list and context['user_id'] not in ignore_list:
         group_i = group_list.index(context['group_id'])
         # 都有的功能
         if content == '!月常活动':
@@ -328,6 +329,11 @@ def MsgCenter(bot, context):
                     bot_global.user_card_list_lock.release()
                     bot.send_group_msg(group_id=context['group_id'], message=msg)
                     bot.send_group_msg(group_id=context['group_id'], message='更新完毕')
+                elif '!update' in content:
+                    bot_global.user_card_list_lock.acquire()
+                    msg = bot_card.certainUserUpdate(user_card_list, content)
+                    bot_global.user_card_list_lock.release()
+                    bot.send_group_msg(group_id=context['group_id'], message=msg)
                 elif content == '!myrct':
                     msg = '!recent'
                     bot.send_group_msg(group_id=context['group_id'], message=msg)
@@ -360,8 +366,16 @@ def MsgCenter(bot, context):
 
     # 私聊指令
     elif context['message_type'] == 'private' and context['user_id'] not in ignore_list:
-        print('有个傻逼私聊你了: %s' % content)
-        if content == '!月常活动':
+        if content == '!hello':
+            msg = '响应测试成功'
+            bot.send_private_msg(user_id=context['user_id'], message=msg)
+        elif content == '!help':
+            msg = bot_getmsg.getHelp()
+            bot.send_private_msg(user_id=context['user_id'], message=msg)
+        elif content == '!group':
+            msg = bot_getmsg.suitL(group_list)
+            bot.send_private_msg(user_id=context['user_id'], message=msg)
+        elif content == '!月常活动':
             msg = bot_getmsg.dalouCardGame()
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif content == '!找图系统':
@@ -474,6 +488,12 @@ def MsgCenter(bot, context):
             msg = '绑定指令只支持下列群号内使用:'
             for group in group_list:
                 msg = msg + '\n%s' % group
+            bot.send_private_msg(user_id=context['user_id'], message=msg)
+        elif '!addmoney' in content:
+            bot_global.user_card_list_lock.acquire()
+            # msg = bot_card.addMoney(context['user_id'], user_card_list)
+            msg = atPeople(context['user_id']) + '别想着作弊啦,努力打图去吧'
+            bot_global.user_card_list_lock.release()
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         # 私聊解禁
         elif '!remove' in content:
