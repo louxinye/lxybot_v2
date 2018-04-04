@@ -6,8 +6,8 @@ from center import bot_global
 
 
 # 适用群列表: 分群,喵呜,要饭,队群,娱乐群
-group_list1 = [514661057, 326389728, 641236878, 693657455, 102171745]
-group_list = [641236878]
+group_list = [514661057, 326389728, 641236878, 693657455, 102171745]
+group_list1 = [641236878]
 
 def JobCenter(bot, maxcount):
     count = 0
@@ -22,7 +22,7 @@ def JobCenter(bot, maxcount):
                 user = bot_global.user_bp_list[num]
                 user_id = user[20]["user_id"]
                 score_mode = user[20]["user_mode"]
-                new_bp = bot_osu.getUserBp(user_id, score_mode)
+                new_bp = bot_osu.getUserBp(user_id, score_mode, max_num=20)
                 if new_bp:
                     for i in range(0, 20):
                         if new_bp[i] != user[i]:

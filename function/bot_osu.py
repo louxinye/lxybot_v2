@@ -126,8 +126,8 @@ def getUserInfo(osu_name, osu_mode, type_mode='string'):
 
 
 # 输入uid，输出bp前50
-def getUserBp(osu_id, osu_mode):
-    url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=50' % (osu_api_key, osu_id, osu_mode)
+def getUserBp(osu_id, osu_mode, max_num=50):
+    url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, osu_id, osu_mode, max_num)
     res = getUrl(url)
     if not res:
         return 0
