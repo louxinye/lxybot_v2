@@ -41,7 +41,7 @@ def get_mod(mod_id, pp):
 
 error_list = []
 user_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_user_CN_list.pkl')
-print(len(user_list))
+total_number = len(user_list)
 user_number = 0
 for user in user_list:
     user_number = user_number + 1
@@ -57,7 +57,7 @@ for user in user_list:
         bp_rank = 0
         for bp_msg in result:
             bp_rank = bp_rank + 1
-            if bp_rank > 1:
+            if bp_rank > 35:
                 break
             bid = int(bp_msg['beatmap_id'])
             mod = int(bp_msg['enabled_mods'])
@@ -66,7 +66,7 @@ for user in user_list:
             (new_mod, new_pp) = get_mod(mod, score_pp)
             sql = 'INSERT INTO bpmsg_mode0 VALUES (%d, %d, %d, %d, %d, %s, %d, %d, %d)' % (uid, bp_rank, bid, mod, score_pp, score_acc, new_mod, new_pp, user_pp)
             bot_SQL.action(sql)
-        print('%s. %s的bp记录完毕' % (user_number, uid))
+        print('%s/%s: %s的bp记录完毕' % (user_number, total_number, uid))
 bot_IOfile.write_pkl_data(error_list, 'D:\Python POJ\lxybot_v2\data\data_error_CN_list.pkl')
 
 
