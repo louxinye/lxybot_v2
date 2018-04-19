@@ -40,7 +40,7 @@ def get_mod(mod_id, pp):
 
 
 error_list = []
-user_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_cn_list.pkl')
+user_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_user_CN_list.pkl')
 print(len(user_list))
 user_number = 0
 for user in user_list:
@@ -51,21 +51,22 @@ for user in user_list:
     if not result:
         error_list.append(user)
         print('%s. %s的成绩获取失败' % (user_number, uid))
-    elif len(result) < 30:
-        print('%s. %s的bp数少于30个' % (user_number, uid))
+    elif len(result) < 35:
+        print('%s. %s的bp数少于35个' % (user_number, uid))
     else:
         bp_rank = 0
         for bp_msg in result:
             bp_rank = bp_rank + 1
-            if bp_rank > 30:
+            if bp_rank > 1:
                 break
             bid = int(bp_msg['beatmap_id'])
             mod = int(bp_msg['enabled_mods'])
+            score_acc = bot_osu.getAcc(bp_msg["count300"], bp_msg["count100"], bp_msg["count50"], bp_msg["countmiss"])
             score_pp = int(float(bp_msg['pp']))
             (new_mod, new_pp) = get_mod(mod, score_pp)
-            sql = 'INSERT INTO bp_mode0_msg VALUES (%d, %d, %d, %d, %d, %d, %d, %d)' % (uid, bp_rank, bid, mod, score_pp, user_pp, new_mod, new_pp)
+            sql = 'INSERT INTO bpmsg_mode0 VALUES (%d, %d, %d, %d, %d, %s, %d, %d, %d)' % (uid, bp_rank, bid, mod, score_pp, score_acc, new_mod, new_pp, user_pp)
             bot_SQL.action(sql)
         print('%s. %s的bp记录完毕' % (user_number, uid))
-bot_IOfile.write_pkl_data(error_list, 'D:\Python POJ\lxybot_v2\data\data_error_cn_list.pkl')
+bot_IOfile.write_pkl_data(error_list, 'D:\Python POJ\lxybot_v2\data\data_error_CN_list.pkl')
 
 
