@@ -186,12 +186,12 @@ def userCardInfo(card_member, list_c):
 
 
 # 查看本QQ号的目前抽卡信息
-def userCardDetail(context, list_c, rare_code):
-    if context['message_type'] != 'private':
+def userCardDetail(member_qq, list_c, rare_code, contact='group'):
+    if contact != 'private':
         msg = '请私聊查询'
         return msg
     for member in list_c:
-        if context['user_id'] == member['qq']:
+        if member_qq == member['qq']:
             card_list = member['card']
             if not len(card_list[rare_code]):
                 msg = '此玩家抽到的%s系列卡……这么伤心的事不忍心说啊' % rare_name[rare_code]

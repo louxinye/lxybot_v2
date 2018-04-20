@@ -27,6 +27,7 @@ def MsgCenter(bot, context):
     global game_member
     global game_diff
     global game_content
+
     # 转义字符与指令字符处理
     content = context['message']
     content = content.replace('&#91;', '[')
@@ -48,7 +49,9 @@ def MsgCenter(bot, context):
         reply(bot, context, msg, atPeople=False)
 
     # 权限判断
-    if context['message_type'] == 'group' and (context['group_id'] not in bot_global.group_total_list or context['user_id'] in bot_global.ignore_list):
+    if context['user_id'] in bot_global.host_list:
+        pass
+    elif context['message_type'] == 'group' and (context['group_id'] not in bot_global.group_total_list or context['user_id'] in bot_global.ignore_list):
         pass
     elif context['message_type'] == 'discuss' and context['discuss_id'] not in bot_global.discuss_total_list:
         pass
@@ -68,23 +71,22 @@ def MsgCenter(bot, context):
         elif content == '!咩羊游戏':
             msg = bot_getmsg.mieGame()
             reply(bot, context, msg, atPeople=False)
-        elif content == '!care':
-            msg = bot_getmsg.careL(health_list)
-            reply(bot, context, msg, atPeople=False)
         elif content == '!dog':
             msg = bot_getmsg.dogL(bot_global.dog_list)
-            reply(bot, context, msg, atPeople=False)
-        elif content == '!bp':
-            msg = bot_getmsg.bpL(bot_global.user_bp_list)
             reply(bot, context, msg, atPeople=False)
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
-        elif 'baka' in content:
+        elif 'baka' in content or 'ba—ka!!' in content:
             msg = 'ba—ka!!'
             reply(bot, context, msg, atPeople=False)
 
-        # 快速查自己pp
+        # osu基本功能
+        elif '!myid' in content:
+            bot_global.sql_action_lock.acquire()
+            msg = bot_osu.setSQL(context['user_id'], content)
+            bot_global.sql_action_lock.release()
+            reply(bot, context, msg, atPeople=True)
         elif content == '!pp':
             bot_global.sql_action_lock.acquire()
             msg = bot_osu.searchUserInfo(context['user_id'])
@@ -93,7 +95,7 @@ def MsgCenter(bot, context):
 
         # 月常活动
         elif '!start_card' in content:
-            if not verify(context, {'group': [614892339, 514661057]}):
+            if not verify(context, {'group': bot_global.group_main_list}):
                 msg = '该指令不支持在此处使用'
             else:
                 bot_global.user_card_list_lock.acquire()
@@ -110,19 +112,19 @@ def MsgCenter(bot, context):
             msg = bot_card.userMedalDetail(context['user_id'], user_card_list)
             reply(bot, context, msg, atPeople=True)
         elif content == '!myMR':
-            msg = bot_card.userCardDetail(context, user_card_list, 0)
+            msg = bot_card.userCardDetail(context, user_card_list, 0, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myUR':
-            msg = bot_card.userCardDetail(context, user_card_list, 1)
+            msg = bot_card.userCardDetail(context, user_card_list, 1, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!mySR':
-            msg = bot_card.userCardDetail(context, user_card_list, 2)
+            msg = bot_card.userCardDetail(context, user_card_list, 2, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myR':
-            msg = bot_card.userCardDetail(context, user_card_list, 3)
+            msg = bot_card.userCardDetail(context, user_card_list, 3, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myN':
-            msg = bot_card.userCardDetail(context, user_card_list, 4)
+            msg = bot_card.userCardDetail(context, user_card_list, 4, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!update':
             bot_global.user_card_list_lock.acquire()
@@ -206,11 +208,8 @@ def MsgCenter(bot, context):
             msg = bot_suggest.infoMap(content, contact=context['message_type'])
             bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=False)
-        elif '!myid' in content:
-            bot_global.sql_action_lock.acquire()
-            msg = bot_osu.setSQL(context['user_id'], content)
-            bot_global.sql_action_lock.release()
-            reply(bot, context, msg, atPeople=True)
+
+        # 监视系统
         elif '!set_bp' in content:
             if not verify(context, {'group': bot_global.group_bp_list}):
                 msg = '该指令不支持在此处使用'
@@ -227,6 +226,27 @@ def MsgCenter(bot, context):
                 msg = bot_osu.stopCare(bot_global.user_bp_list, content)
                 bot_global.user_bp_list_lock.release()
             reply(bot, context, msg, atPeople=True)
+        elif content == '!bp':
+            if not verify(context, {'group': bot_global.group_bp_list}):
+                msg = '该指令不支持在此处使用'
+            else:
+                msg = bot_getmsg.bpL(bot_global.user_bp_list)
+            reply(bot, context, msg, atPeople=False)
+
+        # 健康系统
+        elif content == '!health':
+            bot_global.health_list_lock.acquire()
+            msg = bot_health.add(health_list, context['user_id'])
+            bot_global.health_list_lock.release()
+            reply(bot, context, msg, atPeople=True)
+        elif content == '!stop_h':
+            bot_global.health_list_lock.acquire()
+            msg = bot_health.sub(health_list, context['user_id'])
+            bot_global.health_list_lock.release()
+            reply(bot, context, msg, atPeople=True)
+        elif content == '!care':
+            msg = bot_getmsg.careL(health_list)
+            reply(bot, context, msg, atPeople=False)
 
         # 咩羊游戏
         elif '!game_mie' in content:
@@ -257,57 +277,6 @@ def MsgCenter(bot, context):
 
         # 其余具体情况具体分析
         else:
-            # 需要管理员身份的群聊指令
-            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
-                if content == '!cnm':
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=5)
-                    msg = '操作执行成功: 5秒'
-                    reply(bot, context, msg, atPeople=True)
-                elif content == '!rest':
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=3600)
-                    msg = '操作执行成功: 1小时'
-                    reply(bot, context, msg, atPeople=True)
-                elif content == '!sleep':
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=21600)
-                    msg = '操作执行成功: 6小时'
-                    reply(bot, context, msg, atPeople=True)
-                elif '!afk' in content:
-                    (smoke, msg1, msg2) = bot_msgcheck.afk(context['group_id'], context['user_id'], content)
-                    if msg1:
-                        msg = msg1
-                    else:
-                        bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
-                        msg = '操作执行成功: %s' % msg2
-                    reply(bot, context, msg, atPeople=True)
-                elif content == '!sorry':
-                    smoke_minutes = random.randint(1, 60)
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke_minutes * 60)
-                    msg = '操作执行成功: %s分' % smoke_minutes
-                    reply(bot, context, msg, atPeople=True)
-                elif content == '!health':
-                    bot_global.health_list_lock.acquire()
-                    msg = bot_health.add(health_list, context['user_id'])
-                    bot_global.health_list_lock.release()
-                    reply(bot, context, msg, atPeople=True)
-                elif content == '!stop_h':
-                    bot_global.health_list_lock.acquire()
-                    msg = bot_health.sub(health_list, context['user_id'])
-                    bot_global.health_list_lock.release()
-                    reply(bot, context, msg, atPeople=True)
-                elif context['user_id'] in health_list:
-                    t_hour = int(time.strftime('%H', time.localtime(time.time())))
-                    t_minute = int(time.strftime('%M', time.localtime(time.time())))
-                    if 0 <= t_hour <= 6:
-                        smoke = 6 * 60 * 60 - t_hour * 60 * 60 - t_minute * 60
-                        bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'],
-                                          duration=smoke)
-                        msg = '现在是半夜,请睡觉了'
-                        if context['user_id'] == game_member:
-                            game_diff = 0
-                            game_member = 0
-                            msg = msg + '\n您的咩羊游戏被强制解除'
-                        bot.send_group_msg(group_id=context['group_id'], message=msg)
-
             # 超级权限指令
             if context['user_id'] in bot_global.dog_list:
                 if content == '!watch':
@@ -339,10 +308,51 @@ def MsgCenter(bot, context):
                     msg = '咩羊游戏解除'
                     reply(bot, context, msg, atPeople=False)
 
+            # 需要管理员身份的群聊指令
+            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
+                if content == '!cnm':
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=5)
+                    msg = '操作执行成功: 5秒'
+                    reply(bot, context, msg, atPeople=True)
+                elif content == '!rest':
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=3600)
+                    msg = '操作执行成功: 1小时'
+                    reply(bot, context, msg, atPeople=True)
+                elif content == '!sleep':
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=21600)
+                    msg = '操作执行成功: 6小时'
+                    reply(bot, context, msg, atPeople=True)
+                elif '!afk' in content:
+                    (smoke, msg1, msg2) = bot_msgcheck.afk(context['group_id'], context['user_id'], content)
+                    if msg1:
+                        msg = msg1
+                    else:
+                        bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
+                        msg = '操作执行成功: %s' % msg2
+                    reply(bot, context, msg, atPeople=True)
+                elif content == '!sorry':
+                    smoke_minutes = random.randint(1, 60)
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke_minutes * 60)
+                    msg = '操作执行成功: %s分' % smoke_minutes
+                    reply(bot, context, msg, atPeople=True)
+
+            # 健康系统计算
+            if context['message_type'] == 'group' and context['user_id'] in health_list:
+                t_hour = int(time.strftime('%H', time.localtime(time.time())))
+                t_minute = int(time.strftime('%M', time.localtime(time.time())))
+                if 0 <= t_hour <= 6:
+                    smoke = 6 * 60 * 60 - t_hour * 60 * 60 - t_minute * 60
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
+                    msg = '现在是半夜,请睡觉了'
+                    if context['user_id'] == game_member:
+                        game_member = 0
+                        msg = msg + '\n您的咩羊游戏被强制解除'
+                    reply(bot, context, msg, atPeople=True)
+
             # 复读触发
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_total_list:
                 group_i = bot_global.group_total_list.index(context['group_id'])
-                if '!' in content or '！'in content or '~' in content or '~' in content or '[CQ:' in content:
+                if '!' in content or '！' in content or '~' in content or '~' in content or '[CQ:' in content:
                     pass
                 elif bot_global.repeat_num[group_i] >= 100:
                     pass
@@ -357,7 +367,10 @@ def MsgCenter(bot, context):
             if context['message_type'] == 'private' and '!remove' in content:
                 (msg, remove_group_i) = bot_msgcheck.remove(content)
                 if remove_group_i > -1:
-                    bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
+                    if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
+                        msg = '臣妾做不到啊(不是管理员)'
+                    else:
+                        bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
                 reply(bot, context, msg, atPeople=False)
 
 
@@ -381,6 +394,7 @@ def verify(context, allowed):
         if context['message_type'] == 'private':
             return False
     return True
+
 
 # 加上艾特人的CQ头
 def addAtPeople(user_qq):
