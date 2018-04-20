@@ -62,8 +62,9 @@ def infoMap(content, contact='private'):
                     msg = msg + '\n【%s】共%s条记录' % (bot_osu.getMod(total_list[i_now-1][3]), user_num)
                     msg = msg + '\n玩家%s-%s (%s)' % (user_last, user_top, int(user_total / user_num))
                     msg = msg + '\n成绩%s-%s (%s)' % (pp_last, pp_top, int(pp_total / user_num))
-                    acc_msg = '\n准确度%.2f-%.1f (%.1f)' % (acc_last, acc_top, (acc_total / user_num))
-                    acc_msg.replace('100.0', '100')
+                    acc_msg = '\n准确度%.2f-%.2f (%.1f)' % (acc_last, acc_top, (acc_total / user_num))
+                    acc_msg = acc_msg.replace('100.00', '100')
+                    acc_msg = acc_msg.replace('100.0', '100')
                     msg = msg + acc_msg
                     if i_now == i_max:
                         break
@@ -89,7 +90,7 @@ def banMap(user_qq, content):
         sql = 'SELECT * FROM user WHERE qq = %s AND mode = 0' % user_qq
         result = bot_SQL.select(sql)
         if not result:
-            msg = '您未绑定'
+            msg = '您未绑定 (请使用!myid)'
             return msg
         uid = result[0][1]
         sql = 'SELECT * FROM bp_ban WHERE uid = %d AND bid = %d AND mode = 0' % (uid, bid)
@@ -132,7 +133,7 @@ def searchMap(user_qq, content, suggest_num=5):
         sql = 'SELECT * FROM user WHERE qq = %s AND mode = 0' % user_qq
         result = bot_SQL.select(sql)
         if not result:
-            msg = '您未绑定'
+            msg = '您未绑定 (请使用!myid)'
             return msg
         uid = result[0][1]
         (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(uid, '0', type_mode='id')
