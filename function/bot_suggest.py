@@ -7,7 +7,7 @@ from function import bot_osu
 min_member = 1  # 一首歌至少有几个人打过，才进入后续推荐指数计算
 
 
-def infoMap(content, contact='private'):
+def infoMap(content, contact='group'):
     if content == '!mapinfo':
         return '倒是告诉我要查哪个图啊'
     check_map = re.match(r'^!mapinfo ([1-9][0-9]*)$', content)
@@ -16,7 +16,7 @@ def infoMap(content, contact='private'):
         map_info = '谱面Bid: %s\n' % bid + bot_osu.getMapInfo(bid, '0', getlength=True)
         if not map_info:
             map_info =  '网络爆炸了,查询地图失败'
-        if contact == 'group':
+        if contact != 'private':
             map_info = map_info + '\n详细信息请私聊查询'
             return map_info
         sql = 'SELECT * FROM bpmsg_mode0 WHERE `bid` = %s ORDER BY `mod` DESC' % bid
@@ -109,7 +109,11 @@ def banMap(user_qq, content):
         return '您的!banmap指令使用错误'
 
 
-def searchMap(user_qq, content, suggest_num=5):
+def searchMap(user_qq, content, contact='group'):
+    if contact == 'private':
+        suggest_num = 15
+    else:
+        suggest_num = 5
     check_msg1 = re.match(r'^!getmap with (.*) for (.*)$', content)
     check_msg2 = re.match(r'^!getmap for (.*)$', content)
     check_msg3 = re.match(r'^!getmap with (.*)$', content)

@@ -58,7 +58,7 @@ def setCare(list_b, content):
                     user_msg = {'user_id': osu_id, 'user_name': real_name, 'user_mode': osu_mode}
                     new_bp_msg.append(user_msg)
                     list_b.append(new_bp_msg)
-                    msg = '添加bp监视成功!'
+                    msg = '添加%s的bp监视成功!' % real_name
                     bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
                 else:
                     msg = 'bp数量低于20个,不进行监视'
@@ -97,7 +97,7 @@ def stopCare(list_b, content):
                     del list_b[i]
                     break
             if success == 1:
-                msg = '移除bp监视成功!'
+                msg = '移除%s的bp监视成功!' % real_name
                 bot_IOfile.write_pkl_data(list_b, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
             else:
                 msg = '此人并没在监视列表中'
@@ -308,7 +308,7 @@ def searchUserInfo(user_qq):
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
     result = bot_SQL.select(sql)
     if not result:
-        msg = '您未绑定!'
+        msg = '您未绑定! (请使用!myid)'
         return msg
     uid = result[0][1]
     (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')

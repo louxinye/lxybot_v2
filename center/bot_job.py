@@ -5,10 +5,6 @@ from function import bot_osu
 from center import bot_global
 
 
-# 适用群列表: 分群,喵呜,要饭,队群,娱乐群
-group_list = [514661057, 326389728, 641236878, 693657455, 102171745]
-group_list1 = [641236878]
-
 def JobCenter(bot, maxcount):
     count = 0
     while count < maxcount:
@@ -56,7 +52,7 @@ def JobCenter(bot, maxcount):
                                     update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
                                     bot_global.user_bp_list[num] = update_bp
                                     bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
-                            for group in group_list:
+                            for group in bot_global.group_bp_list:
                                 bot.send_group_msg(group_id=group, message=msg)
                             break
             bot_global.user_bp_list_lock.release() # 列表解锁

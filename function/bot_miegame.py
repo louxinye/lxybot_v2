@@ -195,15 +195,13 @@ def yran(a):
 
 
 # 函数功能:!game指令检查
-def startGame(game_content, game_member, member_qq, content):
+def startGame(game_member, member_qq, content):
     if content == '!game_mie':
         if game_member:
             level_max = 0
             msg = '该游戏正在被玩家%s占用,若要停止则需要本人使用!stop_g' % game_member
         else:
             level_max = 4
-            game_member = member_qq
-            game_content = [[1, 1], [1, 1]]
             msg = '锁定玩家成功!\n难度: 大神级\nbot目前数字:1 1\n玩家目前数字:1 1'
     elif '!game_mie ' in content:
         if game_member:
@@ -212,15 +210,13 @@ def startGame(game_content, game_member, member_qq, content):
         else:
             (level_max, name) = game_diff(content)
             if level_max > 0:
-                game_member = member_qq
-                game_content = [[1, 1], [1, 1]]
                 msg = '锁定玩家成功!\n难度: %s\nbot目前数字:1 1\n玩家目前数字:1 1' % name
             else:
                 msg = '难度输入有误'
     else:
         level_max = 0
         msg = '无法识别,bot猜测您是想使用指令!game x (x为参数,缺省值2)'
-    return game_content, game_member, msg, level_max
+    return msg, level_max
 
 
 def game_diff(content):

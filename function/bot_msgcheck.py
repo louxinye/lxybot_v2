@@ -40,7 +40,7 @@ def afk(group, member, content):
 def roll(content):
     if content == '!roll':
         num = random.randint(1, 100)
-        msg = 'roll了一个%s' % num
+        msg = 'roll了个%s' % num
     elif '!roll ' in content:
         check_roll = re.match(r'^!roll ([123456789][0123456789]*$)', content)
         if check_roll:
@@ -123,14 +123,14 @@ def stop_k(list_k, group, content):
 def remove(content):
     num = -1
     if content == '!remove':
-        msg = '您的!remove指令使用错误,格式应当如下\n!remove 群代码(1主群,2分群,等等)\n举例: !remove 2'
+        msg = '您的!remove指令使用错误,格式应当如下\n!remove 群代码(1主群,2分群,等等)\n举例: !remove 2\n另外请保证该群中本bot是管理员'
     elif '!remove ' in content:
         check_num = re.match(r'!remove ([1234567])', content)
         if check_num:
-            msg = '操作执行成功: 0秒'
+            msg = '操作执行成功: 0秒\n若该群中本bot不是管理员则不会生效'
             num = int(check_num.group(1)) - 1
         else:
-            msg = '您的!remove指令使用错误,格式应当如下\n!remove 群代码(1主群,2分群,等等)\n举例: !remove 2'
+            msg = '您的!remove指令使用错误,格式应当如下\n!remove 群代码(1主群,2分群,等等)\n举例: !remove 2\n另外请保证该群中本bot是管理员'
     else:
         msg = '无法识别,bot猜测您是想使用指令!remove x(x为参数)'
     return msg, num

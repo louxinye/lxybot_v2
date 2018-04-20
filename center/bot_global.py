@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 多线程全局变量设置(目前仅有bp监视有这个需求)
+# 全局设置
 import threading
 from function import bot_IOfile
 
@@ -15,3 +15,22 @@ health_list_lock = threading.Lock()
 noise_list_lock = threading.Lock()
 game_mie_lock = threading.Lock()
 sql_action_lock = threading.Lock()
+
+# 适用群列表: 主群,分群,喵呜,要饭,队群,娱乐群,贫民窟
+group_total_list = [614892339, 514661057, 326389728, 641236878, 693657455, 102171745, 204124585]
+discuss_total_list = []
+# 新人群列表:
+group_main_list = [614892339, 514661057]
+# bp监视适用群列表:
+group_bp_list = [614892339, 514661057, 326389728, 693657455, 102171745]
+# 管理员存在的群:
+group_dog_list = [614892339, 514661057]
+# 权限者qq号
+dog_list = [1061566571, 3059841053]
+# 屏蔽qq号,无视这些人的发言
+ignore_list = [1677323371, 122866607, 1394932996, 1335734629, 2839098896, 1091569752, 2478057279]
+# 当前复读次数, 若大于等于100则表示没有开启复读惩罚,和适用群一一对应
+repeat_num = [0, 0, 0, 0, 0, 0, 0]
+# 当前复读语句, 和适用群一一对应
+repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message']
+
