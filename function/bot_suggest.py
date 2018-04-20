@@ -7,7 +7,7 @@ from function import bot_osu
 min_member = 1  # 一首歌至少有几个人打过，才进入后续推荐指数计算
 
 
-def infoMap(content):
+def infoMap(content, contact='private'):
     if content == '!mapinfo':
         return '倒是告诉我要查哪个图啊'
     check_map = re.match(r'^!mapinfo ([1-9][0-9]*)$', content)
@@ -16,49 +16,66 @@ def infoMap(content):
         map_info = bot_osu.getMapInfo(bid, '0', getlength=True)
         if not map_info:
             map_info =  '网络爆炸了,查询地图失败'
-        sql = 'SELECT * FROM bp_mode0_msg WHERE `bid` = %s ORDER BY `mod` DESC' % bid
+        if contact == 'group':
+            map_info = map_info + '\n详细信息请私聊查询'
+            return map_info
+        sql = 'SELECT * FROM bpmsg_mode0 WHERE `bid` = %s ORDER BY `mod` DESC' % bid
         result = bot_SQL.select(sql)
         if not result:
             msg = '\n数据库中没有其余详细信息'
         else:
-            msg = '\n数据库中有如下信息:'
+            msg = '\n数据库中有如下信息:\n括号内数据为平均值'
             total_list = list(result)
             i_now = 0
             i_max = len(total_list)
-            # 数据库返回的每一条信息中,0:uid,1:bp_rank,2:bid,3:mod,4:score_pp,5:user_pp.6:mod_new,7:pp_new
-            user_last = total_list[0][5]
-            user_top = total_list[0][5]
+            # 数据库返回的每一条信息中,0:uid,1:bp_rank,2:bid,3:mod,4:score_pp,5:score_acc,6:suggest_mod,7:suggest_pp,8:user_pp
+            user_last = total_list[0][8]
+            user_top = total_list[0][8]
             pp_last = total_list[0][4]
             pp_top = total_list[0][4]
-            user_total = total_list[0][5]
+            acc_last = total_list[0][5]
+            acc_top = total_list[0][5]
+            user_total = total_list[0][8]
             pp_total = total_list[0][4]
+            acc_total = total_list[0][5]
             user_num = 1
             while True:
                 i_now = i_now + 1
                 if i_now != i_max and total_list[i_now][3] == total_list[i_now-1][3]:
-                    if user_last > total_list[i_now][5]:
-                        user_last = total_list[i_now][5]
-                    if user_top < total_list[i_now][5]:
-                        user_top = total_list[i_now][5]
+                    if user_last > total_list[i_now][8]:
+                        user_last = total_list[i_now][8]
+                    if user_top < total_list[i_now][8]:
+                        user_top = total_list[i_now][8]
+                    if acc_last > total_list[i_now][5]:
+                        acc_last = total_list[i_now][5]
+                    if acc_top < total_list[i_now][5]:
+                        acc_top = total_list[i_now][5]
                     if pp_last > total_list[i_now][4]:
                         pp_last = total_list[i_now][4]
                     if pp_top < total_list[i_now][4]:
                         pp_top = total_list[i_now][4]
-                    user_total = user_total + total_list[i_now][5]
+                    user_total = user_total + total_list[i_now][8]
                     user_num = user_num + 1
                     pp_total = pp_total + total_list[i_now][4]
+                    acc_total = acc_total + total_list[i_now][5]
                 else:
                     msg = msg + '\n【%s】共%s条记录' % (bot_osu.getMod(total_list[i_now-1][3]), user_num)
-                    msg = msg + '\n玩家%s-%s(平均%s)' % (user_last, user_top, int(user_total/user_num))
-                    msg = msg + '\n成绩%s-%s(平均%s)' % (pp_last, pp_top, int(pp_total/user_num))
+                    msg = msg + '\n玩家%s-%s (%s)' % (user_last, user_top, int(user_total / user_num))
+                    msg = msg + '\n成绩%s-%s (%s)' % (pp_last, pp_top, int(pp_total / user_num))
+                    acc_msg = '\n准确度%.2f-%.1f (%.1f)' % (acc_last, acc_top, (acc_total / user_num))
+                    acc_msg.replace('100.0', '100')
+                    msg = msg + acc_msg
                     if i_now == i_max:
                         break
-                    user_last = total_list[i_now][5]
-                    user_top = total_list[i_now][5]
+                    user_last = total_list[i_now][8]
+                    user_top = total_list[i_now][8]
                     pp_last = total_list[i_now][4]
                     pp_top = total_list[i_now][4]
-                    user_total = total_list[i_now][5]
+                    acc_last = total_list[i_now][5]
+                    acc_top = total_list[i_now][5]
+                    user_total = total_list[i_now][8]
                     pp_total = total_list[i_now][4]
+                    acc_total = total_list[i_now][5]
                     user_num = 1
         return map_info + msg
 
@@ -123,8 +140,8 @@ def searchMap(user_qq, content, suggest_num=5):
         return '您的!getmap指令使用错误'
     if not uid:
         return '用户查询出错,请稍后再试'
-    if pp > 6000 or pp < 800:
-        return '本推荐只支持pp在800-6000的玩家'
+    if pp > 15000 or pp < 600:
+        return '本推荐只支持pp在600-15000的玩家'
     bp_result = bot_osu.getUserBp(uid, '0')
     if not bp_result:
         return 'bp查询出错,请稍后再试'
@@ -134,11 +151,11 @@ def searchMap(user_qq, content, suggest_num=5):
     pp_min = int(pp - 150)
     pp_max = int(pp + 350)
     if input_mod == -999:
-        sql = 'SELECT * FROM bp_mode0_msg WHERE `user_pp` > %d AND `user_pp` < %d ' \
+        sql = 'SELECT * FROM bpmsg_mode0 WHERE `user_pp` > %d AND `user_pp` < %d ' \
               'AND bid NOT IN (SELECT bid FROM bp_ban WHERE uid = %s AND mode = 0) ORDER BY bid DESC' % \
               (pp_min, pp_max, uid)
     else:
-        sql = 'SELECT * FROM bp_mode0_msg WHERE `user_pp` > %d AND `user_pp` < %d AND `mod_new` = %d ' \
+        sql = 'SELECT * FROM bpmsg_mode0 WHERE `user_pp` > %d AND `user_pp` < %d AND `suggest_mod` = %d ' \
               'AND bid NOT IN (SELECT bid FROM bp_ban WHERE uid = %s AND mode = 0) ORDER BY bid DESC' % \
               (pp_min, pp_max, input_mod, uid)
     result = bot_SQL.select(sql)
@@ -146,7 +163,7 @@ def searchMap(user_qq, content, suggest_num=5):
     suggest_list = []
     i_max = len(total_list)
     i_now = 0
-    # 数据库返回的每一条信息中,0:uid,1:bp_rank,2:bid,3:mod,4:score_pp,5:user_pp.6:mod_new,7:pp_new
+    # 数据库返回的每一条信息中,0:uid,1:bp_rank,2:bid,3:mod,4:score_pp,5:score_acc,6:suggest_mod,7:suggest_pp,8:user_pp
     while True:
         if i_now > i_max - min_member:  # 查询到头的时候，结束
             break
@@ -159,14 +176,18 @@ def searchMap(user_qq, content, suggest_num=5):
         for j in range(i_now + min_member - 1, i_max):  # 至少有n个人打了一张你没打过的图，开始计算
             if j == i_max - 1 or total_list[i_now][2] != total_list[j + 1][2]:
                 e_pp = 0  # 期望pp
+                e_acc = 0  # 期望acc
                 e_good = 0  # 推荐指数
                 for songs in range(i_now, j + 1):
                     e_pp = e_pp + total_list[songs][7]
+                    e_acc = e_acc + total_list[songs][5]
                     e_good = e_good + 50 - total_list[songs][1]
                 e_pp = int(e_pp / (j - i_now + 1))
-                e_good = int(e_good / 100)
+                e_acc = '%.1f' % (e_acc / (j - i_now + 1))
+                if e_acc == '100.0':
+                    e_acc = '100'
                 suggest_list.append(
-                    {'bid': total_list[i_now][2], 'mod': total_list[i_now][6], 'pp': e_pp, 'good': e_good})
+                    {'bid': total_list[i_now][2], 'mod': total_list[i_now][6], 'pp': e_pp, 'acc': e_acc, 'good': e_good})
                 i_now = j  # 处理完毕后，索引直接跳转到相同歌曲的最后那一位
                 break
         i_now = i_now + 1
@@ -174,11 +195,11 @@ def searchMap(user_qq, content, suggest_num=5):
     if not suggest_list:
         msg = '你太强了, bot不知道该给你推荐什么图才合适'
     else:
-        msg = '%s的推荐图如下:\nBid, Mod, pp, 推荐指数' % name
+        msg = '%s的推荐图如下:\nBid, Mod, 参考pp, 参考acc' % name
     for i in range(min(suggest_num, len(suggest_list))):
         mod_name = bot_osu.getMod(suggest_list[i]['mod'])
         msg = msg + '\n%s, %s, %s, %s' % (
-        suggest_list[i]['bid'], mod_name, suggest_list[i]['pp'], suggest_list[i]['good'])
+        suggest_list[i]['bid'], mod_name, suggest_list[i]['pp'], suggest_list[i]['acc'])
     return msg
 
 
