@@ -13,7 +13,7 @@ def infoMap(content, contact='private'):
     check_map = re.match(r'^!mapinfo ([1-9][0-9]*)$', content)
     if check_map:
         bid = int(check_map.group(1))
-        map_info = 'Bid: %s\n' % bid + bot_osu.getMapInfo(bid, '0', getlength=True)
+        map_info = '谱面Bid: %s\n' % bid + bot_osu.getMapInfo(bid, '0', getlength=True)
         if not map_info:
             map_info =  '网络爆炸了,查询地图失败'
         if contact == 'group':
