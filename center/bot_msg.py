@@ -396,8 +396,8 @@ def reply(bot, context, msg, atPeople=False):
     elif context['message_type'] == 'discuss':
         if atPeople:
             msg = addAtPeople(context['user_id']) + msg
-        bot.send_discuss_msg(group_id=context['discuss_id'], message=msg)
+        bot.send_discuss_msg(discuss_id=context['discuss_id'], message=msg)
     elif context['message_type'] == 'private':
-        bot.send_private_msg(group_id=context['user_id'], message=msg)
+        bot.send_private_msg(user_id=context['user_id'], message=msg)
     else:
         print('未知消息来源!' % context)
