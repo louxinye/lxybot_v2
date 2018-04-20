@@ -20,7 +20,7 @@ dog_list = [3059841053]
 # 屏蔽qq号,无视这些人的发言
 ignore_list = [1061566571, 1677323371]
 # 当前复读次数, 若大于等于100则表示没有开启复读惩罚,和适用群一一对应
-repeat_num = [100, 0, 0, 0, 0, 0, 0]
+repeat_num = [0, 0, 0, 0, 0, 0, 0]
 # 当前复读语句, 和适用群一一对应
 repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message']
 # 咩羊游戏初始值
@@ -178,7 +178,7 @@ def MsgCenter(bot, context):
             bot.send_group_msg(group_id=context['group_id'], message=msg)
         elif '!mapinfo' in content:
             bot_global.sql_action_lock.acquire()
-            msg = bot_suggest.infoMap(content)
+            msg = bot_suggest.infoMap(content, contact=context['message_type'])
             bot_global.sql_action_lock.release()
             bot.send_group_msg(group_id=context['group_id'], message=msg)
         elif '!myid' in content:
@@ -357,16 +357,16 @@ def MsgCenter(bot, context):
                 bot_global.noise_list_lock.acquire()
                 t = bot_noise.check(group_i, repeat_list, repeat_num, content, context['user_id'])
                 bot_global.noise_list_lock.release()
-                if t == 1:
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=300)
-                    msg = atPeople(context['user_id']) + '求求你别复读了'
-                    bot.send_group_msg(group_id=context['group_id'], message=msg)
+                # if t == 1:
+                #     bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=5)
+                #     msg = atPeople(context['user_id']) + '求求你别复读了'
+                #     bot.send_group_msg(group_id=context['group_id'], message=msg)
                 if t == 2:
                     bot.send_group_msg(group_id=context['group_id'], message=content)
-                if t == 3:
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=300)
-                    msg = atPeople(context['user_id']) + '求求你别打断了'
-                    bot.send_group_msg(group_id=context['group_id'], message=msg)
+                # if t == 3:
+                #     bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=5)
+                #     msg = atPeople(context['user_id']) + '求求你别打断了'
+                #     bot.send_group_msg(group_id=context['group_id'], message=msg)
 
     # 私聊指令
     elif context['message_type'] == 'private' and context['user_id'] not in ignore_list:
@@ -485,7 +485,7 @@ def MsgCenter(bot, context):
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif '!mapinfo' in content:
             bot_global.sql_action_lock.acquire()
-            msg = bot_suggest.infoMap(content)
+            msg = bot_suggest.infoMap(content, contact=context['message_type'])
             bot_global.sql_action_lock.release()
             bot.send_private_msg(user_id=context['user_id'], message=msg)
         elif '!myid' in content:
