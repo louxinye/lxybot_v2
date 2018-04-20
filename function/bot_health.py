@@ -9,7 +9,7 @@ def add(list_h, qq):
         msg = '您已经是关爱对象了,无需重复添加\n输入!care查看'
     else:
         list_h.append(qq)
-        success = bot_IOfile.write_pkl_data(list_h, 'D:\Python POJ\lxybot_v2\data\data_health_list.pkl')
+        success = bot_IOfile.write_pkl_data(list_h, 'data/data_health_list.pkl')
         if success == 1:
             msg = '设置成功!dalou将会每晚关照您的健康\n输入!care查看'
         else:
@@ -22,7 +22,7 @@ def sub(list_h, qq):
     if qq in list_h:
         t = list_h.index(qq)
         del list_h[t]
-        success = bot_IOfile.write_pkl_data(list_h, 'D:\Python POJ\lxybot_v2\data\data_health_list.pkl')
+        success = bot_IOfile.write_pkl_data(list_h, 'data/data_health_list.pkl')
         if success == 1:
             msg = '移除关爱对象成功\n输入!care查看'
         else:

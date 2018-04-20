@@ -37,7 +37,7 @@ def JobCenter(bot, maxcount):
                                     update_bp = new_bp[0:20]
                                     update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
                                     bot_global.user_bp_list[num] = update_bp
-                                    bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
+                                    bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
                             else:
                                 map_id = new_bp[i]["beatmap_id"]
                                 map_info = bot_osu.getMapInfo(map_id, score_mode)
@@ -51,7 +51,7 @@ def JobCenter(bot, maxcount):
                                     update_bp = new_bp[0:20]
                                     update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
                                     bot_global.user_bp_list[num] = update_bp
-                                    bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'D:\Python POJ\lxybot_v2\data\data_bp_care_list.pkl')
+                                    bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
                             for group in bot_global.group_bp_list:
                                 bot.send_group_msg(group_id=group, message=msg)
                             break

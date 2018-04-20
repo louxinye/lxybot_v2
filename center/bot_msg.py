@@ -19,8 +19,8 @@ game_member = 0
 # 咩羊游戏难度
 game_diff = 0
 # 恢复活动列表和健康列表
-user_card_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
-health_list = bot_IOfile.read_pkl_data('D:\Python POJ\lxybot_v2\data\data_health_list.pkl')
+user_card_list = bot_IOfile.read_pkl_data('data/data_card_game_list.pkl')
+health_list = bot_IOfile.read_pkl_data('data/data_health_list.pkl')
 
 
 def MsgCenter(bot, context):

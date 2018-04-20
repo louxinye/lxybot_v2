@@ -131,7 +131,7 @@ def startCard(card_member, list_c, content):
             msg = '玩家信息:\nqq号: %s\nuid: %s\nname: %s\npc: %s\ntth: %s\nmoney: %s\n机票数: 0\n活动开始!'\
                   % (card_member, osu_id, real_name, pc, tth, money)
             list_c.append(user_info)
-            bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+            bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
         else:
             msg = '您的!start_card指令使用错误'
     else:
@@ -150,7 +150,7 @@ def stopCard(list_c, content):
             for i in range(len(list_c)):
                 if list_c[i]['qq'] == qq:
                     del list_c[i]
-                    bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                    bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
                     msg = '已删除此qq号活动数据'
                     return msg
             msg = '该qq号并没有参加活动'
@@ -343,7 +343,7 @@ def oneUserUpdate(card_member, list_c):
         member = list_c[i]
         if card_member == member['qq']:
             (list_c[i], msg, update_success, update_success_detail) = GameUpdate(member)
-            bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+            bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -358,7 +358,7 @@ def certainUserUpdate(list_c, content):
             member = list_c[i]
             if osu_name == member['name']:
                 (list_c[i], msg, success, success_detail) = GameUpdate(member)
-                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
                 return msg
         msg = '此玩家并未参与活动'
     else:
@@ -379,7 +379,7 @@ def allUserUpdate(list_c):
             print('%s. 完成%s, 失败' % (i+1, member['name']))
         else:
             print('%s. 完成%s, 成功' % (i+1, member['name']))
-    bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+    bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
     if not error_list:
         msg = '全体打图记录更新完毕,没有发生错误'
     else:
@@ -430,7 +430,7 @@ def pick1(card_member, list_c):
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -478,7 +478,7 @@ def pick11(card_member, list_c):
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -537,7 +537,7 @@ def pickall(card_member, list_c):
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -579,7 +579,7 @@ def fly1(card_member, list_c):
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+                bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
     return msg
@@ -806,7 +806,7 @@ def addMoney(card_member, list_c):
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
             list_c[i]['money'] = list_c[i]['money'] + 1000
-            bot_IOfile.write_pkl_data(list_c, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
+            bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             msg = '金币+1000'
             return msg
     msg = '此玩家并未参与活动'
