@@ -5,8 +5,7 @@ from center import bot_global
 
 def ReqCenter(bot, context):
 	# 新人群加群验证
-	if context['request_type'] == 'group' and context['group_id'] in bot_global.group_main_list and context[
-		'sub_type'] == 'add':
+	if context['request_type'] == 'group' and context['group_id'] in bot_global.group_main_list and context['sub_type'] == 'add':
 		user_group = context['group_id']
 		group_type = getGroupName(bot_global.group_main_list.index(user_group))
 		user_qq = context['user_id']
