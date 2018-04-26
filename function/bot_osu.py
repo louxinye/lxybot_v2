@@ -19,8 +19,8 @@ bp_list = []
 
 
 def setCare(list_b, content):
-    if len(list_b) > 39:
-        msg = '达到40人上限!'
+    if len(list_b) > 49:
+        msg = '达到50人上限!'
     elif content == '!set_bp':
         msg = '倒是告诉我id啊'
     elif '!set_bp ' in content:

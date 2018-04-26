@@ -112,19 +112,19 @@ def MsgCenter(bot, context):
             msg = bot_card.userMedalDetail(context['user_id'], user_card_list)
             reply(bot, context, msg, atPeople=True)
         elif content == '!myMR':
-            msg = bot_card.userCardDetail(context, user_card_list, 0, contact=context['message_type'])
+            msg = bot_card.userCardDetail(context['user_id'], user_card_list, 0, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myUR':
-            msg = bot_card.userCardDetail(context, user_card_list, 1, contact=context['message_type'])
+            msg = bot_card.userCardDetail(context['user_id'], user_card_list, 1, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!mySR':
-            msg = bot_card.userCardDetail(context, user_card_list, 2, contact=context['message_type'])
+            msg = bot_card.userCardDetail(context['user_id'], user_card_list, 2, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myR':
-            msg = bot_card.userCardDetail(context, user_card_list, 3, contact=context['message_type'])
+            msg = bot_card.userCardDetail(context['user_id'], user_card_list, 3, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!myN':
-            msg = bot_card.userCardDetail(context, user_card_list, 4, contact=context['message_type'])
+            msg = bot_card.userCardDetail(context['user_id'], user_card_list, 4, contact=context['message_type'])
             reply(bot, context, msg, atPeople=True)
         elif content == '!update':
             bot_global.user_card_list_lock.acquire()
@@ -263,17 +263,6 @@ def MsgCenter(bot, context):
             else:
                 msg = '您并没有绑定该游戏'
             reply(bot, context, msg, atPeople=True)
-        elif context['user_id'] == game_member:
-            bot_global.game_mie_lock.acquire()
-            (msg1, msg2, gg) = bot_miegame.one_plus_one_check(game_content, content, game_diff)
-            bot_global.game_mie_lock.release()
-            reply(bot, context, msg1, atPeople=True)
-            if msg2:
-                reply(bot, context, msg2, atPeople=True)
-                if gg == 1:
-                    game_member = 0
-                    msg = '解除成功,游戏结束'
-                    reply(bot, context, msg, atPeople=False)
 
         # 其余具体情况具体分析
         else:
@@ -311,8 +300,9 @@ def MsgCenter(bot, context):
             # 需要管理员身份的群聊指令
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
                 if content == '!cnm':
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=5)
-                    msg = '操作执行成功: 5秒'
+                    smoke = random.randint(5, 100)
+                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
+                    msg = '操作执行成功: %s秒' % smoke
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!rest':
                     bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=3600)
@@ -330,11 +320,6 @@ def MsgCenter(bot, context):
                         bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
-                elif content == '!sorry':
-                    smoke_minutes = random.randint(1, 60)
-                    bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke_minutes * 60)
-                    msg = '操作执行成功: %s分' % smoke_minutes
-                    reply(bot, context, msg, atPeople=True)
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:
@@ -348,6 +333,19 @@ def MsgCenter(bot, context):
                         game_member = 0
                         msg = msg + '\n您的咩羊游戏被强制解除'
                     reply(bot, context, msg, atPeople=True)
+
+            # 咩羊游戏计算
+            if context['user_id'] == game_member:
+                bot_global.game_mie_lock.acquire()
+                (msg1, msg2, gg) = bot_miegame.one_plus_one_check(game_content, content, game_diff)
+                bot_global.game_mie_lock.release()
+                reply(bot, context, msg1, atPeople=True)
+                if msg2:
+                    reply(bot, context, msg2, atPeople=True)
+                    if gg == 1:
+                        game_member = 0
+                        msg = '解除成功,游戏结束'
+                        reply(bot, context, msg, atPeople=False)
 
             # 复读触发
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_total_list:
