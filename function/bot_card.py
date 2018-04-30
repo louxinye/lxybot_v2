@@ -7,99 +7,34 @@ from function import bot_IOfile
 
 
 rare_name = ['MR', 'UR', 'SR', 'R', 'N']  # 稀有度种类
-rare_num = [8, 12, 16, 20, 51]  # 每个稀有度的图鉴数量
+rare_num = [9, 13, 18, 25, 46]  # 每个稀有度的图鉴数量
 rate_pick = [1, 12, 80, 280, 1000]  # 单抽或者11连概率,上限1000
 rate_fly = [40, 280, 1000, 1000, 1000]  # 飞机票概率,上限1000
-p_pick = [0.000125, 0.000917, 0.004250, 0.010000, 0.014118]  # 每张卡抽到概率
-p_fly = [0.005, 0.020, 0.045, 0, 0]  # 每张卡飞到概率
+p_pick = [0.000111, 0.000846, 0.003778, 0.008000, 0.015652]  # 每张卡抽到概率
+p_fly = [0.00444, 0.01846, 0.04000, 0, 0]  # 每张卡飞到概率
 b_first = [1000, 500, 200, 50, 10]  # new卡加分
 b_next = [300, 150, 50, 10, 1]  # 强化卡加分
 tth_Val = [150, 200, 240, 240]  # 更新打图记录时候,四个mode的tth系数
 
-card_n = ['bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'bleatingsheep', 'whirLeeve', 'whirLeeve', '-interesting-', 'HuaLeGeJiBa', 'wdwdwww', 'Mindlessness', 'ChongZi',
-          'yiyue2', 'SinowWhite', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'kss233',
-          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'X_fire233', 'fulinfang',
-          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'yimoQWQ', 'HaiTanYangGuang', 'Shadow_Glass',
-          'DalouBot', 'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
-          'cookiezi', 'Rafis', 'Vaxei', 'Emilia', 'Totoki', 'WubWoofWolf', '_RyuK', '-GN']
-card_r = ['[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'Sakura miku', '-Q', 'Aok', 'Small_Miao', 'ykzl1969497633',
-          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', 'orangeLief', '-inter-', '-NekoMinto-',
-          '[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'Sakura miku', '-Q', 'Aok', 'Small_Miao', 'ykzl1969497633',
-          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', 'orangeLief', '-inter-', '-NekoMinto-',
-          '[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'Sakura miku', '-Q', 'Aok', 'Small_Miao', 'ykzl1969497633',
-          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', 'orangeLief', '-inter-', '-NekoMinto-',
-          '[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'Sakura miku', '-Q', 'Aok', 'Small_Miao', 'ykzl1969497633',
-          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', 'orangeLief', '-inter-', '-NekoMinto-',
-          'Gust', 'heisiban', 'CYCLC']
-card_sr = ['Yizeda', 'AdorableCubCat', 'Cookeazy', 'ShiQiKuangSanzz', 'Mafuyu Shiina', '-THgzz-', 'SNC-F-130',
-           'dicskb122', '-FKai-', 'BiliBiliZyi', 'usagiKokoa', 'COOLMILK123', 'Mother Ship', '-Artemis',
-           'Yizeda', 'AdorableCubCat', 'Cookeazy', 'ShiQiKuangSanzz', 'Mafuyu Shiina', '-THgzz-', 'SNC-F-130',
-           'dicskb122', '-FKai-', 'BiliBiliZyi', 'usagiKokoa', 'COOLMILK123', 'Mother Ship', '-Artemis',
-           'Yizeda', 'AdorableCubCat', 'Cookeazy', 'ShiQiKuangSanzz', 'Mafuyu Shiina', '-THgzz-', 'SNC-F-130',
-           'dicskb122', '-FKai-', 'BiliBiliZyi', 'usagiKokoa', 'COOLMILK123', 'Mother Ship', '-Artemis',
-           'Yizeda', 'AdorableCubCat', 'Cookeazy', 'ShiQiKuangSanzz', 'Mafuyu Shiina', '-THgzz-', 'SNC-F-130',
-           'dicskb122', '-FKai-', 'BiliBiliZyi', 'usagiKokoa', 'COOLMILK123', 'Mother Ship', '-Artemis',
-           'my angel kotori', 'Truth you left']
-card_ur = ['Hibikom', 'Pata-Mon', 'taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', 'AyaSakura', 'Imouto koko',
-           '84461810', 'Fushimi Rio',
-           'Hibikom', 'Pata-Mon', 'taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', 'AyaSakura', 'Imouto koko',
-           '84461810', 'Fushimi Rio',
-           'Hibikom', 'Pata-Mon', 'taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', 'AyaSakura', 'Imouto koko',
-           '84461810', 'Fushimi Rio',
-           'Hibikom', 'Pata-Mon', 'taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', 'AyaSakura', 'Imouto koko',
-           '84461810', 'Fushimi Rio',
-           'Sisters10086', 'ye__ow']
-card_mr = ['PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Discloz',
-           'PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Discloz',
-           'PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Discloz',
-           'PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Discloz',
-           'Oiso']
-card_next = ['NucleophileAP', 'DePuppy']
+card_n = ['whirLeeve', 'whirLeeve', '-interesting-', 'wdwdwww', 'Mindlessness', 'ChongZi', 'NucleophileAP', 'kss233',
+          'yiyue2', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'ZkmarsvXiYang',
+          'superdoG', 'SakuraOmega', 'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'fulinfang',
+          'azisa', 'ojbk', '_Star', '1061436219', 'Game Addiction', 'chan0165', 'HaiTanYangGuang', 'whiteseason2018',
+          'IronWitness', 'Against Current', '24fps', 'xiaoxi654', '[mogezi]', '- ElementOp -', 'My Angel-Asher-',
+          'cookiezi', 'Rafis', 'Vaxei', 'Emilia', 'Totoki', 'WubWoofWolf', '-GN']
+card_r = ['[ Kuon ]', 'godel', '-Hermit-', 'IaKis', '-Q', 'Aok', 'Small_Miao', 'ykzl1969497633', 'bleatingsheep',
+          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', '-NekoMinto-', 'SinowWhite', 'heisiban',
+          'HuaLeGeJiBa', 'Shadow_Glass', 'CYCLC', 'X_fire233', 'akziyou',
+          '-inter-', 'yimoQWQ', 'DalouBot']
+card_sr = ['Yizeda', 'AdorableCubCat', 'Cookeazy', 'ShiQiKuangSanzz', 'Mafuyu Shiina', '-THgzz-', 'Truth you left', 'Sakura miku',
+           'my angel kotori' , 'BiliBiliZyi', 'usagiKokoa', 'COOLMILK123', 'Mother Ship', 'DePuppy', 'C8N16O32' , 'orangeLief',
+           'dicskb122', '-FKai-']
+card_ur = ['Hibikom', 'Pata-Mon', 'taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', 'AyaSakura', 'Imouto koko', '-Artemis',
+           'Fushimi Rio', 'Sisters10086',
+           '84461810', 'ye__ow']
+card_mr = ['PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Storia', 'Firika',
+           'Gust']
+card_next = []
 
 
 # 注册并开始活动
@@ -693,12 +628,12 @@ def European(user):
     # 成就加分，因为不好计算因此只是简单估计
     if use_money > 16000:
         e_pt = 6000
-    elif use_money > 10000:
-        e_pt = 4000 + (use_money - 10000) // 3
     elif use_money > 7000:
-        e_pt = 2000 + (use_money - 7000) // 1.5
-    elif use_money > 3000:
-        e_pt = (use_money - 3000) // 2
+        e_pt = 3000 + (use_money - 7000) // 3
+    elif use_money > 4000:
+        e_pt = 1000 + (use_money - 4000) // 1.5
+    elif use_money > 2000:
+        e_pt = (use_money - 2000) // 2
     else:
         e_pt = 0
     for i in range(5):
