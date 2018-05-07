@@ -15,7 +15,7 @@ bid: %s
 强制Mod: %s
 可选Mod: %s
 允许fail: 否
-得分方式: (10 + acc^2 * combo^0.5 - userpp * 0.002 - miss * 0.2) * v2mod_multiply * 1.6 (if EZ)
+得分方式: 太长了懒得写
 !submit指令用于提交最近15次成绩,如果有包含本歌曲则进行得分计算''' % \
           (chart_bid, getAllowMod(force_mod), getAllowMod(allow_mod))
     return txt
@@ -104,7 +104,7 @@ def calChartScore(playmsg, user_pp, mod_mul):
     combo = int(playmsg['maxcombo'])
     pp = int(float(user_pp))
     miss = int(playmsg['countmiss'])
-    result = (10 + acc**2 * combo**0.5 - pp / 500 - miss / 5) * mod_mul
+    result = (10 + acc**2 * combo**0.5 - pp * 0.003 - miss / 5) * mod_mul
     return result
 
 

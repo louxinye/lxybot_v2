@@ -129,7 +129,7 @@ def chartSystem():
 本活动仅在新人群主群有效
 ☆!chart: 查询本期指定图
 ☆!mychart: 查询自己的成绩
-☆!submit: 提交近期20次成绩
+☆!submit: 提交近期15次成绩
 ☆!rankchart: 查询每张图的1-5名以及自己的名次
 功能还在开发中,敬请期待'''
     return txt
