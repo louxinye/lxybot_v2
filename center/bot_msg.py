@@ -11,6 +11,8 @@ from function import bot_card
 from function import bot_miegame
 from function import bot_IOfile
 from function import bot_osu
+from function import bot_chart
+
 
 # 咩羊游戏初始值
 game_content = [[1, 1], [1, 1]]
@@ -89,7 +91,7 @@ def MsgCenter(bot, context):
             reply(bot, context, msg, atPeople=True)
         elif content == '!pp':
             bot_global.sql_action_lock.acquire()
-            msg = bot_osu.searchUserInfo(context['user_id'])
+            (msg, a2, a3) = bot_osu.searchUserInfo(context['user_id'])
             bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
 
@@ -320,6 +322,21 @@ def MsgCenter(bot, context):
                         bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
+
+            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
+                if content == '!chart':
+                    msg = bot_chart.getChart()
+                    reply(bot, context, msg, atPeople=False)
+                elif content == '!submit':
+                    msg = bot_chart.submitChart(context['user_id'])
+                    reply(bot, context, msg, atPeople=True)
+                elif content == '!mychart':
+                    msg = bot_chart.myChart(context['user_id'])
+                    reply(bot, context, msg, atPeople=True)
+                # elif content == '!rankchart':
+                #     msg = bot_chart.rankChart(context['user_id'])
+                #     reply(bot, context, msg, atPeople=False)
+
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:

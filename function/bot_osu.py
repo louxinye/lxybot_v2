@@ -126,8 +126,8 @@ def getUserInfo(osu_name, osu_mode, type_mode='string'):
 
 
 # 输入uid，输出bp前50
-def getUserBp(osu_id, osu_mode, max_num=50):
-    url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, osu_id, osu_mode, max_num)
+def getUserBp(uid, osu_mode, max_num=50):
+    url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, uid, osu_mode, max_num)
     res = getUrl(url)
     if not res:
         return 0
@@ -168,6 +168,18 @@ def getMapPlay(uid, bid, mode):
     else:
         pp = result[0]['pp']
         return pp
+
+
+def getUserRecent(uid, mode, max_num=20):
+    url = 'https://osu.ppy.sh/api/get_user_recent?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, uid, mode, max_num)
+    res = getUrl(url)
+    if not res:
+        return 0
+    result = json.loads(res.text)
+    if len(result) == 0:
+        return 0
+    else:
+        return result
 
 
 # request请求
@@ -227,6 +239,38 @@ def getMod(mod_id):
     if not msg:
         msg = 'None'
     return msg
+
+
+# mod增益计算
+def getMultiply(mod_id, EZbuff=1, Mtype=1):
+    result = 1
+    mod_list = []
+    mods = getMod(mod_id)
+    if mods == 'None':
+        return result, mod_list
+    num = len(mods)//2
+    for i in range(num):
+        get = mods[2*i: 2*i+2]
+        mod_list.append(get)
+        if get == 'NF':
+            result = result * 0.5
+        elif get == 'EZ':
+            result = result * 0.5 * EZbuff
+        elif get == 'HT':
+            result = result * 0.3
+        elif get == 'HR':
+            result = result * (1.06 if Mtype==1 else 1.12)
+        elif get == 'SD' or get == 'PF':
+            pass
+        elif get == 'DT' or get == 'NC':
+            result = result * (1.12 if Mtype==1 else 1.2)
+        elif get == 'HD':
+            result = result * 1.06
+        elif get == 'FL':
+            result = result * 1.12
+        elif get == 'SO':
+            result = result * 0.9
+    return result, mod_list
 
 
 # 将秒转化为时分秒结构
@@ -303,18 +347,18 @@ def setSQL(user_qq, content):
     return msg
 
 
-# 查询并更新用户信息(临时功能,目前仅用于娱乐群)
+# 查询并更新用户信息
 def searchUserInfo(user_qq):
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
     result = bot_SQL.select(sql)
     if not result:
         msg = '您未绑定! (请使用!myid)'
-        return msg
+        return msg, 0, 0
     uid = result[0][1]
     (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')
     if not uid:
         msg = 'pp查询出错,请稍后再试'
-        return msg
+        return msg, 0, 0
     sql = 'UPDATE user SET name = \'%s\', pp = %.2f, pc = %d, tth = %d, acc= %.2f WHERE qq = %d and mode = 0' \
           % (name, pp, pc, tth, acc, user_qq)
     success = bot_SQL.action(sql)
@@ -327,7 +371,7 @@ def searchUserInfo(user_qq):
               % (name, pp, pp_up, pc, pc_up, tth, tth_up, acc, acc_up)
     else:
         msg = '数据库记录出错，请联系Dalou!'
-    return msg
+    return msg, uid, pp
 
 
 # 增量显示
@@ -338,4 +382,6 @@ def addCal(num, floatnum=0):
         msg = '%d' % num
     if num > -0.001:
         msg = '+' + msg
+    if msg == '+-0.00' or msg == '-0.00':
+        msg = '+0.00'
     return msg
