@@ -104,7 +104,7 @@ def calChartScore(playmsg, user_pp, mod_mul):
     combo = int(playmsg['maxcombo'])
     pp = int(float(user_pp))
     miss = int(playmsg['countmiss'])
-    result = (10 + acc**2 * combo**0.5 - pp * 0.003 - miss / 5) * mod_mul
+    result = (15 + acc**2 * combo**0.5 - pp * 0.004 - miss * 0.2) * mod_mul
     return result
 
 
