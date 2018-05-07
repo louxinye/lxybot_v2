@@ -29,6 +29,8 @@ group_total_list = [614892339, 514661057, 326389728, 641236878, 693657455, 10217
 discuss_total_list = []
 # 新人群代号:
 group_main_list = getGroupList([0, 1])
+# chart群代号:
+group_chart_list = getGroupList([0, 7])
 # 新人群管理群代号:
 group_main_admin_list = getGroupList([7])
 # bp监视适用群代号:

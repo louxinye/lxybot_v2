@@ -4,9 +4,9 @@ from function import bot_osu
 from function import bot_SQL
 
 
-chart_bid = ['1580728']
+chart_bid = [1580728]
 now_turns = 1
-force_mod = ['SO']
+force_mod = []
 allow_mod = ['EZ', 'HR', 'HD', 'SD', 'PF', 'DT', 'NC', 'FL', 'SO']
 
 def getChart():
@@ -15,8 +15,8 @@ bid: %s
 强制Mod: %s
 可选Mod: %s
 允许fail: 否
-得分方式: (acc^2 * combo^0.5 - userpp // 200 - miss) * v2mod_multiply * 1.6(if EZ)
-!submit指令用于提交最近10次pass成绩,如果有包含本歌曲则进行得分计算''' % \
+得分方式: (10 + acc^2 * combo^0.5 - userpp * 0.002 - miss * 0.2) * v2mod_multiply * 1.6 (if EZ)
+!submit指令用于提交最近20次成绩,如果有包含本歌曲则进行得分计算''' % \
 	      (chart_bid, getAllowMod(force_mod), getAllowMod(allow_mod))
 	return txt
 
@@ -42,26 +42,27 @@ def submitChart(user_qq):
 	(a1, current_chart) = myChart(user_qq)
 	msg = '您未更新chart得分'
 	for recent in new_result:
-		if recent['beatmap_id'] not in chart_bid:  # 不是chart图，跳过
+		bid = int(recent['beatmap_id'])
+		if bid not in chart_bid:  # 不是chart图，跳过
 			continue
 		if recent['rank'] == 'F':  # fail，跳过
 			continue
-		(mul, mod_list) = bot_osu.getMultiply(recent['enabled_mods'], EZbuff=1, Mtype=2)
+		(mul, mod_list) = bot_osu.getMultiply(recent['enabled_mods'], EZbuff=1.6, Mtype=2)
 		if not calAllowMod(mod_list):  # mod要求不符合，跳过
 			continue
-		bid = recent['beatmap_id']
 		current_chart_score = getOldResult(current_chart, bid)
 		new_chart_score = calChartScore(recent, pp, mul)
+		print('uid:%s, bid:%s, old:%.2f, new:%.2f' % (uid, bid, current_chart_score, new_chart_score))
 		# 对于每一条chart信息,0:uid,1:bid,2:turns,3:pp,4:c300,5:c100,6:c50,7:c0,8:score,9:combo,10:acc,11:rank,12:mod,13:mul,14:time,15:mode,16:result
 		if new_chart_score > current_chart_score:
 			acc = bot_osu.getAcc(recent['count300'], recent['count100'], recent['count50'], recent['countmiss'])
 			if current_chart_score == 0:
-				sql = 'INSERT INTO chart VALUES (%d, %s, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %.3f, %s, 0, %.2f)' % \
+				sql = 'INSERT INTO chart VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, \'%s\', %s, %.3f, \'%s\', \'0\', %.2f)' % \
 				    (uid, recent['beatmap_id'], now_turns, int(float(pp)), recent['count300'], recent['count100'], recent['count50'], recent['countmiss'],
 	                recent['score'], recent['maxcombo'], acc, recent['rank'], recent['enabled_mods'], mul, recent['date'], new_chart_score)
 			else:
-				sql = 'UPDATE chart SET current_pp=%d, count300=%s, count100=%s, count50=%s, count0=%s, map_score=%s, map_combo=%s, map_acc=%s, ' \
-				      'map_rank=%s, map_mod=%s, map_multiply=%.3f, map_time=%s, chart_score=%.2f WHERE uid=%s and bid=%s and turns=%s' %\
+				sql = 'UPDATE chart SET current_pp=%s, count300=%s, count100=%s, count50=%s, count0=%s, map_score=%s, map_combo=%s, map_acc=%s, ' \
+				      'map_rank=\'%s\', map_mod=%s, map_multiply=%.3f, map_time=\'%s\', chart_score=%.2f WHERE uid=%s and bid=%s and turns=%s' %\
 				      (int(float(pp)), recent['count300'], recent['count100'], recent['count50'], recent['countmiss'], recent['score'],
 				       recent['maxcombo'], acc, recent['rank'], recent['enabled_mods'], mul, recent['date'], new_chart_score,
 				       uid, bid, now_turns)
@@ -82,9 +83,10 @@ def calAllowMod(mod_list):
 
 def calChartScore(playmsg, user_pp, mod_mul):
 	acc = float(bot_osu.getAcc(playmsg['count300'], playmsg['count100'], playmsg['count50'], playmsg['countmiss'])) / 100
-	combo = playmsg['maxcombo']
-	miss = playmsg['countmiss']
-	result = (acc**2 * combo**0.5 - user_pp // 200 - miss) * mod_mul
+	combo = int(playmsg['maxcombo'])
+	pp = int(float(user_pp))
+	miss = int(playmsg['countmiss'])
+	result = (10 + acc**2 * combo**0.5 - pp / 500 - miss / 5) * mod_mul
 	return result
 
 
@@ -113,7 +115,7 @@ def myChart(user_qq):
 	# 对于每一条chart信息,0:uid,1:bid,2:turns,3:pp,4:c300,5:c100,6:c50,7:c0,8:score,9:combo,10:acc,11:rank,12:mod,13:mul,14:time,15:mode,16:result
 	msg = '%s的成绩如下(第%d期)' % (name, now_turns)
 	for chart in result:
-		msg = msg + '\nbid: %s\nscore: %s\ncombo: %s\nacc: %s%%\n评分: %s\nchart得分: %s' % \
-		            (chart[1], chart[8], chart[9], chart[10], chart[11], chart[16])
+		msg = msg + '\n\nbid: %s\nmod: %s\nscore: %s\ncombo: %s\nacc: %s%%\n评分: %s\nchart得分: %.2f' % \
+		            (chart[1], bot_osu.getMod(chart[12]), chart[8], chart[9], chart[10], chart[11], chart[16])
 		chart_info.append({'turns': now_turns, 'bid': chart[1], 'result': chart[16]})
 	return msg, chart_info

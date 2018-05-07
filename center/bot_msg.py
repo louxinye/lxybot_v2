@@ -61,6 +61,9 @@ def MsgCenter(bot, context):
         if content == '!月常活动':
             msg = bot_getmsg.dalouCardGame()
             reply(bot, context, msg, atPeople=False)
+        elif content == '!chart活动':
+            msg = bot_getmsg.chartSystem()
+            reply(bot, context, msg, atPeople=False)
         elif content == '!找图系统':
             msg = bot_getmsg.ppSuggestSystem()
             reply(bot, context, msg, atPeople=False)
@@ -188,8 +191,8 @@ def MsgCenter(bot, context):
             reply(bot, context, msg, atPeople=False)
         elif '!addmoney' in content:
             bot_global.user_card_list_lock.acquire()
-            # msg = atPeople(context['user_id']) + bot_card.addMoney(context['user_id'], user_card_list)
-            msg = '别想着作弊啦,努力打图去吧'
+            msg = bot_card.addMoney(context['user_id'], user_card_list)
+            # msg = '别想着作弊啦,努力打图去吧'
             bot_global.user_card_list_lock.release()
             reply(bot, context, msg, atPeople=True)
 
@@ -323,7 +326,7 @@ def MsgCenter(bot, context):
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
 
-            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
+            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
                 if content == '!chart':
                     msg = bot_chart.getChart()
                     reply(bot, context, msg, atPeople=False)
@@ -331,7 +334,7 @@ def MsgCenter(bot, context):
                     msg = bot_chart.submitChart(context['user_id'])
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!mychart':
-                    msg = bot_chart.myChart(context['user_id'])
+                    (msg, a) = bot_chart.myChart(context['user_id'])
                     reply(bot, context, msg, atPeople=True)
                 # elif content == '!rankchart':
                 #     msg = bot_chart.rankChart(context['user_id'])
