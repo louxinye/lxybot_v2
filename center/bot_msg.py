@@ -326,6 +326,7 @@ def MsgCenter(bot, context):
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
 
+            # 主群chart活动
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
                 if content == '!chart':
                     msg = bot_chart.getChart()
@@ -341,9 +342,10 @@ def MsgCenter(bot, context):
                     bot_global.sql_action_lock.release()
                     reply(bot, context, chartinfo['msg'], atPeople=True)
                 elif '!rankchart' in content:
+                    bot_global.sql_action_lock.acquire()
                     msg = bot_chart.rankChart(content)
+                    bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=False)
-
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:
@@ -387,12 +389,13 @@ def MsgCenter(bot, context):
 
             # 私聊解禁
             if context['message_type'] == 'private' and '!remove' in content:
-                (msg, remove_group_i) = bot_msgcheck.remove(content)
-                if remove_group_i > -1:
-                    if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
-                        msg = '臣妾做不到啊(不是管理员)'
-                    else:
-                        bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
+                # (msg, remove_group_i) = bot_msgcheck.remove(content)
+                # if remove_group_i > -1:
+                #     if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
+                #         msg = '臣妾做不到啊(不是管理员)'
+                #     else:
+                #         bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
+                msg = '此功能暂时关闭'
                 reply(bot, context, msg, atPeople=False)
 
 
