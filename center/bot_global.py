@@ -38,7 +38,7 @@ group_bp_list = getGroupList([1, 2, 4, 5])
 # 管理员存在的群代号:
 group_dog_list = getGroupList([0, 1, 2, 5])
 # 权限者qq号
-dog_list = [1061566571, 3059841053, 1773805744]
+dog_list = [1061566571, 3059841053, 1773805744, 2575009695]
 # 本bot的qq号
 host_list = [3082577334]
 # 屏蔽qq号,群聊时无视这些人的发言

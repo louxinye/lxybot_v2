@@ -38,6 +38,7 @@ def MsgCenter(bot, context):
     content = content.replace('&amp;', '&')
     if content and content[0] == '！':
         content = content.replace('！', '!', 1)
+    print(content)
 
     # 无权限指令
     if content == '!hello':
@@ -301,6 +302,18 @@ def MsgCenter(bot, context):
                     game_member = 0
                     msg = '咩羊游戏解除'
                     reply(bot, context, msg, atPeople=False)
+                elif context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
+                    if '!smoke' in content:
+                        (msg, success, user, smoke) = bot_msgcheck.sendSmoke(content)
+                        if success:
+                            bot.set_group_ban(group_id=context['group_id'], user_id=user, duration=smoke)
+                        reply(bot, context, msg, atPeople=False)
+                    elif '!unsmoke' in content:
+                        (msg, success, user) = bot_msgcheck.removeSmoke(content)
+                        if success:
+                            bot.set_group_ban(group_id=context['group_id'], user_id=user, duration=0)
+                        reply(bot, context, msg, atPeople=False)
+
 
             # 需要管理员身份的群聊指令
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
@@ -326,6 +339,7 @@ def MsgCenter(bot, context):
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
 
+            '''
             # 主群chart活动
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
                 if content == '!chart':
@@ -346,6 +360,7 @@ def MsgCenter(bot, context):
                     msg = bot_chart.rankChart(content)
                     bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=False)
+            '''
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:

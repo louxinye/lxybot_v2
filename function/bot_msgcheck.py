@@ -73,3 +73,71 @@ def remove(content):
     else:
         msg = '无法识别,bot猜测您是想使用指令!remove x(x为参数)'
     return msg, num
+
+
+def sendSmoke(content):
+    success = 0
+    smoke = 0
+    qq = 0
+    if content == '!smoke':
+        msg = '我觉得你在逗我'
+    else:
+        check_msg = re.match(r'^!smoke\[CQ:at,qq=([1-9][0-9]*)\] ([0-9smhd]*)$', content)
+        if check_msg:
+            qq = int(check_msg.group(1))
+            time = str(check_msg.group(2))
+            if not time:
+                smoke = 60
+                msg = '操作执行成功: %s秒' % smoke
+                success = 1
+            else:
+                check_time = re.findall(r'([1-9][0-9]*[smhd])', time)
+                print(check_time)
+                get_len = 0
+                for single_time in check_time:
+                    print(single_time)
+                    get_len = get_len + len(single_time)
+                    temp_time = int(re.match(r'^([1-9][0-9]*)[smhd]$', single_time).group(1))
+                    temp_multy = getTimeMul(str(re.match(r'^[1-9][0-9]*([smhd])$', single_time).group(1)))
+                    smoke = smoke + temp_time * temp_multy
+                if get_len == len(time):
+                    if smoke > 2591940:
+                        smoke = 2591940
+                    msg = '操作执行成功: %s秒' % smoke
+                    success = 1
+                else:
+                    msg = '时间计算好像出了点问题= ='
+        else:
+            msg = '您的!smoke指令使用错误'
+    return msg, success, qq, smoke
+
+
+def removeSmoke(content):
+    success = 0
+    qq = 0
+    if content == '!unsmoke':
+        msg = '我觉得你在逗我'
+    else:
+        check_msg = re.match(r'^!unsmoke\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+        if check_msg:
+            qq = int(check_msg.group(1))
+            msg = '操作执行成功: 0秒'
+            success = 1
+        else:
+            msg = '您的!unsmoke指令使用错误'
+    return msg, success, qq
+
+
+
+def getTimeMul(a):
+    if a == 'd':
+        return 86400
+    if a == 'h':
+        return 3600
+    if a == 'm':
+        return 60
+    else:
+        return 1
+
+
+# sendSmoke('!smoke[CQ:at,qq=2575009695] 1d2h3m4s')
