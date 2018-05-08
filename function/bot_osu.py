@@ -347,31 +347,31 @@ def setSQL(user_qq, content):
     return msg
 
 
-# 查询并更新用户信息
-def searchUserInfo(user_qq):
+# 查询用户信息,如果update为True则会将新信息更新进数据库
+def searchUserInfo(user_qq, update=True):
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
     result = bot_SQL.select(sql)
     if not result:
         msg = '您未绑定! (请使用!myid)'
-        return msg, 0, 0
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0}
     uid = result[0][1]
     (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')
     if not uid:
         msg = 'pp查询出错,请稍后再试'
-        return msg, 0, 0
-    sql = 'UPDATE user SET name = \'%s\', pp = %.2f, pc = %d, tth = %d, acc= %.2f WHERE qq = %d and mode = 0' \
-          % (name, pp, pc, tth, acc, user_qq)
-    success = bot_SQL.action(sql)
-    if success:
-        pp_up = addCal(pp - result[0][3], floatnum=2)
-        pc_up = addCal(pc - result[0][4])
-        tth_up = addCal(tth - result[0][5])
-        acc_up = addCal(acc - result[0][6],floatnum=2)
-        msg = '玩家信息:\nname: %s\npp: %s (%s)\npc: %s (%s)\ntth: %s (%s)\nacc: %.2f%% (%s)\n括号内数据是对比上次查询后的变化'\
-              % (name, pp, pp_up, pc, pc_up, tth, tth_up, acc, acc_up)
-    else:
-        msg = '数据库记录出错，请联系Dalou!'
-    return msg, uid, pp
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0}
+    pp_up = addCal(pp - result[0][3], floatnum=2)
+    pc_up = addCal(pc - result[0][4])
+    tth_up = addCal(tth - result[0][5])
+    acc_up = addCal(acc - result[0][6], floatnum=2)
+    msg = '玩家信息:\nname: %s\npp: %s (%s)\npc: %s (%s)\ntth: %s (%s)\nacc: %.2f%% (%s)\n括号内数据是对比上次查询后的变化' \
+          % (name, pp, pp_up, pc, pc_up, tth, tth_up, acc, acc_up)
+    if update:
+        sql = 'UPDATE user SET name = \'%s\', pp = %.2f, pc = %d, tth = %d, acc= %.2f WHERE qq = %d and mode = 0' \
+              % (name, pp, pc, tth, acc, user_qq)
+        success = bot_SQL.action(sql)
+        if not success:
+            msg = '数据库记录出错，请联系Dalou!'
+    return {'msg': msg, 'uid': uid, 'name': name, 'pp': pp}
 
 
 # 增量显示

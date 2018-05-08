@@ -94,9 +94,9 @@ def MsgCenter(bot, context):
             reply(bot, context, msg, atPeople=True)
         elif content == '!pp':
             bot_global.sql_action_lock.acquire()
-            (msg, a2, a3) = bot_osu.searchUserInfo(context['user_id'])
+            userinfo = bot_osu.searchUserInfo(context['user_id'])
             bot_global.sql_action_lock.release()
-            reply(bot, context, msg, atPeople=True)
+            reply(bot, context, userinfo['msg'], atPeople=True)
 
         # 月常活动
         elif '!start_card' in content:
@@ -331,14 +331,18 @@ def MsgCenter(bot, context):
                     msg = bot_chart.getChart()
                     reply(bot, context, msg, atPeople=False)
                 elif content == '!submit':
+                    bot_global.sql_action_lock.acquire()
                     msg = bot_chart.submitChart(context['user_id'])
+                    bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!mychart':
-                    (msg, a) = bot_chart.myChart(context['user_id'])
-                    reply(bot, context, msg, atPeople=True)
-                # elif content == '!rankchart':
-                #     msg = bot_chart.rankChart(context['user_id'])
-                #     reply(bot, context, msg, atPeople=False)
+                    bot_global.sql_action_lock.acquire()
+                    chartinfo = bot_chart.myChart(context['user_id'])
+                    bot_global.sql_action_lock.release()
+                    reply(bot, context, chartinfo['msg'], atPeople=True)
+                elif '!rankchart' in content:
+                    msg = bot_chart.rankChart(content)
+                    reply(bot, context, msg, atPeople=False)
 
 
             # 健康系统计算
