@@ -339,7 +339,6 @@ def MsgCenter(bot, context):
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
 
-            '''
             # 主群chart活动
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
                 if content == '!chart':
@@ -352,15 +351,14 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!mychart':
                     bot_global.sql_action_lock.acquire()
-                    chartinfo = bot_chart.myChart(context['user_id'])
+                    chartinfo = bot_chart.myChart(context['user_id'],getMsg=True)
                     bot_global.sql_action_lock.release()
                     reply(bot, context, chartinfo['msg'], atPeople=True)
-                elif '!rankchart' in content:
+                elif '!topchart' in content:
                     bot_global.sql_action_lock.acquire()
                     msg = bot_chart.rankChart(content)
                     bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=False)
-            '''
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:

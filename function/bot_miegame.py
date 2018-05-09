@@ -215,7 +215,7 @@ def startGame(game_member, member_qq, content):
                 msg = '难度输入有误'
     else:
         level_max = 0
-        msg = '无法识别,bot猜测您是想使用指令!game x (x为参数,缺省值2)'
+        msg = '无法识别,bot猜测您是想使用指令!game_mie x (x为参数,缺省值2)'
     return msg, level_max
 
 

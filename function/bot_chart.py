@@ -5,7 +5,7 @@ from function import bot_osu
 from function import bot_SQL
 
 
-chart_bid = [1580728, 155929, 1577222]
+chart_bid = [1113308, 1116219, 476149]
 now_turns = 1
 force_mod = []
 allow_mod = ['EZ', 'HR', 'HD', 'SD', 'PF', 'DT', 'NC', 'FL', 'SO']
@@ -160,10 +160,10 @@ def outputRankMsg(turns, bid=0, single_max_num=7, all_max_num=3):
 
 # 获取chart图排名信息,接受用户指令且用于最终输出
 def rankChart(content):
-    if content == '!rankchart':
+    if content == '!chart_top':
         msg = outputRankMsg(now_turns)
-    elif '!rankchart ' in content:
-        check_bid = re.match(r'^!rankchart ([1-9][0-9]*)$', content)
+    elif '!chart_top ' in content:
+        check_bid = re.match(r'^!chart_top ([1-9][0-9]*)$', content)
         if check_bid:
             bid = int(check_bid.group(1))
             if bid not in chart_bid:
@@ -171,9 +171,9 @@ def rankChart(content):
             else:
                 msg = outputRankMsg(now_turns, bid=bid)
         else:
-            msg = '您的!rankchart指令使用错误'
+            msg = '您的!chart_top指令使用错误'
     else:
-        msg = '无法识别,推测您是想使用指令!rankchart x(x为参数)'
+        msg = '无法识别,推测您是想使用指令!chart_top x(x为参数)'
     return msg
 
 
@@ -193,7 +193,7 @@ def printAllow(list_m):
     msg = ''
     for name in list_m:
         if not msg:
-            msg = msg + name
+            msg = msg + '%s' % name
         else:
             msg = msg + ',%s' % name
     if not msg:
