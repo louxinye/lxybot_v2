@@ -12,7 +12,7 @@ def getHelp():
 !remove 私聊解禁
 !roll   随机取数(可选参数)
 !myid   绑定id
-!pp     速查信息
+!mypp   速查信息
 !找图系统
 !健康系统
 !监视系统

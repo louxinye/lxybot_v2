@@ -93,7 +93,7 @@ def MsgCenter(bot, context):
             msg = bot_osu.setSQL(context['user_id'], content)
             bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
-        elif content == '!pp':
+        elif content == '!mypp':
             bot_global.sql_action_lock.acquire()
             userinfo = bot_osu.searchUserInfo(context['user_id'])
             bot_global.sql_action_lock.release()
