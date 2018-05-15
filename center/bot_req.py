@@ -24,4 +24,6 @@ def getGroupName(i):
 		return '主群'
 	if i == 1:
 		return '分群'
+	if i == 2:
+		return '后花园'
 	return '鬼知道什么群'
