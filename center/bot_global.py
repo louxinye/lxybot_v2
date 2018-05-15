@@ -24,19 +24,19 @@ def getGroupList(list_g):
 	return list_g
 
 
-# 适用群列表: 0主群,1分群,2喵呜,3要饭,4队群,5娱乐群,6贫民窟,7管理群
-group_total_list = [614892339, 514661057, 326389728, 641236878, 693657455, 102171745, 204124585, 695600319]
+# 适用群列表: 0主群,1分群,2后花园,3喵呜,4要饭,5队群,6娱乐群,7贫民窟,8管理群
+group_total_list = [614892339, 758120648, 514661057, 326389728, 641236878, 693657455, 102171745, 204124585, 695600319]
 discuss_total_list = []
 # 新人群代号:
-group_main_list = getGroupList([0, 1])
+group_main_list = getGroupList([0, 1, 2])
 # chart群代号:
-group_chart_list = getGroupList([0, 7])
+group_chart_list = getGroupList([0, 8])
 # 新人群管理群代号:
-group_main_admin_list = getGroupList([7])
+group_main_admin_list = getGroupList([8])
 # bp监视适用群代号:
-group_bp_list = getGroupList([1, 2, 4, 5])
+group_bp_list = getGroupList([2, 3, 4, 6])
 # 管理员存在的群代号:
-group_dog_list = getGroupList([0, 1, 2, 5])
+group_dog_list = getGroupList([0, 1, 2, 3, 6])
 # 权限者qq号
 dog_list = [1061566571, 3059841053, 1773805744, 2575009695]
 # 本bot的qq号

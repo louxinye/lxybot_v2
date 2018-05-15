@@ -32,7 +32,7 @@ def submitChart(user_qq):
             continue
         if recent['rank'] == 'F':  # fail，跳过
             continue
-        (mul, mod_list) = bot_osu.getMultiply(recent['enabled_mods'], EZbuff=1.6, Mtype=2)
+        (mul, mod_list) = bot_osu.getMultiply(recent['enabled_mods'], EZbuff=1.8, Mtype=2)
         if not calAllowMod(mod_list):  # mod要求不符合，跳过
             continue
         index = chart_bid.index(bid)
@@ -89,7 +89,7 @@ def calChartScore(playmsg, user_pp, mod_mul):
     combo = int(playmsg['maxcombo'])
     pp = int(float(user_pp))
     miss = int(playmsg['countmiss'])
-    result = (15 + acc**2 * combo**0.5 - pp * 0.004 - miss * 0.2) * mod_mul
+    result = (15 + acc**2 * combo**0.5 - pp * 0.004 - miss * 0.25) * mod_mul
     return result
 
 

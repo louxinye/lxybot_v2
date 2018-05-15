@@ -192,8 +192,8 @@ def MsgCenter(bot, context):
             reply(bot, context, msg, atPeople=False)
         elif '!addmoney' in content:
             bot_global.user_card_list_lock.acquire()
-            msg = bot_card.addMoney(context['user_id'], user_card_list)
-            # msg = '别想着作弊啦,努力打图去吧'
+            # msg = bot_card.addMoney(context['user_id'], user_card_list)
+            msg = '别想着作弊啦,努力打图去吧'
             bot_global.user_card_list_lock.release()
             reply(bot, context, msg, atPeople=True)
 
