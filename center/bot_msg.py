@@ -83,12 +83,41 @@ def MsgCenter(bot, context):
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
-        elif 'baka' in content or 'ba—ka!!' in content:
+            
+        # 彩蛋
+        if 'baka' in content or 'ba—ka!!' in content:
             msg = 'ba—ka!!'
+            reply(bot, context, msg, atPeople=False)
+        elif '成精' in content:
+            msg = '那就打死'
+            reply(bot, context, msg, atPeople=False)
+        elif '删游戏' in content:
+            msg = 'zz才玩这游戏.jpg'
+            reply(bot, context, msg, atPeople=False)
+        elif '8012' in content:
+            msg = '咋了不服啊'
+            reply(bot, context, msg, atPeople=False)
+        elif '200bp' in content or '200+bp' in content:
+            msg = '这还不踢？'
+            reply(bot, context, msg, atPeople=False)
+        elif 'cbcc' in content or 'CBCC' in content:
+            msg = '真香'
+            reply(bot, context, msg, atPeople=False)
+        elif '冷群' in content or '凉了' in content:
+            msg = '那就再热热呗'
+            reply(bot, context, msg, atPeople=False)
+        elif ('ez' in content or 'EZ' in content) and ('mp' in content or 'MP' in content):
+            msg = '我也要来'
+            reply(bot, context, msg, atPeople=False)
+        elif ('heisiban' in content or 'ever' in content or 'miku' in content or '杰克王' in content) and '无敌' in content:
+            msg = '啊我死了'
+            reply(bot, context, msg, atPeople=False)
+        elif '彩蛋' in content:
+            msg = '你知道吗，本bot偷偷设置了十个彩蛋哦（包括此条回复）'
             reply(bot, context, msg, atPeople=False)
 
         # osu基本功能
-        elif '!myid' in content:
+        if '!myid' in content:
             bot_global.sql_action_lock.acquire()
             msg = bot_osu.setSQL(context['user_id'], content)
             bot_global.sql_action_lock.release()
@@ -354,7 +383,7 @@ def MsgCenter(bot, context):
                     chartinfo = bot_chart.myChart(context['user_id'],getMsg=True)
                     bot_global.sql_action_lock.release()
                     reply(bot, context, chartinfo['msg'], atPeople=True)
-                elif '!topchart' in content:
+                elif '!chart_top' in content:
                     bot_global.sql_action_lock.acquire()
                     msg = bot_chart.rankChart(content)
                     bot_global.sql_action_lock.release()
@@ -402,13 +431,15 @@ def MsgCenter(bot, context):
 
             # 私聊解禁
             if context['message_type'] == 'private' and '!remove' in content:
-                # (msg, remove_group_i) = bot_msgcheck.remove(content)
-                # if remove_group_i > -1:
-                #     if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
-                #         msg = '臣妾做不到啊(不是管理员)'
-                #     else:
-                #         bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
-                msg = '此功能暂时关闭'
+                if context['user_id'] in bot_global.dog_list:
+                    (msg, remove_group_i) = bot_msgcheck.remove(content)
+                    if remove_group_i > -1:
+                        if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
+                            msg = '臣妾做不到啊(不是管理员)'
+                        else:
+                            bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
+                else:
+                    msg = '此功能暂时关闭'
                 reply(bot, context, msg, atPeople=False)
 
 
