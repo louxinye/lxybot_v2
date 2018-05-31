@@ -343,7 +343,6 @@ def MsgCenter(bot, context):
                             bot.set_group_ban(group_id=context['group_id'], user_id=user, duration=0)
                         reply(bot, context, msg, atPeople=False)
 
-
             # 需要管理员身份的群聊指令
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
                 if content == '!cnm':
