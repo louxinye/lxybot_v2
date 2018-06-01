@@ -369,6 +369,7 @@ def MsgCenter(bot, context):
                         if check_egg:
                             reply(bot, context, egg['reply'], atPeople=False)
                             if not egg['unlock_qq']:
+                                bot_global.sql_action_lock.acquire()
                                 egg['unlock_name'] = bot_osu.searchUserInfo(context['user_id'])['name']
                                 egg['unlock_qq'] = context['user_id']
                                 if egg['unlock_name']:
@@ -386,6 +387,8 @@ def MsgCenter(bot, context):
                                         break
                                 if all_unlock:
                                     reply(bot, context, msg1, atPeople=False)
+                                bot_global.sql_action_lock.release()
+                                break
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:
