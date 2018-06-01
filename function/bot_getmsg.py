@@ -170,7 +170,7 @@ def eggL(list_e):
                 msg = msg + '\n%s, %s, %s' % (egg['id'], egg['keyword'], egg['unlock_name'])
             else:
                 msg = msg + '\n%s, %s, QQ号%s' % (egg['id'], egg['keyword'], egg['unlock_qq'])
-    msg = msg + '群聊如果带有关键词则会解锁彩蛋，但请注意，若含有图片、表情、艾特人则不会触发。本期彩蛋总数: %s' % len(list_e)
+    msg = msg + '\n群聊如果带有关键词则会解锁彩蛋，但请注意，若含有图片、表情、艾特人则不会触发。本期彩蛋总数: %s' % len(list_e)
     return msg
 
 
