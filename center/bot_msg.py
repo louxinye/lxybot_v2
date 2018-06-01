@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import time
+import re
 from center import bot_global
 from function import bot_getmsg
 from function import bot_suggest
@@ -23,6 +24,7 @@ game_diff = 0
 # 恢复活动列表和健康列表
 user_card_list = bot_IOfile.read_pkl_data('data/data_card_game_list.pkl')
 health_list = bot_IOfile.read_pkl_data('data/data_health_list.pkl')
+egg_list = bot_IOfile.read_pkl_data('data/data_egg_list.pkl')
 
 
 def MsgCenter(bot, context):
@@ -80,44 +82,15 @@ def MsgCenter(bot, context):
         elif content == '!dog':
             msg = bot_getmsg.dogL(bot_global.dog_list)
             reply(bot, context, msg, atPeople=False)
+        elif content == '!egg':
+            msg = bot_getmsg.eggL(egg_list)
+            reply(bot, context, msg, atPeople=False)
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
-            
-        # 彩蛋
-        if 'baka' in content or 'ba—ka!!' in content:
-            msg = 'ba—ka!!'
-            reply(bot, context, msg, atPeople=False)
-        elif '成精' in content:
-            msg = '那就打死'
-            reply(bot, context, msg, atPeople=False)
-        elif '删游戏' in content:
-            msg = 'zz才玩这游戏.jpg'
-            reply(bot, context, msg, atPeople=False)
-        elif '8012' in content:
-            msg = '咋了不服啊'
-            reply(bot, context, msg, atPeople=False)
-        elif '200bp' in content or '200+bp' in content:
-            msg = '这还不踢？'
-            reply(bot, context, msg, atPeople=False)
-        elif 'cbcc' in content or 'CBCC' in content:
-            msg = '真香'
-            reply(bot, context, msg, atPeople=False)
-        elif '冷群' in content or '凉了' in content:
-            msg = '那就再热热呗'
-            reply(bot, context, msg, atPeople=False)
-        elif ('ez' in content or 'EZ' in content) and ('mp' in content or 'MP' in content):
-            msg = '我也要来'
-            reply(bot, context, msg, atPeople=False)
-        elif ('heisiban' in content or 'ever' in content or 'miku' in content or '杰克王' in content) and '无敌' in content:
-            msg = '啊我死了'
-            reply(bot, context, msg, atPeople=False)
-        elif '彩蛋' in content:
-            msg = '你知道吗，本bot偷偷设置了十个彩蛋哦（包括此条回复）'
-            reply(bot, context, msg, atPeople=False)
 
         # osu基本功能
-        if '!myid' in content:
+        elif '!myid' in content:
             bot_global.sql_action_lock.acquire()
             msg = bot_osu.setSQL(context['user_id'], content)
             bot_global.sql_action_lock.release()
@@ -387,6 +360,32 @@ def MsgCenter(bot, context):
                     msg = bot_chart.rankChart(content)
                     bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=False)
+
+            # 新人群彩蛋
+            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
+                for egg in egg_list:
+                    if '[CQ:' not in content:
+                        check_egg = re.match(r'%s' % egg['expression'], content)
+                        if check_egg:
+                            reply(bot, context, egg['reply'], atPeople=False)
+                            if not egg['unlock_qq']:
+                                egg['unlock_name'] = bot_osu.searchUserInfo(context['user_id'])['name']
+                                egg['unlock_qq'] = context['user_id']
+                                if egg['unlock_name']:
+                                    msg = '大伙注意啦, %s解锁了%s号彩蛋' % (egg['unlock_name'], egg['id'])
+                                    msg1 = '全部彩蛋解锁完毕，恭喜%s得到撒泼特一个月' % egg['unlock_name']
+                                else:
+                                    msg = '大伙注意啦, QQ号%s解锁了%s号彩蛋' % (egg['unlock_qq'], egg['id'])
+                                    msg1 = '全部彩蛋解锁完毕，恭喜QQ号%s得到撒泼特一个月' % egg['unlock_qq']
+                                bot_IOfile.write_pkl_data(egg_list, 'data/data_egg_list.pkl')
+                                reply(bot, context, msg, atPeople=False)
+                                all_unlock = True
+                                for eggs in egg_list:
+                                    if not eggs['unlock_qq']:
+                                        all_unlock = False
+                                        break
+                                if all_unlock:
+                                    reply(bot, context, msg1, atPeople=False)
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:

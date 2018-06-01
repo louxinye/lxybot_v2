@@ -21,7 +21,7 @@ def getHelp():
 !chart活动
 !dog   查询bot权限者
 
-v2.03 测试版'''
+v2.10 正式版'''
     return txt
 
 
@@ -119,7 +119,7 @@ def dalouCardGame():
 2.相同卡会自动强化等级+1
 3.活动pt为你的仓库全部卡价值总和
 4.除了注册，其余指令均可以私聊
-5.第四期活动截止5月31日晚'''
+5.第五期活动截止6月30日晚'''
     return txt
 
 
@@ -159,6 +159,18 @@ def dogL(list_d):
     for user in list_d:
         msg = msg + '%s\n' % user
     msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!smoke@  !unsmoke@\n!update  !updateall\n!ban_card'
+    return msg
+
+
+def eggL(list_e):
+    msg = '本期已解锁彩蛋信息如下:\n编号, 关键词, 解锁者'
+    for egg in list_e:
+        if egg['unlock_qq']:
+            if egg['unlock_name']:
+                msg = msg + '\n%s, %s, %s' % (egg['id'], egg['keyword'], egg['unlock_name'])
+            else:
+                msg = msg + '\n%s, %s, QQ号%s' % (egg['id'], egg['keyword'], egg['unlock_qq'])
+    msg = msg + '群聊如果带有关键词则会解锁彩蛋，但请注意，若含有图片、表情、艾特人则不会触发。本期彩蛋总数: %s' % len(list_e)
     return msg
 
 
