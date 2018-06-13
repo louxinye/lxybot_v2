@@ -5,10 +5,10 @@ from function import bot_osu
 from center import bot_global
 
 
-def JobCenter(bot, maxcount):
+def bpCareCenter(bot, maxcount):
     count = 0
     while count < maxcount:
-        print('定时任务启动')
+        print('bp监视任务触发')
         if bot_global.bp_watch:
             count = count + 1
             msg = '开始查询BP\n本次为bot启动后第%s次查询' % count
@@ -60,3 +60,23 @@ def JobCenter(bot, maxcount):
             time.sleep(600)
         else:
             time.sleep(60)
+
+
+def killCenter(bot):
+    while(True):
+        print('踢人倒计时触发')
+        member_num = len(bot_global.kill_list)
+        if member_num > 0:
+            for i in range(member_num-1, -1, -1):
+                bot_global.kill_list[i]['time'] = bot_global.kill_list[i]['time'] - 1
+                if bot_global.kill_list[i]['time'] == 0:
+                    group = bot_global.kill_list[i]['group']
+                    qq = bot_global.kill_list[i]['qq']
+                    msg = '操作执行成功: 踢出QQ号%s' % qq
+                    del bot_global.kill_list[i]
+                    try:
+                        bot.set_group_kick(group_id=group, user_id=qq)
+                        bot.send_group_msg(group_id=group, message=msg)
+                    except:
+                        pass
+        time.sleep(60)

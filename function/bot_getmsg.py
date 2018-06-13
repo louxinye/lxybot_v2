@@ -9,7 +9,7 @@ def getHelp():
 !rest   1小时休息套餐
 !sleep  6小时睡眠套餐
 !afk    闭群套餐(可选参数)
-!remove 私聊解禁
+!remove 私聊解禁(关闭)
 !roll   随机取数(可选参数)
 !myid   绑定id
 !mypp   速查信息
@@ -114,6 +114,7 @@ def dalouCardGame():
 ☆!card: 查询玩家图鉴(参数为osuid)
 ☆!card_p: 查询抽卡概率
 ☆!card_v: 查询卡牌价值
+☆!boom: 爆炸(-30金币)
 活动说明:
 1.玩家可以通过打图来涨金币,金币可以用来抽卡
 2.相同卡会自动强化等级+1
@@ -159,6 +160,14 @@ def dogL(list_d):
     for user in list_d:
         msg = msg + '%s\n' % user
     msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!smoke@  !unsmoke@\n!update  !updateall\n!ban_card'
+    return msg
+
+
+def killL(list_k):
+    msg = '即将被踢的成员如下(QQ号):\n'
+    msg = msg + '群号, QQ号, 剩余时间(分)'
+    for user in list_k:
+        msg = msg + '\n%s, %s, %s' % (user['group'], user['qq'], user['time'])
     return msg
 
 

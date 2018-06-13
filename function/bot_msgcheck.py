@@ -2,6 +2,7 @@
 # 带有参数的部分指令检查系统
 import random
 import re
+from center import bot_global
 
 
 # 函数功能:!afk指令检查
@@ -128,6 +129,52 @@ def removeSmoke(content):
     return msg, success, qq
 
 
+def sendKill(bot, list_k, group, content):
+    success = True
+    check_user = re.match(r'!kill\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+    if check_user:
+        qq = int(check_user.group(1))
+        if qq in bot_global.dog_list:
+            return '不许欺负bot权限者!'
+        if qq in bot_global.host_list:
+            return '不许欺负我!'
+        user_info = getGroupMemberInfo(bot, group, qq)
+        if user_info and user_info['role'] == 'admin':
+            return '不许欺负狗管理!'
+        if user_info and user_info['role'] == 'owner':
+            return '不许欺负狗群主!'
+        for i in range(len(list_k)):
+            if group == list_k[i]["group"] and qq == list_k[i]["qq"]:
+                success = False
+                break
+        if success:
+            list_k.append({"group": group, "qq": qq, "time": 60})
+            msg = '已获得飞机票,现在进入60分钟遗言时间'
+        else:
+            msg = '这人已经有机票了'
+    else:
+        msg = '您的!kill指令使用错误'
+    return msg
+
+
+def stopKill(list_k, group, content):
+    success = False
+    check_user = re.match(r'!stop_k\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+    if check_user:
+        qq = int(check_user.group(1))
+        for i in range(len(list_k)):
+            if group == list_k[i]["group"] and qq == list_k[i]["qq"]:
+                success = True
+                del list_k[i]
+                break
+        if success:
+            msg = '已取消此用户的机票'
+        else:
+            msg = '此用户没有机票'
+    else:
+        msg = '您的!stop_k指令使用错误'
+    return msg
+
 
 def getTimeMul(a):
     if a == 'd':
@@ -140,4 +187,9 @@ def getTimeMul(a):
         return 1
 
 
-# sendSmoke('!smoke[CQ:at,qq=2575009695] 1d2h3m4s')
+def getGroupMemberInfo(bot, groupid, memberqq):
+    result = bot.get_group_member_info(group_id=groupid, user_id=memberqq)
+    if 'user_id' in result:
+        return result
+    else:
+        return {}

@@ -85,6 +85,9 @@ def MsgCenter(bot, context):
         elif content == '!egg':
             msg = bot_getmsg.eggL(egg_list)
             reply(bot, context, msg, atPeople=False)
+        elif content == '!kill':
+            msg = bot_getmsg.killL(bot_global.kill_list)
+            reply(bot, context, msg, atPeople=False)
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
@@ -198,6 +201,14 @@ def MsgCenter(bot, context):
             msg = '别想着作弊啦,努力打图去吧'
             bot_global.user_card_list_lock.release()
             reply(bot, context, msg, atPeople=True)
+        elif context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list and '!boom' in content:
+            bot_global.user_card_list_lock.acquire()
+            (msg, success, user, smoke1, smoke2) = bot_card.sendBoom(user_card_list, context['user_id'], content)
+            bot_global.user_card_list_lock.release()
+            if success:
+                bot.set_group_ban(group_id=context['group_id'], user_id=user, duration=smoke1)
+                bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke2)
+            reply(bot, context, msg, atPeople=True)
 
         # 找图系统
         elif '!getmap' in content:
@@ -304,6 +315,9 @@ def MsgCenter(bot, context):
                     game_member = 0
                     msg = '咩羊游戏解除'
                     reply(bot, context, msg, atPeople=False)
+                elif '!测试' in content:
+                    msg = '%s' % bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], context['user_id'])
+                    reply(bot, context, msg, atPeople=False)
                 elif context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
                     if '!smoke' in content:
                         (msg, success, user, smoke) = bot_msgcheck.sendSmoke(content)
@@ -315,6 +329,13 @@ def MsgCenter(bot, context):
                         if success:
                             bot.set_group_ban(group_id=context['group_id'], user_id=user, duration=0)
                         reply(bot, context, msg, atPeople=False)
+                    elif '!kill' in content:
+                        msg = bot_msgcheck.sendKill(bot, bot_global.kill_list, context['group_id'], content)
+                        reply(bot, context, msg, atPeople=False)
+                    elif '!stop_k' in content:
+                        msg = bot_msgcheck.stopKill(bot_global.kill_list, context['group_id'], content)
+                        reply(bot, context, msg, atPeople=False)
+
 
             # 需要管理员身份的群聊指令
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
@@ -339,6 +360,7 @@ def MsgCenter(bot, context):
                         bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
+
 
             # 主群chart活动
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
@@ -388,7 +410,7 @@ def MsgCenter(bot, context):
                                 if all_unlock:
                                     reply(bot, context, msg1, atPeople=False)
                                 bot_global.sql_action_lock.release()
-                                break
+                            break
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:
@@ -464,6 +486,14 @@ def verify(context, allowed):
         if context['message_type'] == 'private':
             return False
     return True
+
+
+def getGroupMemberInfo(bot, groupid, memberqq):
+    result = bot.get_group_member_info(group_id=groupid, user_id=memberqq)
+    if 'user_id' in result:
+        return result
+    else:
+        return {}
 
 
 # 加上艾特人的CQ头

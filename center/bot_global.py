@@ -47,5 +47,7 @@ ignore_list = [1677323371, 122866607, 1394932996, 1335734629, 2839098896, 109156
 repeat_num = [0, 0, 0, 0, 0, 0, 0, 0]
 # 当前复读语句, 和适用群一一对应
 repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message', 'message']
+# 踢人列表
+kill_list = []
 
 
