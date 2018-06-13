@@ -20,8 +20,9 @@ def getHelp():
 !月常活动
 !chart活动
 !dog   查询bot权限者
+!kill  查询踢人列表
 
-v2.10 正式版'''
+v2.20 正式版'''
     return txt
 
 
@@ -159,7 +160,8 @@ def dogL(list_d):
     msg = '权限者列表如下(QQ号):\n'
     for user in list_d:
         msg = msg + '%s\n' % user
-    msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!smoke@  !unsmoke@\n!update  !updateall\n!ban_card'
+    msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!kill@  !stop_k@\n' \
+                '!smoke@  !unsmoke@\n!update  !updateall\n!ban_card\n!stop_mie'
     return msg
 
 
