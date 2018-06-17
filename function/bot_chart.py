@@ -5,8 +5,8 @@ from function import bot_osu
 from function import bot_SQL
 
 
-chart_bid = [1113308, 1116219, 476149]
-now_turns = 1
+chart_bid = [995115, 482453, 507098]
+now_turns = 2
 force_mod = []
 allow_mod = ['EZ', 'HR', 'HD', 'SD', 'PF', 'DT', 'NC', 'FL', 'SO']
 
@@ -142,7 +142,7 @@ def getRankInfo(turns, bid):
 
 
 # 获取指定chart图的前几名的文本信息,若不指定bid则默认输出全体chart图
-def outputRankMsg(turns, bid=0, single_max_num=7, all_max_num=3):
+def outputRankMsg(turns, bid=0, single_max_num=10, all_max_num=3):
     if bid:
         result = getRankInfo(turns, bid)
         msg = 'bid: %s' % bid

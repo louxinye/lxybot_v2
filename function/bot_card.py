@@ -830,18 +830,21 @@ def sendBoom(list_c, card_member, content):
         return msg, success, qq, smoke1, smoke2
     for i in range(len(list_c)):
         if card_member == list_c[i]['qq']:
-            if list_c[i]['money'] < 30:
-                msg = '金币数量低于30! 快去打图'
+            now_boom_money = list_c[i]['boom_cost']
+            if list_c[i]['money'] < now_boom_money:
+                msg = '金币数量低于%s! 快去打图' % now_boom_money
             else:
                 check_msg = re.match(r'^!boom\[CQ:at,qq=([1-9][0-9]*)\]', content)
                 if check_msg:
-                    list_c[i]['money'] = list_c[i]['money'] - 30
-                    list_c[i]['boom_money'] = list_c[i]['boom_money'] + 30
+                    list_c[i]['money'] = list_c[i]['money'] - now_boom_money
+                    list_c[i]['boom_money'] = list_c[i]['boom_money'] + now_boom_money
+                    list_c[i]['boom_cost'] = list_c[i]['boom_cost'] + 2
                     bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
                     qq = int(check_msg.group(1))
                     smoke2 = random.randint(30, 200)
-                    smoke1 = int(smoke2 * random.uniform(0.5, 5))
-                    msg = '操作执行成功\n对方: %s秒, 自己: %s秒\n金币变更情况: %s → %s' % (smoke1, smoke2, list_c[i]['money']+30, list_c[i]['money'])
+                    smoke1 = int(smoke2 * random.uniform(0.5, 3))
+                    msg = '操作执行成功\n对方: %s秒, 自己: %s秒\n金币变更情况: %s → %s\n炸弹购买价格: %s → %s' \
+                          % (smoke1, smoke2, list_c[i]['money']+now_boom_money, list_c[i]['money'], list_c[i]['boom_cost']-2, list_c[i]['boom_cost'])
                     success = 1
                 else:
                     msg = '您的!boom指令使用错误(指令最后需要紧跟着艾特一个人)'

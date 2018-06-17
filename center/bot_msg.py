@@ -394,7 +394,7 @@ def MsgCenter(bot, context):
                                 bot_global.sql_action_lock.acquire()
                                 egg['unlock_name'] = bot_osu.searchUserInfo(context['user_id'])['name']
                                 egg['unlock_qq'] = context['user_id']
-                                if egg['unlock_name']:
+                                if egg['unlock_name'] and egg['unlock_name'] != '0':
                                     msg = '大伙注意啦, %s解锁了%s号彩蛋' % (egg['unlock_name'], egg['id'])
                                     msg1 = '全部彩蛋解锁完毕，恭喜%s得到撒泼特一个月' % egg['unlock_name']
                                 else:

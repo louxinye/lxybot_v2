@@ -21,7 +21,7 @@ def getHelp():
 !chart活动
 !dog   查询bot权限者
 !kill  查询踢人列表
-
+帮助文档 https://github.com/louxinye/lxybot_v2/wiki
 v2.20 正式版'''
     return txt
 
@@ -132,7 +132,7 @@ def chartSystem():
 ☆!chart: 查询本期指定图
 ☆!mychart: 查询自己的成绩
 ☆!submit: 提交近期15次成绩
-☆!chart_top: 查询每张图的榜单(可选参数,参数为指定bid,此时返回前七名结果;若不指定参数则返回本期全部chart各前三名结果)
+☆!chart_top: 查询每张图的榜单(可选参数,参数为指定bid,此时返回前十名结果;若不指定参数则返回本期全部chart各前三名结果)
 功能还在开发中,敬请期待'''
     return txt
 
@@ -177,7 +177,7 @@ def eggL(list_e):
     msg = '本期已解锁彩蛋信息如下:\n编号, 关键词, 解锁者'
     for egg in list_e:
         if egg['unlock_qq']:
-            if egg['unlock_name']:
+            if egg['unlock_name'] and egg['unlock_name'] != '0':
                 msg = msg + '\n%s, %s, %s' % (egg['id'], egg['keyword'], egg['unlock_name'])
             else:
                 msg = msg + '\n%s, %s, QQ号%s' % (egg['id'], egg['keyword'], egg['unlock_qq'])
