@@ -454,6 +454,7 @@ def MsgCenter(bot, context):
 
             # 私聊解禁
             if context['message_type'] == 'private' and '!remove' in content:
+                '''
                 if context['user_id'] in bot_global.dog_list:
                     (msg, remove_group_i) = bot_msgcheck.remove(content)
                     if remove_group_i > -1:
@@ -462,7 +463,8 @@ def MsgCenter(bot, context):
                         else:
                             bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
                 else:
-                    msg = '此功能暂时关闭'
+                '''
+                msg = '此功能暂时关闭'
                 reply(bot, context, msg, atPeople=False)
 
 

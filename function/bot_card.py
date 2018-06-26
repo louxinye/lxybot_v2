@@ -133,7 +133,7 @@ def startCard(card_member, list_c, content):
             money = 100
             user_info = {'qq': card_member, 'uid': osu_id, 'name': real_name, 'pc': pc, 'tth': tth, 'money': money,
                          'fly': 0, 'card': [[], [], [], [], []], 'pt': 0, 'total_money': money, 'boom_money': 0,
-                         'medal': medal, 'lucky': 0, 'lucky_rate': 0}
+                         'boom_cost': 30, 'medal': medal, 'lucky': 0, 'lucky_rate': 0}
             msg = '玩家信息:\nqq号: %s\nuid: %s\nname: %s\npc: %s\ntth: %s\nmoney: %s\n机票数: 0\n活动开始!'\
                   % (card_member, osu_id, real_name, pc, tth, money)
             list_c.append(user_info)
@@ -841,7 +841,7 @@ def sendBoom(list_c, card_member, content):
                     list_c[i]['boom_cost'] = list_c[i]['boom_cost'] + 2
                     bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
                     qq = int(check_msg.group(1))
-                    smoke2 = random.randint(30, 200)
+                    smoke2 = random.randint(30, 100)
                     smoke1 = int(smoke2 * random.uniform(0.5, 3))
                     msg = '操作执行成功\n对方: %s秒, 自己: %s秒\n金币变更情况: %s → %s\n炸弹购买价格: %s → %s' \
                           % (smoke1, smoke2, list_c[i]['money']+now_boom_money, list_c[i]['money'], list_c[i]['boom_cost']-2, list_c[i]['boom_cost'])
