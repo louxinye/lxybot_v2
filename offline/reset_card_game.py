@@ -12,4 +12,7 @@ for i in range(len(list_card)):
 	list_card[i]['fly'] = 0
 	list_card[i]['lucky'] = 0
 	list_card[i]['lucky_rate'] = 0
+	list_card[i]['boom_money'] = 0
+	list_card[i]['boom_cost'] = 30
+	list_card[i]['bonus_pt'] = 0
 bot_IOfile.write_pkl_data(list_card, 'D:\Python POJ\lxybot_v2\data\data_card_game_list.pkl')
