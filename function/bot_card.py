@@ -19,13 +19,13 @@ tth_Val = [150, 200, 240, 240]  # 更新打图记录时候,四个mode的tth系�
 card_n = ['whirLeeve', 'whirLeeve', '-interesting-', 'ChongZi', 'NucleophileAP', 'kss233', 'FelxMy', 'lonelyling',
           'yiyue2', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'ZkmarsvXiYang',
           'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'ninler', '00guainiubi', 'xiaoxi654',
-          'azisa', 'ojbk', '_Star', 'Game Addiction', 'chan0165', 'HaiTanYangGuang', 'whiteseason2018', 'newplayre',
+          'Rein_Liya', 'ojbk', '_Star', 'Game Addiction', 'chan0165', 'HaiTanYangGuang', 'whiteseason2018', 'newplayre',
           'Against Current', '24fps', '- ElementOp -', 'My Angel-Asher-', 'purewhiteflame', 'Tacmyw', 'Dango_YwY',
           'matco', '[SHIYU]', 'K_vAE', 'Neptsun', 'ink rhyme',
           'cookiezi', 'Rafis', 'Vaxei', 'Emilia', 'Mathi', '-GN']
 card_r = ['[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'ykzl1969497633', 'bleatingsheep', 'akziyou', 'Pixiv', '[mogezi]',
           'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', '-NekoMinto-', 'yimoQWQ', 'heisiban',
-          'X_fire233', 'Mindlessness', 'Gust', 'IronWitness', 'SakuraOmega', 'superdoG', 'SinowWhite',
+          'X_fire233', 'Mindlessness', 'Gust', 'IronWitness', 'SakuraOmega', 'zfxggg', 'SinowWhite',
           'CoCo-OuO', 'wdwdwww', 'DalouBot', '[ morion ]']
 card_sr = ['Yizeda', 'Cookeazy', 'ShiQiKuangSanzz', '-THgzz-', 'Truth you left', 'Hanasaki Yukina', 'Small_Miao', '-FKai-',
            'BiliBiliZyi', 'COOLMILK123', 'GAddict', 'DePuppy', 'C8N16O32' , 'orangeLief', 'Sakura miku', '-Q', 'Aok',
