@@ -369,7 +369,8 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=False)
                 elif content == '!submit':
                     bot_global.sql_action_lock.acquire()
-                    msg = bot_chart.submitChart(context['user_id'])
+                    msg = '本期chart已经结束'
+                    # msg = bot_chart.submitChart(context['user_id'])
                     bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!mychart':
@@ -390,8 +391,8 @@ def MsgCenter(bot, context):
                         check_egg = re.match(r'%s' % egg['expression'], content)
                         if check_egg:
                             reply(bot, context, egg['reply'], atPeople=False)
+                            bot_global.sql_action_lock.acquire()
                             if not egg['unlock_qq']:
-                                bot_global.sql_action_lock.acquire()
                                 egg['unlock_name'] = bot_osu.searchUserInfo(context['user_id'])['name']
                                 egg['unlock_qq'] = context['user_id']
                                 if egg['unlock_name'] and egg['unlock_name'] != '0':
@@ -409,7 +410,7 @@ def MsgCenter(bot, context):
                                         break
                                 if all_unlock:
                                     reply(bot, context, msg1, atPeople=False)
-                                bot_global.sql_action_lock.release()
+                            bot_global.sql_action_lock.release()
                             break
 
             # 健康系统计算
