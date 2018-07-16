@@ -161,7 +161,7 @@ def dogL(list_d):
     for user in list_d:
         msg = msg + '%s\n' % user
     msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!kill@  !stop_k@\n' \
-                '!smoke@  !unsmoke@\n!update  !updateall\n!ban_card\n!stop_mie'
+                '!smoke@  !unsmoke@\n!update  !updateall\n!ban_card  !stop_mie\n!unbind'
     return msg
 
 

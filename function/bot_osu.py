@@ -337,7 +337,7 @@ def setSQL(user_qq, content):
             sql = 'INSERT INTO user VALUES (%s, %d, \'%s\', %.2f, %d, %d, %.2f, 0)' % (user_qq, int(uid), name, pp, pc, tth, acc)
             success = bot_SQL.action(sql)
             if success:
-                msg = '玩家信息:\nuid: %s\nname:%s\npp: %s\n绑定成功!' % (uid, name, pp)
+                msg = '玩家信息:\nuid: %s\nname: %s\npp: %s\n绑定成功!' % (uid, name, pp)
             else:
                 msg = '数据库出错，请联系Dalou!'
         else:
@@ -351,8 +351,8 @@ def setSQL(user_qq, content):
 def unsetSQL(content):
     if content == '!unbind':
         msg = '倒是告诉我要解除谁啊'
-    elif '!unband ' in content:
-        check_qq = re.match(r'^!kick ([0-9]*)$', content)
+    elif '!unbind ' in content:
+        check_qq = re.match(r'^!unbind ([0-9]*)$', content)
         if check_qq:
             qq = check_qq.group(1)
             sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % qq
@@ -369,7 +369,7 @@ def unsetSQL(content):
         else:
             msg = '您的!unbind指令使用错误'
     else:
-        msg = '无法识别,bot猜测您是想使用指令!unband x (x为参数)'
+        msg = '无法识别,bot猜测您是想使用指令!unbind x (x为参数)'
     return msg
 
 
