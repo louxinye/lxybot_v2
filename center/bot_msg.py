@@ -311,6 +311,11 @@ def MsgCenter(bot, context):
                     msg = bot_card.certainUserUpdate(user_card_list, content)
                     bot_global.user_card_list_lock.release()
                     reply(bot, context, msg, atPeople=False)
+                elif '!unbind' in content:
+                    bot_global.sql_action_lock.acquire()
+                    msg = bot_osu.unsetSQL(content)
+                    bot_global.sql_action_lock.release()
+                    reply(bot, context, msg, atPeople=False)
                 elif '!stop_mie' in content:
                     game_member = 0
                     msg = '咩羊游戏解除'

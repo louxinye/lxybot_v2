@@ -347,6 +347,32 @@ def setSQL(user_qq, content):
     return msg
 
 
+# 从数据库中删除指定用户的信息(目前仅用于pp图推荐)
+def unsetSQL(content):
+    if content == '!unbind':
+        msg = '倒是告诉我要解除谁啊'
+    elif '!unband ' in content:
+        check_qq = re.match(r'^!kick ([0-9]*)$', content)
+        if check_qq:
+            qq = check_qq.group(1)
+            sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % qq
+            result = bot_SQL.select(sql)
+            if result:
+                sql = 'DELETE FROM user WHERE qq = \'%s\' AND mode = 0' % qq
+                success = bot_SQL.action(sql)
+                if success:
+                    msg = '解除绑定QQ号%s成功' % qq
+                else:
+                    msg = '解除绑定QQ号%s失败' % qq
+            else:
+                msg = '此人并没有绑定数据库'
+        else:
+            msg = '您的!unbind指令使用错误'
+    else:
+        msg = '无法识别,bot猜测您是想使用指令!unband x (x为参数)'
+    return msg
+
+
 # 查询用户信息,如果update为True则会将新信息更新进数据库
 def searchUserInfo(user_qq, update=True):
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
