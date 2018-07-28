@@ -13,6 +13,7 @@ from function import bot_miegame
 from function import bot_IOfile
 from function import bot_osu
 from function import bot_chart
+from function import bot_superstar
 
 
 # 咩羊游戏初始值
@@ -366,6 +367,16 @@ def MsgCenter(bot, context):
                         msg = '操作执行成功: %s' % msg2
                     reply(bot, context, msg, atPeople=True)
 
+            # 超星检测
+            if context['message_type'] == 'group' and context['discuss_id'] in bot_global.group_main_list:
+                if context['user_id'] == 2680306741:
+                    max_diff = bot_superstar.maxDiffCheck(context['discuss_id'])
+                    (now_diff, user_qq) = bot_superstar.nowDiffCheck(content)
+                    if now_diff > max_diff:
+                        smoke = max(2591940, (now_diff - max_diff) * 10 * 60)
+                        msg = '核能侦测启动成功: %s秒' % smoke
+                        bot.set_group_ban(group_id=context['group_id'], user_id=user_qq, duration=smoke)
+                        reply(bot, context, msg, atPeople=False)
 
             # 主群chart活动
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_chart_list:
