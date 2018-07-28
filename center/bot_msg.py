@@ -368,12 +368,12 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=True)
 
             # 超星检测
-            if context['message_type'] == 'group' and context['discuss_id'] in bot_global.group_main_list:
+            if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
                 if context['user_id'] == 2680306741:
-                    max_diff = bot_superstar.maxDiffCheck(context['discuss_id'])
+                    max_diff = bot_superstar.maxDiffCheck(context['group_id'])
                     (now_diff, user_qq) = bot_superstar.nowDiffCheck(content)
                     if now_diff > max_diff:
-                        smoke = max(2591940, (now_diff - max_diff) * 10 * 60)
+                        smoke = min(2591940, (now_diff - max_diff) * 10 * 60)
                         msg = '核能侦测启动成功: %s秒' % smoke
                         bot.set_group_ban(group_id=context['group_id'], user_id=user_qq, duration=smoke)
                         reply(bot, context, msg, atPeople=False)

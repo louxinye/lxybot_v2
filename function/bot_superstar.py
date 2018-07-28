@@ -21,6 +21,6 @@ def nowDiffCheck(content):
 	if check_at and check_stars:
 		user_qq = int(check_at[0])
 		map_diff = int(float(check_stars[0]) * 100)
-		return user_qq, map_diff
+		return map_diff, user_qq
 	else:
 		return 0, 0
