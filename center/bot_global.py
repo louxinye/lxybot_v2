@@ -5,7 +5,7 @@ from function import bot_IOfile
 
 
 # BP监视开关
-bp_watch = 0
+bp_watch = 1
 # 恢复bp监视列表
 user_bp_list = bot_IOfile.read_pkl_data('data/data_bp_care_list.pkl')
 # 变量锁,对内容有改动的指令需要加锁以实现互斥(对只读指令则采取鸵鸟策略)

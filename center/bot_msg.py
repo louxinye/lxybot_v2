@@ -247,10 +247,10 @@ def MsgCenter(bot, context):
                 bot_global.user_bp_list_lock.release()
             reply(bot, context, msg, atPeople=True)
         elif content == '!bp':
-            if not verify(context, {'group': bot_global.group_bp_list}):
+            if not verify(context, {'group': bot_global.group_total_list}):
                 msg = '该指令不支持在此处使用'
             else:
-                msg = bot_getmsg.bpL(bot_global.user_bp_list)
+                msg = bot_getmsg.bpL(bot_global.user_bp_list, context['group_id'])
             reply(bot, context, msg, atPeople=False)
 
         # 健康系统

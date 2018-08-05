@@ -5,6 +5,7 @@ import json
 import re
 from function import bot_IOfile
 from function import bot_SQL
+from center import bot_global
 
 
 osu_api_key = '7f2f84a280917690158a6ea1f7a72b7e8374fbf9'
@@ -19,9 +20,7 @@ bp_list = []
 
 
 def setCare(list_b, content, group):
-    if len(list_b) > 59:
-        msg = '达到60人上限!'
-    elif content == '!set_bp':
+    if content == '!set_bp':
         msg = '倒是告诉我id啊'
     elif '!set_bp ' in content:
         check_id = re.match(r'^!set_bp (.*),([0123])$', content)
@@ -41,6 +40,10 @@ def setCare(list_b, content, group):
             msg = '查不到这个人哎'
         elif pp < 500:
             msg = '该号pp较低, 不进行监视'
+        elif pp > 3000 and group == bot_global.group_total_list[0]:
+            msg = '新人群主群不允许监视pp超过3000的玩家'
+        elif pp > 5000 and group == bot_global.group_total_list[1]:
+            msg = '新人群主群不允许监视pp超过3000的玩家'
         else:
             member_exist = False  # 列表内是否已经存在这个人
             for user in list_b:
@@ -50,22 +53,25 @@ def setCare(list_b, content, group):
                         break
                     else:
                         user[20]['user_group'].append(group)
-                        msg = '添加%s的bp监视成功!' % real_name
+                        msg = '添加%s的本群bp监视成功!' % real_name
                         bot_IOfile.write_pkl_data(list_b, 'data/data_bp_care_list.pkl')
                         return msg
             if not member_exist:  # 全新添加
-                bp_msg = getUserBp(osu_id, osu_mode)
-                if len(bp_msg) > 19:
-                    new_bp_msg = []
-                    for i in range(20):
-                        new_bp_msg.append(bp_msg[i])
-                    user_msg = {'user_id': osu_id, 'user_name': real_name, 'user_mode': osu_mode, 'user_group': [group]}
-                    new_bp_msg.append(user_msg)
-                    list_b.append(new_bp_msg)
-                    msg = '添加%s的bp监视成功!' % real_name
-                    bot_IOfile.write_pkl_data(list_b, 'data/data_bp_care_list.pkl')
+                if len(list_b) > 79:
+                    msg = '太……太多人了,bot要承受不住了!'
                 else:
-                    msg = 'bp数量低于20个,不进行监视'
+                    bp_msg = getUserBp(osu_id, osu_mode)
+                    if len(bp_msg) > 19:
+                        new_bp_msg = []
+                        for i in range(20):
+                            new_bp_msg.append(bp_msg[i])
+                        user_msg = {'user_id': osu_id, 'user_name': real_name, 'user_mode': osu_mode, 'user_group': [group]}
+                        new_bp_msg.append(user_msg)
+                        list_b.append(new_bp_msg)
+                        msg = '添加%s的本群bp监视成功!' % real_name
+                        bot_IOfile.write_pkl_data(list_b, 'data/data_bp_care_list.pkl')
+                    else:
+                        msg = 'bp数量低于20个,不进行监视'
             else:
                 msg = '已经存在此id,无需重复添加'
     else:

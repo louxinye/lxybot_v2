@@ -81,16 +81,16 @@ bot算法由咩羊提供
 def watchSystem():
     txt = '''监视系统介绍
 
-此系统开启或者关闭需要权限,且只在部分群内有效
-☆!set_bp: 加入监视列表中(需要参数,第一个参数为你的用户名;第二个参数为mode,缺省值0;两个参数间用半角逗号隔开)
-☆!reset_bp: 从监视列表中移除(参数同上)
+此系统开启或者关闭需要权限
+☆!set_bp: 加入本群监视列表中(需要参数,第一个参数为你的用户名;第二个参数为mode,缺省值0;两个参数间用半角逗号隔开)
+☆!reset_bp: 从本群监视列表中移除(参数同上)
 ☆!bp: 查询监视名单
 使用举例:
 !set_bp Aero-zero,3
 监视效果:
-1.当用户刷新了bp前20,则会进行通知
-2.当用户倒刷了一张原本为bp前20的图,则会进行通知
-3.只对500pp以上的玩家生效,监视数量上限为50'''
+1.当用户刷新或倒刷了bp前20,则会进行通知
+2.只对500pp以上的玩家生效,监视数量上限为80
+3.目前采用按群通知的方式,如果想在多个群内同时通知bp更新,则需要各个群都设置一遍(不会占用额外监视名额)'''
     return txt
 
 
@@ -185,20 +185,22 @@ def eggL(list_e):
     return msg
 
 
-def bpL(list_b):
+def bpL(list_b, group):
     msg = ''
     std_msg = ''
     taiko_msg = ''
     ctb_msg = ''
     mania_msg = ''
     for user in list_b:
-        if user[20]['user_mode'] == '0':
+        if group not in user[20]['user_group']:
+            pass
+        elif user[20]['user_mode'] == '0':
             std_msg = std_msg + '%s\n' % user[20]['user_name']
-        if user[20]['user_mode'] == '1':
+        elif user[20]['user_mode'] == '1':
             taiko_msg = taiko_msg + '%s\n' % user[20]['user_name']
-        if user[20]['user_mode'] == '2':
+        elif user[20]['user_mode'] == '2':
             ctb_msg = ctb_msg + '%s\n' % user[20]['user_name']
-        if user[20]['user_mode'] == '3':
+        elif user[20]['user_mode'] == '3':
             mania_msg = mania_msg + '%s\n' % user[20]['user_name']
     if std_msg:
         msg = msg + '【std】\n%s' % std_msg
@@ -209,7 +211,7 @@ def bpL(list_b):
     if mania_msg:
         msg = msg + '【mania】\n%s' % mania_msg
     if not msg:
-        msg = 'bot没有对任何人进行bp监视'
+        msg = 'bot在本群内没有对任何人进行bp监视'
     else:
-        msg = '监视列表如下:\n'+ msg + '上述成员更新bp将会进行实时通知 (用户id仅供参考,不排除有人改名,此时需要本人更新bp才会自动替换为新id)'
+        msg = '本群监视列表如下:\n'+ msg + '上述成员更新bp将会进行实时通知 (用户id仅供参考,不排除有人改名,此时需要本人更新bp才会自动替换为新id)'
     return msg
