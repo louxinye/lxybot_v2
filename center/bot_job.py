@@ -8,6 +8,7 @@ from center import bot_global
 def bpCareCenter(bot, maxcount):
     count = 0
     while count < maxcount:
+        time.sleep(10)
         print('bp监视任务触发')
         if bot_global.bp_watch:
             count = count + 1
@@ -36,7 +37,7 @@ def bpCareCenter(bot, maxcount):
                                     msg = '%s倒刷了一张图 (%s)\n谱面bid: %s\n%s\nMod: %s\n倒刷前的pp: %.2f\n现在的pp: %.2f'\
                                         % (user_name, mode_name, map_id, map_info, score_mod, old_pp, new_pp)
                                     update_bp = new_bp[0:20]
-                                    update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
+                                    update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode, "user_group": group_list})
                                     bot_global.user_bp_list[num] = update_bp
                                     bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
                             else:
@@ -50,7 +51,7 @@ def bpCareCenter(bot, maxcount):
                                     msg = '%s更新了bp%s (%s)\n谱面bid: %s\n%s\n评分: %s\nAcc: %s%%\nMod: %s\npp: %.2f'\
                                         % (user_name, i+1, mode_name, map_id, map_info, score_rank, score_acc, score_mod, score_pp)
                                     update_bp = new_bp[0:20]
-                                    update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
+                                    update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode, "user_group": group_list})
                                     bot_global.user_bp_list[num] = update_bp
                                     bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
                             for group in group_list:
@@ -61,9 +62,9 @@ def bpCareCenter(bot, maxcount):
                             break
             bot_global.user_bp_list_lock.release() # 列表解锁
             print('本轮查询结束')
-            time.sleep(600)
+            time.sleep(350)
         else:
-            time.sleep(60)
+            time.sleep(50)
 
 
 def killCenter(bot):
