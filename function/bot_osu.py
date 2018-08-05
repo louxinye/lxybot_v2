@@ -18,9 +18,9 @@ headers = {
 bp_list = []
 
 
-def setCare(list_b, content):
-    if len(list_b) > 49:
-        msg = '达到50人上限!'
+def setCare(list_b, content, group):
+    if len(list_b) > 59:
+        msg = '达到60人上限!'
     elif content == '!set_bp':
         msg = '倒是告诉我id啊'
     elif '!set_bp ' in content:
@@ -28,13 +28,11 @@ def setCare(list_b, content):
         if check_id:
             osu_name = check_id.group(1)
             osu_mode = check_id.group(2)
-            print('1 %s' % osu_mode)
         else:
             check_id = re.match(r'^!set_bp (.*)$', content)
             if check_id:
                 osu_name = check_id.group(1)
                 osu_mode = '0'
-                print('2 %s' % osu_mode)
             else:
                 msg = '您的!set_bp指令使用错误'
                 return msg
@@ -44,18 +42,24 @@ def setCare(list_b, content):
         elif pp < 500:
             msg = '该号pp较低, 不进行监视'
         else:
-            success = 1
+            member_exist = False  # 列表内是否已经存在这个人
             for user in list_b:
                 if user[20]['user_id'] == osu_id and user[20]['user_mode'] == osu_mode:
-                    success = 0
-                    break
-            if success == 1:
+                    member_exist = True
+                    if group in user[20]['user_group']:
+                        break
+                    else:
+                        user[20]['user_group'].append(group)
+                        msg = '添加%s的bp监视成功!' % real_name
+                        bot_IOfile.write_pkl_data(list_b, 'data/data_bp_care_list.pkl')
+                        return msg
+            if not member_exist:  # 全新添加
                 bp_msg = getUserBp(osu_id, osu_mode)
                 if len(bp_msg) > 19:
                     new_bp_msg = []
                     for i in range(20):
                         new_bp_msg.append(bp_msg[i])
-                    user_msg = {'user_id': osu_id, 'user_name': real_name, 'user_mode': osu_mode}
+                    user_msg = {'user_id': osu_id, 'user_name': real_name, 'user_mode': osu_mode, 'user_group': [group]}
                     new_bp_msg.append(user_msg)
                     list_b.append(new_bp_msg)
                     msg = '添加%s的bp监视成功!' % real_name
@@ -69,7 +73,7 @@ def setCare(list_b, content):
     return msg
 
 
-def stopCare(list_b, content):
+def stopCare(list_b, content, group):
     if content == '!reset_bp':
         msg = '倒是告诉我id啊'
     elif '!reset_bp ' in content:
@@ -93,14 +97,22 @@ def stopCare(list_b, content):
             bp_num = len(list_b)
             for i in range(0, bp_num):
                 if list_b[i][20]['user_id'] == osu_id and list_b[i][20]['user_mode'] == osu_mode:
-                    success = 1
-                    del list_b[i]
-                    break
+                    if group in list_b[i][20]['user_group']:
+                        list_b[i][20]['user_group'].remove(group)
+                        if not list_b[i][20]['user_group']:
+                            del list_b[i]
+                        success = 1
+                        break
+                    else:
+                        success = 2
+                        break
             if success == 1:
                 msg = '移除%s的bp监视成功!' % real_name
                 bot_IOfile.write_pkl_data(list_b, 'data/data_bp_care_list.pkl')
+            elif success == 2:
+                msg = '此人并没有在本群内监视'
             else:
-                msg = '此人并没在监视列表中'
+                msg = '此人并没有在任何群内监视'
     else:
         msg = '无法识别,bot猜测您是想使用指令!reset_bp x(x为参数)'
     return msg

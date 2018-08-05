@@ -18,6 +18,7 @@ def bpCareCenter(bot, maxcount):
                 user = bot_global.user_bp_list[num]
                 user_id = user[20]["user_id"]
                 score_mode = user[20]["user_mode"]
+                group_list = user[20]["user_group"]
                 new_bp = bot_osu.getUserBp(user_id, score_mode, max_num=20)
                 if new_bp:
                     for i in range(0, 20):
@@ -52,8 +53,11 @@ def bpCareCenter(bot, maxcount):
                                     update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode})
                                     bot_global.user_bp_list[num] = update_bp
                                     bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
-                            for group in bot_global.group_bp_list:
-                                bot.send_group_msg(group_id=group, message=msg)
+                            for group in group_list:
+                                try:
+                                    bot.send_group_msg(group_id=group, message=msg)
+                                except BaseException:
+                                    print('群发消息出错, 群号: %s' % group)
                             break
             bot_global.user_bp_list_lock.release() # 列表解锁
             print('本轮查询结束')

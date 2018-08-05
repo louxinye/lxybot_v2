@@ -231,19 +231,19 @@ def MsgCenter(bot, context):
 
         # 监视系统
         elif '!set_bp' in content:
-            if not verify(context, {'group': bot_global.group_bp_list}):
+            if not verify(context, {'group': bot_global.group_total_list}):
                 msg = '该指令不支持在此处使用'
             else:
                 bot_global.user_bp_list_lock.acquire()
-                msg = bot_osu.setCare(bot_global.user_bp_list, content)
+                msg = bot_osu.setCare(bot_global.user_bp_list, content, context['group_id'])
                 bot_global.user_bp_list_lock.release()
             reply(bot, context, msg, atPeople=True)
         elif '!reset_bp' in content:
-            if not verify(context, {'group': bot_global.group_bp_list}):
+            if not verify(context, {'group': bot_global.group_total_list}):
                 msg = '该指令不支持在此处使用'
             else:
                 bot_global.user_bp_list_lock.acquire()
-                msg = bot_osu.stopCare(bot_global.user_bp_list, content)
+                msg = bot_osu.stopCare(bot_global.user_bp_list, content, context['group_id'])
                 bot_global.user_bp_list_lock.release()
             reply(bot, context, msg, atPeople=True)
         elif content == '!bp':
