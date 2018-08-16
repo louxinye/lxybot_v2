@@ -11,7 +11,7 @@ def maxDiffCheck(group):
 	if num == 0:
 		return 540
 	elif num == 1:
-		return 620
+		return 650
 	else:
 		return 99999
 

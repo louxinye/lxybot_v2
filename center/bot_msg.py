@@ -104,6 +104,11 @@ def MsgCenter(bot, context):
             userinfo = bot_osu.searchUserInfo(context['user_id'])
             bot_global.sql_action_lock.release()
             reply(bot, context, userinfo['msg'], atPeople=True)
+        elif content == '!myrct':
+            bot_global.sql_action_lock.acquire()
+            msg = bot_osu.searchUserRecent(context['user_id'])
+            bot_global.sql_action_lock.release()
+            reply(bot, context, msg, atPeople=True)
 
         # 月常活动
         elif '!start_card' in content:

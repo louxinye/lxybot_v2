@@ -6,6 +6,7 @@ import re
 from function import bot_IOfile
 from function import bot_SQL
 from center import bot_global
+from plugin import console_calc
 
 
 osu_api_key = '7f2f84a280917690158a6ea1f7a72b7e8374fbf9'
@@ -192,10 +193,10 @@ def getUserRecent(uid, mode, max_num=20):
     url = 'https://osu.ppy.sh/api/get_user_recent?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, uid, mode, max_num)
     res = getUrl(url)
     if not res:
-        return 0
+        return []
     result = json.loads(res.text)
-    if len(result) == 0:
-        return 0
+    if not result:
+        return []
     else:
         return result
 
@@ -428,4 +429,31 @@ def addCal(num, floatnum=0):
         msg = '+' + msg
     if msg == '+-0.00' or msg == '-0.00':
         msg = '+0.00'
+    return msg
+
+
+# 获取玩家最新的游戏成绩信息
+def searchUserRecent(user_qq):
+    sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
+    result = bot_SQL.select(sql)
+    if not result:
+        msg = '您未绑定! (请使用!myid)'
+        return msg
+    uid = result[0][1]
+    recent = getUserRecent(uid, 0, max_num=20)
+    if not recent:
+        msg = '查询游戏记录失败……'
+        return msg
+    mod = recent[0]["enabled_mods"]
+    bid = recent[0]["beatmap_id"]
+    c300 = recent[0]["count300"]
+    c100 = recent[0]["count100"]
+    c50 = recent[0]["count50"]
+    c0 = recent[0]["countmiss"]
+    rank = recent[0]["rank"]
+    map_msg = getMapInfo(bid, 0)
+    mod_name = getMod(mod)
+    acc = getAcc(c300, c100, c50, c0)
+    msg = '您的最新游戏记录如下:\n谱面bid: %s\n%s\n' % (bid, map_msg)
+    msg = msg + '%s' % console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank)
     return msg
