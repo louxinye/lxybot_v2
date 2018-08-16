@@ -56,8 +56,8 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
     maxcombo_full = btmap.max_combo
     maxcombo_half = maxcombo_full - int((maxcombo_full - maxcombo_now) / 2)
     msg = '--------------------\n'
-    msg = msg + 'Mod: %s  stars: %.2f\nacc: %s%%  misses: %s\ncombo: %s/%s\nrank: %s\n' % \
-                (mod_name, stars, acc, c0, maxcombo_now, maxcombo_full, rank)
+    msg = msg + 'stars: %.2f | %s | %s\n%sx/%sx | %s%% | %smiss\n' % \
+                (stars, mod_name, rank, maxcombo_now, maxcombo_full, acc, c0)
 
     # 计算完成度
     complete = c300 + c100 + c50 + c0
@@ -102,13 +102,13 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
         pp[0][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_now, misses=c0, score_version=score_ver).pp
         pp[1][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_half, misses=c0, score_version=score_ver).pp
         pp[2][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
-        accuracy = '%.2f' % (100-(100-accuracy)/2)
+        accuracy = 100 - (100 - accuracy)/2
         pp[0][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_now, misses=c0, score_version=score_ver).pp
         pp[1][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_half, misses=c0, score_version=score_ver).pp
         pp[2][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
         accuracy = 100
         pp[2][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
-        msg = msg + '你只完成歌曲时长的%.1f%%!' % (completion*100)
+        msg = msg + '你只完成歌曲时长的%.1f%%\n' % (completion*100)
         msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  ---\n%.1f  %.1f  ---\n%.1f  %.1f  %.1f' % \
                     (pp[0][0], pp[0][1], pp[1][0], pp[1][1], pp[2][0], pp[2][1], pp[2][2])
     return msg

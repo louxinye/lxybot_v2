@@ -6,13 +6,11 @@ def getHelp():
     txt = '''发烟bot使用说明
 
 !group  查看适用群
-!rest   1小时休息套餐
-!sleep  6小时睡眠套餐
-!afk    闭群套餐(可选参数)
-!remove 私聊解禁(关闭)
 !roll   随机取数(可选参数)
 !myid   绑定id
 !mypp   速查信息
+!myrct  查询最新游戏记录
+!抽烟系统
 !找图系统
 !健康系统
 !监视系统
@@ -22,7 +20,20 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.30 正式版'''
+v2.43 正式版'''
+    return txt
+
+
+def smokeSystem():
+    txt = '''抽烟系统介绍
+
+☆!cnm    5-100秒娱乐套餐
+☆!rest   1小时休息套餐
+☆!sleep  6小时睡眠套餐
+☆!afk    闭群套餐(可选参数,形式为<num><type>,例如3d等于3天)
+☆!remove 私聊解禁(关闭)
+注意事项
+本系统效果为主动让自己禁言,适合那些控制不住自己水群的孩子使用'''
     return txt
 
 

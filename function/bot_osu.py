@@ -158,7 +158,7 @@ def getUserBp(uid, osu_mode, max_num=50):
 
 
 # 输入bid，输出图的名字难度和长度(此时需要指明getlength为True)
-def getMapInfo(bid, mode, getlength=False):
+def getMapInfo(bid, mode, getDiff=True, getlength=False):
     url = 'https://osu.ppy.sh/api/get_beatmaps?k=%s&b=%s&m=%s&limit=1' % (osu_api_key, bid, mode)
     res = getUrl(url)
     if not res:
@@ -167,8 +167,9 @@ def getMapInfo(bid, mode, getlength=False):
     if len(result) == 0:
         msg = '不存在这张图'
     else:
-        msg = '%s - %s [%s]\n难度: %.2f (未计算mod)'\
-            % (result[0]['artist'], result[0]['title'], result[0]['version'], float(result[0]['difficultyrating']))
+        msg = '%s - %s [%s]' % (result[0]['artist'], result[0]['title'], result[0]['version'])
+        if getDiff:
+            msg = msg + '\n难度: % .2f(未计算mod)' % float(result[0]['difficultyrating'])
         if getlength:
             length = getLength(int(result[0]['total_length']))
             msg = msg + '\n长度: %s' % length
@@ -446,14 +447,15 @@ def searchUserRecent(user_qq):
         return msg
     mod = recent[0]["enabled_mods"]
     bid = recent[0]["beatmap_id"]
-    c300 = recent[0]["count300"]
-    c100 = recent[0]["count100"]
-    c50 = recent[0]["count50"]
-    c0 = recent[0]["countmiss"]
+    c300 = int(recent[0]["count300"])
+    c100 = int(recent[0]["count100"])
+    c50 = int(recent[0]["count50"])
+    c0 = int(recent[0]["countmiss"])
+    combo = int(recent[0]["maxcombo"])
     rank = recent[0]["rank"]
-    map_msg = getMapInfo(bid, 0)
+    map_msg = getMapInfo(bid, 0, getDiff=False)
     mod_name = getMod(mod)
     acc = getAcc(c300, c100, c50, c0)
     msg = '您的最新游戏记录如下:\n谱面bid: %s\n%s\n' % (bid, map_msg)
-    msg = msg + '%s' % console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank)
+    msg = msg + '%s' % console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank, maxcombo_now=combo)
     return msg

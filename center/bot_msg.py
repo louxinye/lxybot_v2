@@ -80,6 +80,9 @@ def MsgCenter(bot, context):
         elif content == '!咩羊游戏':
             msg = bot_getmsg.mieGame()
             reply(bot, context, msg, atPeople=False)
+        elif content == '!抽烟系统':
+            msg = bot_getmsg.smokeSystem()
+            reply(bot, context, msg, atPeople=False)
         elif content == '!dog':
             msg = bot_getmsg.dogL(bot_global.dog_list)
             reply(bot, context, msg, atPeople=False)
