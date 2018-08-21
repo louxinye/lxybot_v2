@@ -53,11 +53,12 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
     mods = Mods(mod_name if mod_name != "None" else "")
     btmap.apply_mods(mods)
     aim, speed, stars, btmap = diff.main(btmap)
-    maxcombo_full = btmap.max_combo
-    maxcombo_half = maxcombo_full - int((maxcombo_full - maxcombo_now) / 2)
+    maxcombo_0 = btmap.max_combo  # 全连的combo
+    maxcombo_1 = maxcombo_0 - int((maxcombo_0 - maxcombo_now) / 3)  # 如果你多打剩余2/3的combo
+    maxcombo_2 = maxcombo_0 - int((maxcombo_0 - maxcombo_now) * 2 / 3)  # 如果你多打剩余1/3的combo
     msg = '--------------------\n'
     msg = msg + 'stars: %.2f | %s | %s\n%sx/%sx | %s%% | %smiss\n' % \
-                (stars, mod_name, rank, maxcombo_now, maxcombo_full, acc, c0)
+                (stars, mod_name, rank, maxcombo_now, maxcombo_0, acc, c0)
 
     # 计算完成度
     complete = c300 + c100 + c50 + c0
@@ -78,39 +79,60 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
         completion = 100
 
     if rank != 'F':
+        # 往前走一小步，也就是多打1/3的剩余acc
+        c300_2 = c300 + c100 + c50 + int(c0 / 3) - int(c50 * 2 / 3) - int(c100 * 2 / 3)
+        c100_2 = int(c100 * 2 / 3)
+        c50_2 = int(c50 * 2 / 3)
+        c0_2 = c0 - int(c0 / 3)
+        # 再往前走一步，也就是多打2/3的剩余acc
+        c300_1 = c300 + c100 + c50 + int(c0 * 2 / 3) - int(c50 / 3) - int(c100 / 3)
+        c100_1 = int(c100 / 3)
+        c50_1 = int(c50 / 3)
+        c0_1 = c0 - int(c0 * 2 / 3)
+        # 再往前走一步，也就是ss
+        c300_0 = c300 + c100 + c50 + c0
         pp[0][0] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_now, score_version=score_ver).pp
-        pp[1][0] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_half, score_version=score_ver).pp
-        pp[2][0] = calculate_pp(aim, speed, btmap, c100, c50, 0, c300=c300+c0, used_mods=mods, combo=maxcombo_full, score_version=score_ver).pp
-        c100_cut = int(c100/2)
-        c50_cut = int(c50/2)
-        c300 = c300 + c100_cut + c50_cut
-        c100 = c100 - c100_cut
-        c50 = c50 - c50_cut
-        pp[0][1] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_now, score_version=score_ver).pp
-        pp[1][1] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_half, score_version=score_ver).pp
-        pp[2][1] = calculate_pp(aim, speed, btmap, c100, c50, 0, c300=c300+c0, used_mods=mods, combo=maxcombo_full, score_version=score_ver).pp
-        c300 = c300 + c100 + c50 + c0
-        pp[2][2] = calculate_pp(aim, speed, btmap, 0, 0, 0, c300=c300, used_mods=mods, combo=maxcombo_full, score_version=score_ver).pp
-        msg = msg + 'pp: %.1f → %.1f\n' % (pp[0][0], pp[2][2])
+        pp[1][0] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_2, score_version=score_ver).pp
+        pp[2][0] = calculate_pp(aim, speed, btmap, c100, c50, c0, c300=c300, used_mods=mods, combo=maxcombo_1, score_version=score_ver).pp
+        pp[3][0] = calculate_pp(aim, speed, btmap, c100, c50, 0, c300=c300+c0, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
+        pp[0][1] = calculate_pp(aim, speed, btmap, c100_2, c50_2, c0_2, c300=c300_2, used_mods=mods, combo=maxcombo_now, score_version=score_ver).pp
+        pp[1][1] = calculate_pp(aim, speed, btmap, c100_2, c50_2, c0_2, c300=c300_2, used_mods=mods, combo=maxcombo_2, score_version=score_ver).pp
+        pp[2][1] = calculate_pp(aim, speed, btmap, c100_2, c50_2, c0_2, c300=c300_2, used_mods=mods, combo=maxcombo_1, score_version=score_ver).pp
+        pp[3][1] = calculate_pp(aim, speed, btmap, c100_2, c50_2, 0, c300=c300_2+c0_2, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
+        pp[0][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, c0_1, c300=c300_1, used_mods=mods, combo=maxcombo_now, score_version=score_ver).pp
+        pp[1][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, c0_1, c300=c300_1, used_mods=mods, combo=maxcombo_2, score_version=score_ver).pp
+        pp[2][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, c0_1, c300=c300_1, used_mods=mods, combo=maxcombo_1, score_version=score_ver).pp
+        pp[3][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, 0, c300=c300_1+c0_1, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
+        pp[3][3] = calculate_pp(aim, speed, btmap, 0, 0, 0, c300=c300_0, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
+        msg = msg + 'pp: %.2f → %.2f\n' % (pp[0][0], pp[2][2])
+        msg = msg + '--------------------\n'
         if rank == 'X' or rank == 'XH':
             msg = msg + '恭喜! 你已经打爆这首歌了'
         else:
-            msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  ---\n%.1f  %.1f  ---\n%.1f  %.1f  %.1f' % \
-                        (pp[0][0], pp[0][1], pp[1][0], pp[1][1], pp[2][0], pp[2][1],pp[2][2])
+            msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  %.1f' % \
+                        (pp[0][0], pp[0][1], pp[0][2], pp[1][0], pp[1][1], pp[1][2], pp[2][0], pp[2][1],pp[2][2], pp[3][0], pp[3][1], pp[3][2], pp[3][3])
     else:
         accuracy = float(acc)
         pp[0][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_now, misses=c0, score_version=score_ver).pp
-        pp[1][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_half, misses=c0, score_version=score_ver).pp
-        pp[2][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
-        accuracy = 100 - (100 - accuracy)/2
+        pp[1][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_2, misses=c0, score_version=score_ver).pp
+        pp[2][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_1, misses=c0, score_version=score_ver).pp
+        pp[3][0] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_0, misses=0, score_version=score_ver).pp
+        accuracy = 100 - (100 - accuracy) * 2 / 3
         pp[0][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_now, misses=c0, score_version=score_ver).pp
-        pp[1][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_half, misses=c0, score_version=score_ver).pp
-        pp[2][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
+        pp[1][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_2, misses=c0, score_version=score_ver).pp
+        pp[2][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_1, misses=c0, score_version=score_ver).pp
+        pp[3][1] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_0, misses=0, score_version=score_ver).pp
+        accuracy = 100 - (100 - accuracy) / 2
+        pp[0][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_now, misses=c0, score_version=score_ver).pp
+        pp[1][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_2, misses=c0, score_version=score_ver).pp
+        pp[2][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_1, misses=c0, score_version=score_ver).pp
+        pp[3][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_0, misses=0, score_version=score_ver).pp
         accuracy = 100
-        pp[2][2] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_full, misses=0, score_version=score_ver).pp
+        pp[3][3] = calculate_pp_by_acc(aim, speed, btmap, accuracy, used_mods=mods, combo=maxcombo_0, misses=0, score_version=score_ver).pp
         msg = msg + '你只完成歌曲时长的%.1f%%\n' % (completion*100)
-        msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  ---\n%.1f  %.1f  ---\n%.1f  %.1f  %.1f' % \
-                    (pp[0][0], pp[0][1], pp[1][0], pp[1][1], pp[2][0], pp[2][1], pp[2][2])
+        msg = msg + '--------------------\n'
+        msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  %.1f' % \
+                    (pp[0][0], pp[0][1], pp[0][2], pp[1][0], pp[1][1], pp[1][2], pp[2][0], pp[2][1], pp[2][2], pp[3][0], pp[3][1], pp[3][2], pp[3][3])
     return msg
 
 '''
