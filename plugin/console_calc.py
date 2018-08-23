@@ -37,7 +37,7 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
     complete = args.completion
     '''
 
-    pp = [[0,0,0], [0,0,0], [0,0,0]]  # 在当前combo、多连一半的combo、fc的情况下，当前acc、多打一半acc、ss的成绩
+    pp = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]  # 在当前combo、多连一半的combo、fc的情况下，当前acc、多打一半acc、ss的成绩
     if link:
         data = requests.get("https://osu.ppy.sh/osu/{}".format(bid)).content.decode('utf8')
         print(data)
@@ -104,7 +104,7 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
         pp[2][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, c0_1, c300=c300_1, used_mods=mods, combo=maxcombo_1, score_version=score_ver).pp
         pp[3][2] = calculate_pp(aim, speed, btmap, c100_1, c50_1, 0, c300=c300_1+c0_1, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
         pp[3][3] = calculate_pp(aim, speed, btmap, 0, 0, 0, c300=c300_0, used_mods=mods, combo=maxcombo_0, score_version=score_ver).pp
-        msg = msg + 'pp: %.2f → %.2f\n' % (pp[0][0], pp[2][2])
+        msg = msg + 'pp: %.2f → %.2f\n' % (pp[0][0], pp[3][3])
         msg = msg + '--------------------\n'
         if rank == 'X' or rank == 'XH':
             msg = msg + '恭喜! 你已经打爆这首歌了'
