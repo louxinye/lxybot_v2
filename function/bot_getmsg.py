@@ -20,7 +20,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.43 正式版'''
+v2.44 正式版'''
     return txt
 
 

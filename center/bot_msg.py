@@ -108,9 +108,10 @@ def MsgCenter(bot, context):
             bot_global.sql_action_lock.release()
             reply(bot, context, userinfo['msg'], atPeople=True)
         elif content == '!myrct':
-            bot_global.sql_action_lock.acquire()
+            # 此指令存在bug，为了避免死锁暂时先取消加锁
+            # bot_global.sql_action_lock.acquire()
             msg = bot_osu.searchUserRecent(context['user_id'])
-            bot_global.sql_action_lock.release()
+            # bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
 
         # 月常活动
