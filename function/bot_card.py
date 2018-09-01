@@ -7,34 +7,34 @@ from function import bot_IOfile
 
 
 rare_name = ['MR', 'UR', 'SR', 'R', 'N']  # 稀有度种类
-rare_num = [10, 15, 20, 28, 50]  # 每个稀有度的图鉴数量
+rare_num = [10, 15, 20, 30, 50]  # 每个稀有度的图鉴数量
 rate_pick = [1, 12, 80, 280, 1000]  # 单抽或者11连概率,上限1000
 rate_fly = [40, 280, 1000, 1000, 1000]  # 飞机票概率,上限1000
-p_pick = [0.000100, 0.000733, 0.003400, 0.007143, 0.014400]  # 每张卡抽到概率
+p_pick = [0.000100, 0.000733, 0.003400, 0.006667, 0.014400]  # 每张卡抽到概率
 p_fly = [0.004, 0.016, 0.036, 0, 0]  # 每张卡飞到概率
 b_first = [1000, 500, 200, 50, 10]  # new卡加分
 b_next = [300, 150, 50, 10, 1]  # 强化卡加分
 tth_Val = [150, 200, 240, 240]  # 更新打图记录时候,四个mode的tth系数
 
-card_n = ['whirLeeve', 'whirLeeve', '-interesting-', 'ChongZi', 'NucleophileAP', 'kss233', 'FelxMy', 'lonelyling',
-          'yiyue2', 'yuanxi123', 'Sardin3', 'JRC888', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'ZkmarsvXiYang',
+card_n = ['whirLeeve', 'whirLeeve', 'whirLeeve', 'Sega Hatsumi', 'ChongZi', 'NucleophileAP', 'kss233', 'CappuccinoChino',
+          'yiyue2', 'yuanxi123', 'Sardin3', 'Kazami-Menhera', 'LITEON', 'Archer9', 'sakiyi', '1716153665', 'ZkmarsvXiYang',
           'dullwolf', 'Trustless532', 'AllenBerserker', 'zawde', 'osu happy', 'ninler', '00guainiubi', 'xiaoxi654',
-          'Rein_Liya', 'ojbk', '_Star', 'Game Addiction', 'chan0165', 'HaiTanYangGuang', 'whiteseason2018', 'newplayre',
-          'Against Current', '24fps', '- ElementOp -', 'My Angel-Asher-', 'purewhiteflame', 'Tacmyw', 'Dango_YwY',
+          'ojbk', '_Star', 'Game Addiction', 'chan0165', 'HaiTanYangGuang', 'whiteseason2018', 'newplayre', 'KPC123',
+          'Against Current', '24fps', '- ElementOp -', 'My Angel-Asher-', 'Tacmyw', 'Dango_YwY', 'Aleafy', 'Sora_w',
           'matco', '[SHIYU]', 'K_vAE', 'Neptsun', 'ink rhyme',
           'cookiezi', 'Rafis', 'Vaxei', 'Emilia', 'Mathi', '-GN']
 card_r = ['[ Kuon ]', 'godel', '-Hermit-', 'IaKis', 'ykzl1969497633', 'bleatingsheep', 'akziyou', 'Pixiv', '[mogezi]',
-          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', '-NekoMinto-', 'yimoQWQ', 'heisiban',
-          'X_fire233', 'Mindlessness', 'Gust', 'IronWitness', 'SakuraOmega', 'zfxggg', 'SinowWhite',
+          'GreySTrip', 'sodarose', 'misaki nene', 'kahei0726', 'bilibilicnm', 'yimoQWQ', 'PlaZmAx', 'FelxMy', 'Gust',
+          'X_fire233', 'IronWitness', 'SakuraOmega', 'SinowWhite', 'tanwanlanyue', 'Rein_Liya', 'lonelyling', '-NekoMinto-',
           'CoCo-OuO', 'wdwdwww', 'DalouBot', '[ morion ]']
-card_sr = ['Yizeda', 'Cookeazy', 'ShiQiKuangSanzz', '-THgzz-', 'Truth you left', 'Hanasaki Yukina', 'Small_Miao', '-FKai-',
-           'BiliBiliZyi', 'COOLMILK123', 'GAddict', 'DePuppy', 'C8N16O32' , 'orangeLief', 'Sakura miku', '-Q', 'Aok',
-           '-Inui Sana-', '-inter-', 'usagiKokoa']
-card_ur = ['taolex', 'Sayori_yui', 'Sonoaoi', 'Kutouzi', '-Artemis', 'AdorableCubCat', 'ye__ow', 'Mafuyu Shiina',
-           'Fushimi Rio', 'Sisters10086', 'my angel kotori', 'dicskb122', '84461810',
+card_sr = ['KA MI NA', 'Cookeazy', 'ShiQiKuangSanzz', 'Truth you left', '-Inui Sana-', 'Mindlessness', 'Arcareh', 'Aok',
+           'BiliBiliZyi', 'COOLMILK123', 'GAddict', 'DePuppy', 'C8N16O32' , '-inter-', '-Q', 'usagiKokoa', '-FKai-',
+           'Hanasaki Yukina', 'orangeLief', 'Sakura miku']
+card_ur = ['taolex',  'Sonoaoi', 'Kutouzi', '-Artemis', 'AdorableCubCat', 'ye__ow', 'Mafuyu Shiina', 'zfxggg',
+           'Fushimi Rio', 'Sisters10086', 'my angel kotori', 'dicskb122', 'heisiban',
            'AyaSakura', 'Imouto koko']
-card_mr = ['PandaCattle', 'ikaNyai', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Storia', 'Firika', 'Hibikom',
-           'Pata-Mon']
+card_mr = ['PandaCattle', '84461810', 'Aero-zero', 'Jack_Wang_', 'bless_von', 'TuGuanZ', 'Firika', 'Hibikom', 'Pata-Mon',
+           'Sayori_yui']
 card_next = []
 
 
@@ -764,7 +764,7 @@ def sendBoom(list_c, card_member, content):
             if list_c[i]['money'] < now_boom_money:
                 msg = '金币数量低于%s! 快去打图' % now_boom_money
             else:
-                check_msg = re.match(r'^!boom\[CQ:at,qq=([1-9][0-9]*)\]$', content)
+                check_msg = re.match(r'^!boom\[CQ:at,qq=([1-9][0-9]*)\]', content)
                 if check_msg:
                     list_c[i]['money'] = list_c[i]['money'] - now_boom_money
                     list_c[i]['boom_money'] = list_c[i]['boom_money'] + now_boom_money
