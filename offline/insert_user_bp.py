@@ -3,6 +3,7 @@
 from function import bot_osu
 from function import bot_IOfile
 from function import bot_SQL
+import time
 
 
 def get_mod(mod_id, pp):
@@ -35,7 +36,7 @@ def get_mod(mod_id, pp):
             pp = int(pp * 1.09)
         if choose[i] == 'HD':  # HD删除，得分除以1.10
             total_mod = total_mod - 8
-            pp = int(pp / 1.1)
+            pp = int(pp / 1.09)
     return total_mod, pp
 
 
@@ -66,7 +67,6 @@ for user in user_list:
             (new_mod, new_pp) = get_mod(mod, score_pp)
             sql = 'INSERT INTO bpmsg_mode0 VALUES (%d, %d, %d, %d, %d, %s, %d, %d, %d)' % (uid, bp_rank, bid, mod, score_pp, score_acc, new_mod, new_pp, user_pp)
             bot_SQL.action(sql)
-        print('%s/%s: %s的bp记录完毕' % (user_number, total_number, uid))
+        print('CN %s/%s: %s的bp记录完毕' % (user_number, total_number, uid))
 bot_IOfile.write_pkl_data(error_list, 'D:\Python POJ\lxybot_v2\data\data_error_CN_list.pkl')
-
-
+time.sleep(30)
