@@ -22,7 +22,7 @@ def handle_request(context):
 
 
 # bp监视定时任务
-max_count = 1000
+max_count = 5000
 sched_t1 = threading.Thread(target=bot_job.bpCareCenter, args=(bot, max_count))
 sched_t1.setDaemon(True)
 sched_t1.start()

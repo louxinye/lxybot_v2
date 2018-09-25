@@ -7,6 +7,7 @@ from center import bot_global
 
 def bpCareCenter(bot, maxcount):
     count = 0
+    newstart = True
     while count < maxcount:
         time.sleep(10)
         print('bp监视任务触发')
@@ -54,17 +55,20 @@ def bpCareCenter(bot, maxcount):
                                     update_bp.append({"user_id": user_id, "user_name": user_name, "user_mode": score_mode, "user_group": group_list})
                                     bot_global.user_bp_list[num] = update_bp
                                     bot_IOfile.write_pkl_data(bot_global.user_bp_list, 'data/data_bp_care_list.pkl')
-                            for group in group_list:
-                                try:
-                                    bot.send_group_msg(group_id=group, message=msg)
-                                except BaseException:
-                                    print('群发消息出错, 群号: %s' % group)
-                            break
+                            if not newstart:
+                                for group in group_list:
+                                    try:
+                                        bot.send_group_msg(group_id=group, message=msg)
+                                    except BaseException:
+                                        print('群发消息出错, 群号: %s' % group)
+                                break
             bot_global.user_bp_list_lock.release() # 列表解锁
             print('本轮查询结束')
             time.sleep(350)
+            newstart = False
         else:
             time.sleep(50)
+            newstart = True
 
 
 def killCenter(bot):
