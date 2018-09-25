@@ -59,6 +59,23 @@ def roll(content):
     return msg
 
 
+# 函数功能!send功能检查
+def getMsgSend(content):
+    if content == '!send':
+        msg = '你倒是说话呀'
+    elif '!send ' in content:
+        check_msg = re.match(r'^!send (.*)$', content)
+        if check_msg:
+            msg = check_msg.group(1)
+            if not msg:
+                msg = '您的!send指令使用错误'
+        else:
+            msg = '您的!send指令使用错误'
+    else:
+        msg = '无法识别,bot猜测您是想使用指令!send x(x为参数)'
+    return msg
+
+
 # 函数功能:!remove指令检查
 def remove(content):
     num = -1

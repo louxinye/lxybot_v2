@@ -20,7 +20,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.44 正式版'''
+v2.50 正式版'''
     return txt
 
 
@@ -44,8 +44,7 @@ def ppSuggestSystem():
 ☆!banmap: 为自己屏蔽某张图的推荐(参数为bid)
 ☆!mapinfo: 查询地图详细信息(参数为bid)
 使用举例:
-!getmap with hrdt
-!getmap for DalouBot
+!getmap with hrdt for DalouBot
 注意事项:
 1.为每位玩家推荐pp图,使用前推荐先用!myid绑定自己
 2.推荐结果是基于统计得到的，统计范围是你的pp(-150, +350)的其他玩家
@@ -54,7 +53,8 @@ def ppSuggestSystem():
 5.HD、PF、SD、SO、NF会被对待成None,统计时候如果有人开了这几个Mod,会将他的pp按照None情况估算后再进行推荐
 6.某图打的人越多或在他们的bp中越靠前,则推荐结果里的排名也越靠前
 7.屏蔽指令实际上针对的是自己的uid,他人为您找图时候也会生效
-8.私聊使用本系统会返回更为详细的结果'''
+8.私聊使用本系统会返回更为详细的结果
+9.地图数据库更新日期180925'''
     return txt
 
 
@@ -172,7 +172,7 @@ def dogL(list_d):
     for user in list_d:
         msg = msg + '%s\n' % user
     msg = msg + '在一般群员基础上,权限者多拥有下列指令:\n!watch  !stop_w\n!kill@  !stop_k@\n' \
-                '!smoke@  !unsmoke@\n!update  !updateall\n!ban_card  !stop_mie\n!unbind'
+                '!smoke@  !unsmoke@\n!update  !updateall\n!ban_card  !stop_mie\n!unbind  !send'
     return msg
 
 

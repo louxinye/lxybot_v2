@@ -5,8 +5,8 @@ from function import bot_osu
 from function import bot_SQL
 
 
-chart_bid = [995115, 482453, 507098]
-now_turns = 2
+chart_bid = [1494806, 1257362, 741469]
+now_turns = 3
 force_mod = []
 allow_mod = ['EZ', 'HR', 'HD', 'SD', 'PF', 'DT', 'NC', 'FL', 'SO']
 
@@ -89,7 +89,7 @@ def calChartScore(playmsg, user_pp, mod_mul):
     combo = int(playmsg['maxcombo'])
     pp = int(float(user_pp))
     miss = int(playmsg['countmiss'])
-    result = (15 + acc**2 * combo**0.5 - pp * 0.004 - miss * 0.25) * mod_mul
+    result = (15 + acc**2.5 * combo**0.5 - pp * 0.004 - miss * 0.2) * mod_mul
     return result
 
 

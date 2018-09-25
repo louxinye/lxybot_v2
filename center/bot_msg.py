@@ -394,8 +394,8 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=False)
                 elif content == '!submit':
                     bot_global.sql_action_lock.acquire()
-                    msg = '本期chart已经结束'
-                    # msg = bot_chart.submitChart(context['user_id'])
+                    # msg = '本期chart已经结束'
+                    msg = bot_chart.submitChart(context['user_id'])
                     bot_global.sql_action_lock.release()
                     reply(bot, context, msg, atPeople=True)
                 elif content == '!mychart':
@@ -492,6 +492,15 @@ def MsgCenter(bot, context):
                 '''
                 msg = '此功能暂时关闭'
                 reply(bot, context, msg, atPeople=False)
+
+            # 群发公告
+            if context['message_type'] == 'private' and '!send' in content:
+                if context['user_id'] in bot_global.dog_list:
+                    msg = bot_msgcheck.getMsgSend(content)
+                else:
+                    msg = '你不是我的master!'
+                for group_id in bot_global.group_total_list:
+                    bot.send_group_msg(group_id=group_id, message=msg)
 
 
 # 验证指令是否有权限
