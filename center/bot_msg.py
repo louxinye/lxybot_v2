@@ -524,6 +524,7 @@ def MsgCenter(bot, context):
                     bot_global.user_check_in_list.append(context['user_id'])
                 else:
                     bot_global.user_check_in_list.append(context['user_id'])
+                bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
                 if msg:
                     reply(bot, context, msg, atPeople=True)
 

@@ -5,6 +5,7 @@ import re
 import datetime
 from center import bot_global
 from function import bot_osu
+from function import bot_IOfile
 
 def maxDiffCheck(group):
 	if group not in bot_global.group_main_list:
@@ -33,7 +34,7 @@ def maxPPCheck(group):
 		return 99999, 99999, 99999
 	num = bot_global.group_main_list.index(group)
 	if num == 0:
-		return 2000, 2500, 3
+		return 2000, 2500, 2
 	elif num == 1:
 		return 4400, 4500, 1
 	else:
@@ -65,4 +66,5 @@ def checkout(group, qq, uid, name, days):
 	if not success:
 		bot_global.user_check_out_list.append({'group': group, 'qq': qq, 'uid': uid, 'name': name, 'deadline': kill_day})
 		msg = '您已达到进阶水平,将在指定日期后离开本群: %s' % kill_day
+	bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
 	return msg
