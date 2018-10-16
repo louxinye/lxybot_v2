@@ -6,8 +6,10 @@ from function import bot_IOfile
 
 # BP监视开关
 bp_watch = 1
-# 恢复bp监视列表
+# 恢复bp监视列表,用户当日是否被检查列表,用户将被超限踢出列表
 user_bp_list = bot_IOfile.read_pkl_data('data/data_bp_care_list.pkl')
+user_check_in_list = bot_IOfile.read_pkl_data('data/data_check_in_list.pkl')
+user_check_out_list = bot_IOfile.read_pkl_data('data/data_check_out_list.pkl')
 # 变量锁,对内容有改动的指令需要加锁以实现互斥(对只读指令则采取鸵鸟策略)
 user_bp_list_lock = threading.Lock()
 user_card_list_lock = threading.Lock()
@@ -15,6 +17,7 @@ health_list_lock = threading.Lock()
 noise_list_lock = threading.Lock()
 game_mie_lock = threading.Lock()
 sql_action_lock = threading.Lock()
+super_star_lock = threading.Lock()
 
 
 def getGroupList(list_g):
@@ -38,7 +41,7 @@ group_bp_list = getGroupList([2, 3, 4, 6])
 # 管理员存在的群代号:
 group_dog_list = getGroupList([0, 1, 2, 3, 6])
 # 权限者qq号
-dog_list = [1061566571, 3059841053, 1149483077, 962549599, 1239219529, 191937704, 1773805744, 2575009695, 1094452372]
+dog_list = [3082577334, 1061566571, 3059841053, 1149483077, 962549599, 1239219529, 191937704, 1773805744, 2575009695, 1094452372]
 # 本bot的qq号
 host_list = [3082577334]
 # 屏蔽qq号,群聊时无视这些人的发言

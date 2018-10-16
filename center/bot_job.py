@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import time
+import datetime
 from function import bot_IOfile
 from function import bot_osu
 from center import bot_global
+from center import bot_msg
 
 
+# bp监视任务
 def bpCareCenter(bot, maxcount):
     count = 0
     newstart = True
@@ -71,6 +74,7 @@ def bpCareCenter(bot, maxcount):
             newstart = True
 
 
+# 定时踢人任务
 def killCenter(bot):
     while(True):
         print('踢人倒计时触发')
@@ -89,3 +93,14 @@ def killCenter(bot):
                     except:
                         pass
         time.sleep(60)
+
+
+# pp超限检测任务
+def checkOutCenter(bot):
+    now_day = datetime.date.today()
+    for user in bot_global.user_check_out_list:
+        if now_day >= user['deadline']:
+            msg = '!kill[CQ:at,qq=%s] ' % user['qq']
+            context = {'message_type': 'group', 'group_id': user['group'], 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
+            bot.send_group_msg(group_id=user['group'], message=msg)
+            bot_msg.MsgCenter(bot, context)

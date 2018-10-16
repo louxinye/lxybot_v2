@@ -55,7 +55,7 @@ def MsgCenter(bot, context):
         reply(bot, context, msg, atPeople=False)
 
     # 权限判断
-    if context['user_id'] in bot_global.host_list:
+    if context['user_id'] in bot_global.host_list and 'lxybot_sudo' not in context:
         pass
     elif context['message_type'] == 'group' and (context['group_id'] not in bot_global.group_total_list or context['user_id'] in bot_global.ignore_list):
         pass
@@ -501,6 +501,31 @@ def MsgCenter(bot, context):
                     msg = '你不是我的master!'
                 for group_id in bot_global.group_total_list:
                     bot.send_group_msg(group_id=group_id, message=msg)
+
+        # 主群超限检测
+        if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
+            if context['user_id'] in bot_global.user_check_in_list:
+                pass
+            else:
+                bot_global.sql_action_lock.acquire()
+                (out_pp, max_pp, step_pp) = bot_superstar.maxPPCheck(context['group_id'])
+                (now_pp, uid, name) = bot_superstar.nowPPCheck(context['user_id'])
+                bot_global.sql_action_lock.release()
+                msg = ''
+                if now_pp < 0:
+                    msg = '请绑定本bot以便获取更好的服♂务\n指令格式为!myid x (x为您的osu!账号)'
+                elif now_pp < 1:
+                    msg = '您的pp小于1,请先进行一次游戏'
+                elif now_pp > out_pp:
+                    days = max((max_pp-now_pp)//step_pp+1, 1)
+                    bot_global.super_star_lock.acquire()
+                    msg = bot_superstar.checkout(context['group_id'], context['user_id'], uid, name, days)
+                    bot_global.super_star_lock.release()
+                    bot_global.user_check_in_list.append(context['user_id'])
+                else:
+                    bot_global.user_check_in_list.append(context['user_id'])
+                if msg:
+                    reply(bot, context, msg, atPeople=True)
 
 
 # 验证指令是否有权限
