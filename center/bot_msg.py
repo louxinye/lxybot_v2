@@ -503,7 +503,7 @@ def MsgCenter(bot, context):
                     bot.send_group_msg(group_id=group_id, message=msg)
 
         # 主群超限检测
-        if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
+        if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list and context['user_id'] not in bot_global.ignore_list:
             if context['user_id'] in bot_global.user_check_in_list:
                 pass
             else:
