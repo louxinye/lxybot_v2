@@ -50,6 +50,7 @@ def checkout(group, qq, uid, name, days):
 	kill_day = now_day + datetime.timedelta(days=days)
 	success = False
 	msg = '本条语句为debug专用,请无视'
+	bot_global.check_out_lock.acquire()
 	for user_will_be_kill in bot_global.user_check_out_list:
 		if user_will_be_kill['qq'] == qq:
 			success = True
@@ -64,6 +65,7 @@ def checkout(group, qq, uid, name, days):
 		bot_global.user_check_out_list.append({'group': group, 'qq': qq, 'uid': uid, 'name': name, 'deadline': kill_day})
 		msg = '您已达到进阶水平,将在指定日期后离开本群: %s' % kill_day
 	bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
+	bot_global.check_out_lock.release()
 	return msg
 
 

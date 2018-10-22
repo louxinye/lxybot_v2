@@ -103,20 +103,29 @@ def checkOutCenter(bot):
         time.sleep(100)
         print('定时pp超限踢人触发')
         now_day = datetime.date.today()
-        for user in bot_global.user_check_out_list:
-            context_temp = {'message_type': 'group', 'group_id': user['group'], 'user_id': user['qq'], 'message': '0'}
-            if now_day >= user['deadline'] and bot_superstar.ignoreUserCheck(bot, context_temp) <= 1:
-                msg = '!kill[CQ:at,qq=%s] ' % user['qq']
-                context = {'message_type': 'group', 'group_id': user['group'], 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
-                bot.send_group_msg(group_id=user['group'], message=msg)
-                bot_msg.MsgCenter(bot, context)
+        bot_global.check_out_lock.acquire()
+        for i in range(len(bot_global.user_check_out_list)-1, -1, -1):
+            group = bot_global.user_check_out_list[i]['group']
+            qq = bot_global.user_check_out_list[i]['qq']
+            deadline = bot_global.user_check_out_list[i]['deadline']
+            context_temp = {'message_type': 'group', 'group_id': group, 'user_id': qq, 'message': '0'}
+            if now_day >= deadline:
+                if bot_superstar.ignoreUserCheck(bot, context_temp) <= 1:
+                    msg = '!kill[CQ:at,qq=%s] ' % qq
+                    context = {'message_type': 'group', 'group_id': group, 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
+                    bot.send_group_msg(group_id=group, message=msg)
+                    bot_msg.MsgCenter(bot, context)
+                del bot_global.user_check_out_list[i]
+        bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
+        bot_global.check_out_lock.release()
         time.sleep(3500)
 
 
-# pp超限检测记录清除任务,每执行一轮休息12小时
+# pp超限检测记录清除任务,每执行一轮休息24小时
 def cleanCenter(bot):
     while(True):
         time.sleep(100)
         print('定时清除记录触发')
-        bot_global.user_check_out_list.clear()
-        time.sleep(43100)
+        bot_global.user_check_in_list.clear()
+        bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
+        time.sleep(86300)

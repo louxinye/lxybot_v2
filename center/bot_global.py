@@ -18,6 +18,7 @@ noise_list_lock = threading.Lock()
 game_mie_lock = threading.Lock()
 sql_action_lock = threading.Lock()
 super_star_lock = threading.Lock()
+check_out_lock = threading.Lock()
 
 
 def getGroupList(list_g):

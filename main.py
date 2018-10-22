@@ -27,11 +27,20 @@ sched_t1 = threading.Thread(target=bot_job.bpCareCenter, args=(bot, max_count))
 sched_t1.setDaemon(True)
 sched_t1.start()
 
-
 # 踢人定时任务
 sched_t2 = threading.Thread(target=bot_job.killCenter, args=(bot,))
 sched_t2.setDaemon(True)
 sched_t2.start()
+
+# pp超限踢人定时任务
+sched_t3 = threading.Thread(target=bot_job.checkOutCenter, args=(bot,))
+sched_t3.setDaemon(True)
+sched_t3.start()
+
+# 记录清除定时任务
+sched_t4 = threading.Thread(target=bot_job.cleanCenter, args=(bot,))
+sched_t4.setDaemon(True)
+sched_t4.start()
 
 
 # 监听启动
