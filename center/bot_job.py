@@ -5,15 +5,16 @@ from function import bot_IOfile
 from function import bot_osu
 from center import bot_global
 from center import bot_msg
+from function import bot_superstar
 
 
-# bp监视任务
+# bp监视任务,每执行一轮休息8分钟
 def bpCareCenter(bot, maxcount):
     count = 0
     newstart = True
     while count < maxcount:
-        time.sleep(10)
-        print('bp监视任务触发')
+        time.sleep(30)
+        print('定时bp监视任务触发')
         if bot_global.bp_watch:
             count = count + 1
             msg = '开始查询BP\n本次为bot启动后第%s次查询' % count
@@ -67,17 +68,18 @@ def bpCareCenter(bot, maxcount):
                                 break
             bot_global.user_bp_list_lock.release() # 列表解锁
             print('本轮查询结束')
-            time.sleep(350)
+            time.sleep(450)
             newstart = False
         else:
-            time.sleep(50)
+            time.sleep(30)
             newstart = True
 
 
 # 定时踢人任务
 def killCenter(bot):
     while(True):
-        print('踢人倒计时触发')
+        time.sleep(30)
+        print('定时踢人倒计时触发')
         member_num = len(bot_global.kill_list)
         if member_num > 0:
             for i in range(member_num-1, -1, -1):
@@ -92,15 +94,29 @@ def killCenter(bot):
                         bot.send_group_msg(group_id=group, message=msg)
                     except:
                         pass
-        time.sleep(60)
+        time.sleep(30)
 
 
-# pp超限检测任务
+# pp超限踢人任务,每执行一轮休息1小时
 def checkOutCenter(bot):
-    now_day = datetime.date.today()
-    for user in bot_global.user_check_out_list:
-        if now_day >= user['deadline']:
-            msg = '!kill[CQ:at,qq=%s] ' % user['qq']
-            context = {'message_type': 'group', 'group_id': user['group'], 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
-            bot.send_group_msg(group_id=user['group'], message=msg)
-            bot_msg.MsgCenter(bot, context)
+    while (True):
+        time.sleep(100)
+        print('定时pp超限踢人触发')
+        now_day = datetime.date.today()
+        for user in bot_global.user_check_out_list:
+            context_temp = {'message_type': 'group', 'group_id': user['group'], 'user_id': user['qq'], 'message': '0'}
+            if now_day >= user['deadline'] and bot_superstar.ignoreUserCheck(bot, context_temp) <= 1:
+                msg = '!kill[CQ:at,qq=%s] ' % user['qq']
+                context = {'message_type': 'group', 'group_id': user['group'], 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
+                bot.send_group_msg(group_id=user['group'], message=msg)
+                bot_msg.MsgCenter(bot, context)
+        time.sleep(3500)
+
+
+# pp超限检测记录清除任务,每执行一轮休息12小时
+def cleanCenter(bot):
+    while(True):
+        time.sleep(100)
+        print('定时清除记录触发')
+        bot_global.user_check_out_list.clear()
+        time.sleep(43100)

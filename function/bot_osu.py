@@ -399,12 +399,12 @@ def searchUserInfo(user_qq, update=True):
     result = bot_SQL.select(sql)
     if not result:
         msg = '您未绑定! (请使用!myid)'
-        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0}
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sql': False}
     uid = result[0][1]
     (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')
     if not uid:
         msg = 'pp查询出错,请稍后再试'
-        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0}
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sql': True}
     pp_up = addCal(pp - result[0][3], floatnum=2)
     pc_up = addCal(pc - result[0][4])
     tth_up = addCal(tth - result[0][5])
@@ -417,7 +417,7 @@ def searchUserInfo(user_qq, update=True):
         success = bot_SQL.action(sql)
         if not success:
             msg = '数据库记录出错，请联系Dalou!'
-    return {'msg': msg, 'uid': uid, 'name': name, 'pp': pp}
+    return {'msg': msg, 'uid': uid, 'name': name, 'pp': pp, 'sql': True}
 
 
 # 增量显示

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # 函数功能:查看各类帮助文档或者列表
+import copy
+from center import bot_global
 
 
 def getHelp():
@@ -196,6 +198,31 @@ def eggL(list_e):
     return msg
 
 
+def farewellL(list_f, qq):
+    list_farewell = copy.deepcopy(list_f)
+    list_farewell.sort(key=lambda x: x['deadline'], reverse=False)
+    member_number = min(len(list_farewell), 5)
+    if not member_number:
+        msg = '所有人都很安全,哈哈'
+    else:
+        msg = '最近有人会在指定日期离群:'
+        msg2 = ''
+        for i in range(list_farewell):
+            group = getGroupName(bot_global.group_main_list.index(list_farewell(i)['group']))
+            name = list_farewell(i)['name']
+            deadline = list_farewell(i)['deadline']
+            if member_number:
+                msg = msg + '\n%s, %s, %s' % (group, name, deadline)
+                member_number = member_number - 1
+            if list_farewell(i)['qq'] == qq:
+                msg2 = msg2 + '\n%s, %s, %s' % (group, name, deadline)
+        if not msg2:
+            msg = msg + '检查完毕,您没在名单中'
+        else:
+            msg = msg + '其中,这是您的离群信息:' + msg2
+    return msg
+
+
 def bpL(list_b, group):
     msg = ''
     std_msg = ''
@@ -226,3 +253,13 @@ def bpL(list_b, group):
     else:
         msg = '本群监视列表如下:\n'+ msg + '上述成员更新bp将会进行实时通知 (用户id仅供参考,不排除有人改名,此时需要本人更新bp才会自动替换为新id)'
     return msg
+
+
+def getGroupName(i):
+    if i == 0:
+        return '主群'
+    if i == 1:
+        return '分群'
+    if i == 2:
+        return '后花园'
+    return '鬼知道什么群'

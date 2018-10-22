@@ -92,6 +92,9 @@ def MsgCenter(bot, context):
         elif content == '!kill':
             msg = bot_getmsg.killL(bot_global.kill_list)
             reply(bot, context, msg, atPeople=False)
+        elif content == '!farewell':
+            msg = bot_getmsg.farewellL(bot_global.user_check_out_list, context['user_id'])
+            reply(bot, context, msg, atPeople=False)
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
@@ -504,34 +507,28 @@ def MsgCenter(bot, context):
 
         # 主群超限检测
         if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
-            member = bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], context['user_id'])
-            if not member:
-                pass
-            elif context['user_id'] in bot_global.ignore_list or context['user_id'] in bot_global.white_list:
-                pass
-            elif member['role'] == 'admin' or member['role'] == 'owner':
-                pass
-            elif context['user_id'] in bot_global.user_check_in_list:
-                pass
-            else:
+            if not bot_superstar.ignoreUserCheck(bot, context):
                 bot_global.sql_action_lock.acquire()
                 (out_pp, max_pp, step_pp) = bot_superstar.maxPPCheck(context['group_id'])
-                (now_pp, uid, name) = bot_superstar.nowPPCheck(context['user_id'])
+                now_user_info = bot_osu.searchUserInfo(context['user_id'], update=False)
                 bot_global.sql_action_lock.release()
                 msg = ''
-                if now_pp < 0:
-                    msg = '请绑定本bot以便获取更好的服♂务\n指令格式为!myid x (x为您的osu!账号)'
-                elif now_pp < 1:
-                    msg = '您的pp小于1,请先进行一次游戏'
-                elif now_pp > out_pp:
-                    days = max((max_pp-now_pp)//step_pp+1, 1)
+                if not now_user_info['sql']:
+                    msg = '请绑定本bot以便获取更好的服务\n指令格式为!myid x (x为您的osu!账号)'
+                elif not now_user_info['uid']:
+                    pass
+                elif now_user_info['pp'] < 1:
+                    msg = '您的pp低于1,请先进行一次游戏'
+                elif now_user_info['pp'] > out_pp:
+                    days = max((max_pp-now_user_info['pp'])//step_pp+1, 1)
                     bot_global.super_star_lock.acquire()
-                    msg = bot_superstar.checkout(context['group_id'], context['user_id'], uid, name, days)
+                    msg = bot_superstar.checkout(context['group_id'], context['user_id'], now_user_info['uid'], now_user_info['name'], days)
                     bot_global.super_star_lock.release()
                     bot_global.user_check_in_list.append(context['user_id'])
+                    bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
                 else:
                     bot_global.user_check_in_list.append(context['user_id'])
-                bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
+                    bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
                 if msg:
                     reply(bot, context, msg, atPeople=True)
 
