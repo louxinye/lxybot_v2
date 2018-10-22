@@ -83,6 +83,9 @@ def MsgCenter(bot, context):
         elif content == '!抽烟系统':
             msg = bot_getmsg.smokeSystem()
             reply(bot, context, msg, atPeople=False)
+        elif content == '!欢送系统':
+            msg = bot_getmsg.farewellSystem()
+            reply(bot, context, msg, atPeople=False)
         elif content == '!dog':
             msg = bot_getmsg.dogL(bot_global.dog_list)
             reply(bot, context, msg, atPeople=False)

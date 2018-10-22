@@ -12,6 +12,7 @@ def getHelp():
 !myid   绑定id
 !mypp   速查信息
 !myrct  查询最新游戏记录
+!欢送系统
 !抽烟系统
 !找图系统
 !健康系统
@@ -22,7 +23,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.50 正式版'''
+v2.61 正式版'''
     return txt
 
 
@@ -36,6 +37,18 @@ def smokeSystem():
 ☆!remove 私聊解禁(关闭)
 注意事项
 本系统效果为主动让自己禁言,适合那些控制不住自己水群的孩子使用'''
+    return txt
+
+
+def farewellSystem():
+    txt = '''欢送系统介绍
+
+☆!farewell: 查询欢送情况
+注意事项:
+1.为了维护新人群环境,主群达到2000pp,分群达到4400pp,后花园达到99999pp的玩家将会进入离群倒计时
+2.时间由玩家当前pp决定,主群每提升2pp减少一天倒计时,其余群每提升1pp减少一天倒计时
+3.群主,管理员,bot权限者,主群临时参观团,白名单玩家和其它bot不会受到本系统影响
+4.如果进入倒计时后该玩家成为了上述人员,则时间结束后不会触发踢人,欢送名单会自动删去'''
     return txt
 
 
@@ -207,19 +220,19 @@ def farewellL(list_f, qq):
     else:
         msg = '最近有人会在指定日期离群:'
         msg2 = ''
-        for i in range(list_farewell):
-            group = getGroupName(bot_global.group_main_list.index(list_farewell(i)['group']))
-            name = list_farewell(i)['name']
-            deadline = list_farewell(i)['deadline']
+        for i in range(len(list_farewell)):
+            group = getGroupName(bot_global.group_main_list.index(list_farewell[i]['group']))
+            name = list_farewell[i]['name']
+            deadline = list_farewell[i]['deadline']
             if member_number:
                 msg = msg + '\n%s, %s, %s' % (group, name, deadline)
                 member_number = member_number - 1
-            if list_farewell(i)['qq'] == qq:
+            if list_farewell[i]['qq'] == qq:
                 msg2 = msg2 + '\n%s, %s, %s' % (group, name, deadline)
         if not msg2:
-            msg = msg + '检查完毕,您没在名单中'
+            msg = msg + '\n------------------\n检查完毕,您没在名单中'
         else:
-            msg = msg + '其中,这是您的离群信息:' + msg2
+            msg = msg + '\n------------------\n其中,这是您的离群信息:' + msg2
     return msg
 
 
