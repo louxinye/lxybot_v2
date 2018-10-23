@@ -3,9 +3,9 @@ import time
 import datetime
 from function import bot_IOfile
 from function import bot_osu
-from center import bot_global
-from center import bot_msg
+from function import bot_msgcheck
 from function import bot_superstar
+from center import bot_global
 
 
 # bp监视任务,每执行一轮休息8分钟
@@ -111,10 +111,10 @@ def checkOutCenter(bot):
             context_temp = {'message_type': 'group', 'group_id': group, 'user_id': qq, 'message': '0'}
             if now_day >= deadline:
                 if bot_superstar.ignoreUserCheck(bot, context_temp) <= 1:
-                    msg = '!kill[CQ:at,qq=%s] ' % qq
-                    context = {'message_type': 'group', 'group_id': group, 'user_id': bot_global.host_list, 'message': msg, 'lxybot_sudo': True}
+                    content = '!kill[CQ:at,qq=%s] ' % qq
+                    bot.send_group_msg(group_id=group, message=content)
+                    msg = bot_msgcheck.sendKill(bot, bot_global.kill_list, group, content)
                     bot.send_group_msg(group_id=group, message=msg)
-                    bot_msg.MsgCenter(bot, context)
                 del bot_global.user_check_out_list[i]
         bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
         bot_global.check_out_lock.release()
