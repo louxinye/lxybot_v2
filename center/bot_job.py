@@ -89,6 +89,10 @@ def killCenter(bot):
                     qq = bot_global.kill_list[i]['qq']
                     msg = '操作执行成功: 踢出QQ号%s' % qq
                     del bot_global.kill_list[i]
+                    for j in range(len(bot_global.user_check_out_list) - 1, -1, -1):
+                        if bot_global.user_check_out_list[j]['qq'] == qq and bot_global.user_check_out_list[j]['group'] == group:
+                            del bot_global.user_check_out_list[j]
+                            break
                     try:
                         bot.set_group_kick(group_id=group, user_id=qq)
                         bot.send_group_msg(group_id=group, message=msg)

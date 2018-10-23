@@ -23,7 +23,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.61 正式版'''
+v2.62 正式版'''
     return txt
 
 
@@ -44,10 +44,11 @@ def farewellSystem():
     txt = '''欢送系统介绍
 
 ☆!farewell: 查询欢送情况
+☆!whitelist: 查询安全名单
 注意事项:
-1.为了维护新人群环境,主群达到2000pp,分群达到4400pp,后花园达到99999pp的玩家将会进入离群倒计时
+1.为了维护新人群环境,主群达到2000pp,分群达到4400pp的玩家将会进入离群倒计时
 2.时间由玩家当前pp决定,主群每提升2pp减少一天倒计时,其余群每提升1pp减少一天倒计时
-3.群主,管理员,bot权限者,主群临时参观团,白名单玩家和其它bot不会受到本系统影响
+3.安全名单内的成员不会受到本系统影响
 4.如果进入倒计时后该玩家成为了上述人员,则时间结束后不会触发踢人,欢送名单会自动删去'''
     return txt
 
@@ -192,7 +193,7 @@ def dogL(list_d):
 
 
 def killL(list_k):
-    msg = '即将被踢的成员如下(QQ号):\n'
+    msg = '即将被踢的成员如下:\n'
     msg = msg + '群号, QQ号, 剩余时间(分)'
     for user in list_k:
         msg = msg + '\n%s, %s, %s' % (user['group'], user['qq'], user['time'])
@@ -233,6 +234,21 @@ def farewellL(list_f, qq):
             msg = msg + '\n------------------\n检查完毕,您没在名单中'
         else:
             msg = msg + '\n------------------\n其中,这是您的离群信息:' + msg2
+    return msg
+
+
+def whiteL(list_w1, list_w2):
+    msg = '以下人员免除超限检测:'
+    msg = msg + '\n【1】该群的群主与管理员'
+    msg = msg + '\n【2】该群的其余bot'
+    msg = msg + '\n【3】本bot的权限者'
+    msg = msg + '\n【4】白名单玩家(QQ号):'
+    for user in list_w1:
+        msg = msg + '\n%s' % user
+    msg = msg + '\n【5】主群参观团(QQ号):'
+    for user in list_w2:
+        msg = msg + '\n%s' % user
+    msg = msg + '\n如果您是上述之一成员但是被检测到,请立刻联系dalou'
     return msg
 
 

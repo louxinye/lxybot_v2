@@ -98,6 +98,9 @@ def MsgCenter(bot, context):
         elif content == '!farewell':
             msg = bot_getmsg.farewellL(bot_global.user_check_out_list, context['user_id'])
             reply(bot, context, msg, atPeople=False)
+        elif content == '!whitelist':
+            msg = bot_getmsg.whiteL(bot_global.white_list, bot_global.white_temp_list)
+            reply(bot, context, msg, atPeople=False)
         elif '!roll' in content:
             msg = bot_msgcheck.roll(content)
             reply(bot, context, msg, atPeople=True)
@@ -338,6 +341,7 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=False)
                 elif '!测试' in content:
                     msg = '%s' % bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], context['user_id'])
+                    print(bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], 0))
                     reply(bot, context, msg, atPeople=False)
                 elif context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
                     if '!smoke' in content:
