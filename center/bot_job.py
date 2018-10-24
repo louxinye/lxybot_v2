@@ -89,10 +89,13 @@ def killCenter(bot):
                     qq = bot_global.kill_list[i]['qq']
                     msg = '操作执行成功: 踢出QQ号%s' % qq
                     del bot_global.kill_list[i]
+                    bot_global.check_out_lock.acquire()
                     for j in range(len(bot_global.user_check_out_list) - 1, -1, -1):
                         if bot_global.user_check_out_list[j]['qq'] == qq and bot_global.user_check_out_list[j]['group'] == group:
                             del bot_global.user_check_out_list[j]
+                            bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
                             break
+                    bot_global.check_out_lock.release()
                     try:
                         bot.set_group_kick(group_id=group, user_id=qq)
                         bot.send_group_msg(group_id=group, message=msg)
@@ -101,7 +104,7 @@ def killCenter(bot):
         time.sleep(30)
 
 
-# pp超限踢人任务,每执行一轮休息1小时
+# pp超限踢人任务,每执行一轮休息2小时
 def checkOutCenter(bot):
     while (True):
         time.sleep(100)
@@ -119,10 +122,9 @@ def checkOutCenter(bot):
                     bot.send_group_msg(group_id=group, message=content)
                     msg = bot_msgcheck.sendKill(bot, bot_global.kill_list, group, content)
                     bot.send_group_msg(group_id=group, message=msg)
-                del bot_global.user_check_out_list[i]
         bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
         bot_global.check_out_lock.release()
-        time.sleep(3500)
+        time.sleep(7100)
 
 
 # pp超限检测记录清除任务,每执行一轮休息24小时

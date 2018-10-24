@@ -49,14 +49,13 @@ def checkout(group, qq, uid, name, days):
 	now_day = datetime.date.today()
 	kill_day = now_day + datetime.timedelta(days=days)
 	success = False
-	msg = '本条语句为debug专用,请无视'
+	msg = ''
 	bot_global.check_out_lock.acquire()
 	for user_will_be_kill in bot_global.user_check_out_list:
 		if user_will_be_kill['qq'] == qq:
 			success = True
 			user_will_be_kill['uid'] = uid
 			user_will_be_kill['name'] = name
-			msg = '每日提醒: 您将在指定日期后离开本群: %s' % kill_day
 			if kill_day < user_will_be_kill['deadline']:
 				user_will_be_kill['deadline'] = kill_day
 				msg = '由于您的出色水平,将提前至下列日期离开本群: %s' % kill_day
