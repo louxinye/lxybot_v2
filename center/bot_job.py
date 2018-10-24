@@ -104,10 +104,10 @@ def killCenter(bot):
         time.sleep(30)
 
 
-# pp超限踢人任务,每执行一轮休息2小时
+# pp超限踢人任务,每执行一轮休息3小时
 def checkOutCenter(bot):
     while (True):
-        time.sleep(100)
+        time.sleep(50)
         print('定时pp超限踢人触发')
         now_day = datetime.date.today()
         bot_global.check_out_lock.acquire()
@@ -126,14 +126,14 @@ def checkOutCenter(bot):
                     del bot_global.user_check_out_list[i]
         bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
         bot_global.check_out_lock.release()
-        time.sleep(7100)
+        time.sleep(10750)
 
 
-# pp超限检测记录清除任务,每执行一轮休息24小时
+# pp超限检测记录清除任务,每执行一轮休息1小时
 def cleanCenter(bot):
     while(True):
         time.sleep(100)
         print('定时清除记录触发')
         bot_global.user_check_in_list.clear()
         bot_IOfile.write_pkl_data(bot_global.user_check_in_list, 'data/data_check_in_list.pkl')
-        time.sleep(86300)
+        time.sleep(3500)
