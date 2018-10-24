@@ -122,6 +122,8 @@ def checkOutCenter(bot):
                     bot.send_group_msg(group_id=group, message=content)
                     msg = bot_msgcheck.sendKill(bot, bot_global.kill_list, group, content)
                     bot.send_group_msg(group_id=group, message=msg)
+                else:
+                    del bot_global.user_check_out_list[i]
         bot_IOfile.write_pkl_data(bot_global.user_check_out_list, 'data/data_check_out_list.pkl')
         bot_global.check_out_lock.release()
         time.sleep(7100)
