@@ -5,8 +5,8 @@ from function import bot_osu
 from function import bot_SQL
 
 
-chart_bid = [1494806, 1257362, 741469]
-now_turns = 3
+chart_bid = [338646, 808996, 71829]
+now_turns = 4
 force_mod = []
 allow_mod = ['EZ', 'HR', 'HD', 'SD', 'PF', 'DT', 'NC', 'FL', 'SO']
 
