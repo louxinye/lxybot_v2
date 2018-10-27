@@ -145,8 +145,8 @@ def searchMap(user_qq, content, contact='group'):
         return '您的!getmap指令使用错误'
     if not uid:
         return '用户查询出错,请稍后再试'
-    if pp > 15000 or pp < 600:
-        return '本推荐只支持pp在600-15000的玩家'
+    if pp > 15000 or pp < 500:
+        return '本推荐只支持pp在500-15000的玩家'
     bp_result = bot_osu.getUserBp(uid, '0')
     if not bp_result:
         return 'bp查询出错,请稍后再试'
