@@ -341,7 +341,13 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=False)
                 elif '!测试' in content:
                     msg = '%s' % bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], context['user_id'])
-                    print(bot_msgcheck.getGroupMemberInfo(bot, context['group_id'], 0))
+                    reply(bot, context, msg, atPeople=False)
+                elif '!unlock_sql' in content:
+                    try:
+                        bot_global.sql_action_lock.release()
+                        msg = '数据库锁强制释放成功'
+                    except:
+                        msg = '数据库锁未被占用'
                     reply(bot, context, msg, atPeople=False)
                 elif context['message_type'] == 'group' and context['group_id'] in bot_global.group_dog_list:
                     if '!smoke' in content:

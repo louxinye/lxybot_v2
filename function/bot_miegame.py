@@ -201,7 +201,7 @@ def startGame(game_member, member_qq, content):
             level_max = 0
             msg = '该游戏正在被玩家%s占用,若要停止则需要本人使用!stop_g' % game_member
         else:
-            level_max = 4
+            level_max = 2
             msg = '锁定玩家成功!\n难度: 大神级\nbot目前数字:1 1\n玩家目前数字:1 1'
     elif '!game_mie ' in content:
         if game_member:
@@ -224,19 +224,19 @@ def game_diff(content):
     if check_game:
         t = int(content[10])
         if t == 1:
-            level_max = 2
+            level_max = 1
             diff_name = '教学级'
         elif t == 2:
+            level_max = 2
+            diff_name = '高手级'
+        elif t == 3:
             level_max = 3
             diff_name = '大神级'
-        elif t == 3:
+        elif t == 4:
             level_max = 4
             diff_name = '噩梦级'
-        elif t == 4:
-            level_max = 6
-            diff_name = '怀疑人生级'
         elif t == 5:
-            level_max = 8
+            level_max = 5
             diff_name = '退群删游戏级'
         else:
             level_max = 0

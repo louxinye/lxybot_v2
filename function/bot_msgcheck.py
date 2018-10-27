@@ -205,7 +205,10 @@ def getTimeMul(a):
 
 
 def getGroupMemberInfo(bot, groupid, memberqq):
-    result = bot.get_group_member_info(group_id=groupid, user_id=memberqq)
+    try:
+        result = bot.get_group_member_info(group_id=groupid, user_id=memberqq)
+    except:
+        return {}
     if 'user_id' in result:
         return result
     else:
