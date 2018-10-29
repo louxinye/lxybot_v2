@@ -505,11 +505,18 @@ def MsgCenter(bot, context):
             # 群发公告
             if context['message_type'] == 'private' and '!send' in content:
                 if context['user_id'] in bot_global.dog_list:
-                    msg = bot_msgcheck.getMsgSend(content)
+                    (msg, success) = bot_msgcheck.getMsgSend(content)
                 else:
                     msg = '你不是我的master!'
-                for group_id in bot_global.group_total_list:
-                    bot.send_group_msg(group_id=group_id, message=msg)
+                    success = False
+                if success:
+                    for group_id in bot_global.group_total_list:
+                        try:
+                            bot.send_group_msg(group_id=group_id, message=msg)
+                        except:
+                            reply(bot, context, '群号%s出现发送异常' % group_id, atPeople=False)
+                else:
+                    reply(bot, context, msg, atPeople=False)
 
         # 主群超限检测
         if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
