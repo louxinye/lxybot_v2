@@ -646,22 +646,22 @@ def rankAll(list_c, keyVal, contact='group'):
         list_card.sort(key=lambda x: x['pt_total'], reverse=True)
         msg = 'pt排行榜(正序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['pt'])
+            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['pt_total'])
     elif keyVal == 'pt_up':
         list_card.sort(key=lambda x: x['pt_total'], reverse=False)
         msg = 'pt排行榜(倒序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['pt'])
+            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['pt_total'])
     elif keyVal == 'mn_down':
         list_card.sort(key=lambda x: x['money_total'], reverse=True)
         msg = '总金币排行榜(正序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['total_money'])
+            msg = msg + '\n%s: %s (%s)' % (i+1, list_card[i]['name'], list_card[i]['money_total'])
     elif keyVal == 'mn_up':
         list_card.sort(key=lambda x: x['money_total'], reverse=False)
         msg = '总金币排行榜(倒序):'
         for i in range(member_number):
-            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['total_money'])
+            msg = msg + '\n%s: %s (%s)' % (i + 1, list_card[i]['name'], list_card[i]['money_total'])
     else:
         list_lucky = []
         for user in list_card:
