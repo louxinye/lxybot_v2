@@ -199,21 +199,9 @@ def MsgCenter(bot, context):
         elif content == '!lucky_last':
             msg = bot_card.rankAll(user_card_list, 'lucky_up', contact=context['message_type'])
             reply(bot, context, msg, atPeople=False)
-        elif content == '!card_p':
-            msg = bot_card.gailv()
-            reply(bot, context, msg, atPeople=False)
-        elif content == '!card_v':
-            msg = bot_card.jiazhi()
-            reply(bot, context, msg, atPeople=False)
         elif content == '!rankme':
             msg = bot_card.userRank(context['user_id'], user_card_list)
             reply(bot, context, msg, atPeople=True)
-        elif '!rank' in content:
-            msg = bot_card.otherRank(user_card_list, content)
-            reply(bot, context, msg, atPeople=False)
-        elif '!card' in content:
-            msg = bot_card.otherCardInfo(user_card_list, content)
-            reply(bot, context, msg, atPeople=False)
         elif '!addmoney' in content:
             bot_global.user_card_list_lock.acquire()
             # msg = bot_card.addMoney(context['user_id'], user_card_list)
