@@ -69,13 +69,12 @@ def startCard(card_member, list_c, content):
                 if not osu_id:
                     msg = '查询失败,可能为输入错误或网络延迟'
                     return msg
-            money = 100
             user_info = {'qq': card_member, 'uid': osu_id, 'name': real_name, 'pc': pc, 'tth': tth, 'medal': medal,
-                         'card': [[], [], [], [], []], 'money_now': money, 'money_total': money, 'money_boom_total': 0,
-                         'money_boom_cost': 30, 'money_smoke': 0, 'pt_total': 0, 'pt_bonus':0, 'lucky': 0, 'lucky_rate': 0,
-                         'fly': 0, 'num_pick': 0, 'num_fly': 0}
+                         'card': [[], [], [], [], []], 'money_now': 100, 'money_total': 100, 'money_boom_total': 0,
+                         'money_boom_cost': 30, 'money_smoke': 0, 'money_bonus': 0, 'pt_total': 0, 'pt_bonus': 0,
+                         'lucky': 0, 'lucky_rate': 0, 'fly': 0, 'num_pick': 0, 'num_fly': 0}
             msg = '玩家信息:\nqq号: %s\nuid: %s\nname: %s\npc: %s\ntth: %s\nmoney: %s\n机票数: 0\n活动开始!'\
-                  % (card_member, osu_id, real_name, pc, tth, money)
+                  % (card_member, osu_id, real_name, pc, tth, 100)
             list_c.append(user_info)
             bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
         else:
@@ -612,7 +611,7 @@ def medalUnlock(card_set):
 
 # 欧洲系数计算
 def European(user):
-    use_money = max(0, user['money_total'] - user['money_now'] - user['money_boom_total'] - user['money_smoke'])
+    use_money = max(0, user['money_total'] + user['money_bonus'] - user['money_now'] - user['money_boom_total'] - user['money_smoke'])
     num_fly = user['num_fly']
     num_pick = user['num_pick']
     if num_pick == 0:
@@ -732,7 +731,7 @@ def sendBoom(list_c, card_member, content):
                     smoke1 = int(smoke2 * random.uniform(0.5, 3))
                     msg = '操作执行成功\n对方: %s秒, 自己: %s秒\n金币变更情况: %s → %s\n炸弹购买价格: %s → %s' \
                           % (smoke1, smoke2, list_c[i]['money_now']+now_boom_money, list_c[i]['money_now'],
-                             list_c[i]['money_boom_cost']-3, list_c[i]['money_boom_cost'])
+                             now_boom_money, list_c[i]['money_boom_cost'])
                     success = 1
                 else:
                     msg = '您的!boom指令使用错误(指令最后需要紧跟着艾特一个人)'

@@ -23,7 +23,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.63 正式版'''
+v2.64 正式版'''
     return txt
 
 
@@ -138,17 +138,13 @@ def dalouCardGame():
 ☆!mn_top: 查询金币榜
 ☆!lucky_top: 查询欧皇榜
 ☆!rankme: 查询自己的排名
-☆!rank: 查询玩家排名(参数为osuid)
-☆!card: 查询玩家图鉴(参数为osuid)
-☆!card_p: 查询抽卡概率
-☆!card_v: 查询卡牌价值
 ☆!boom: 爆炸(-30金币)
 活动说明:
 1.玩家可以通过打图来涨金币,金币可以用来抽卡
-2.相同卡会自动强化等级+1
-3.活动pt为你的仓库全部卡价值总和
-4.除了注册，其余指令均可以私聊
-5.第八期活动截止10月31日晚'''
+2.活动pt为你的仓库全部卡价值总和
+3.除了注册，其余指令均可以私聊
+4.第九期活动截止11月30日晚
+5.卡池信息 https://yiqixie.com/s/home/fcADfeuCo_X4wGAPgehzK4A9-'''
     return txt
 
 
