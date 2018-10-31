@@ -466,8 +466,8 @@ def fly1(card_member, list_c):
                     msg = msg + '\n%s: %s (new!)' % (rare_name[rare_code], new_card)
                     card_set[rare_code].append({'card_name': new_card, 'card_number': 1})
                 new_unlock = medalUnlock(card_set)
-                if list_c[i]['medal'][6] == 100:
-                    new_unlock[6] = 100
+                if list_c[i]['medal'][9] == 100:
+                    new_unlock[9] = 100
                 new_pt = check_pt(card_set, list_c[i]['pt_bonus'], new_unlock)
                 medal_msg = medalUpdate(list_c[i]['medal'], new_unlock)
                 msg = msg + '\n机票数变更: %s → %s' % (flyNumCal(list_c[i]['fly'] + 50), flyNumCal(list_c[i]['fly']))
@@ -606,6 +606,8 @@ def medalUnlock(card_set):
                 unlock[5] = (100 * card['card_number']) // 30
         if card['card_name'] == '[ Morion ]':
             unlock[8] = unlock[8] + 20
+    if unlock[1] >= 100:
+        unlock[1] = 100
     return unlock
 
 
