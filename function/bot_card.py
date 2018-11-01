@@ -725,7 +725,7 @@ def sendBoom(list_c, card_member, content):
                 check_msg = re.match(r'^!boom\[CQ:at,qq=([1-9][0-9]*)\]', content)
                 if check_msg:
                     list_c[i]['money_now'] = list_c[i]['money_now'] - now_boom_money
-                    list_c[i]['money_boom'] = list_c[i]['money_boom'] + now_boom_money
+                    list_c[i]['money_boom_total'] = list_c[i]['money_boom_total'] + now_boom_money
                     list_c[i]['money_boom_cost'] = list_c[i]['money_boom_cost'] + 3
                     bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
                     qq = int(check_msg.group(1))
