@@ -325,10 +325,10 @@ def pick1(card_member, list_c):
                 list_c[i]['card'] = card_set
                 list_c[i]['pt_total'] = new_pt
                 list_c[i]['medal'] = new_unlock
+                list_c[i]['num_pick'] = list_c[i]['num_pick'] + 1
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                list_c[i]['num_pick'] = list_c[i]['num_pick'] + 1
                 bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
@@ -374,10 +374,10 @@ def pick11(card_member, list_c):
                 list_c[i]['card'] = card_set
                 list_c[i]['pt_total'] = new_pt
                 list_c[i]['medal'] = new_unlock
+                list_c[i]['num_pick'] = list_c[i]['num_pick'] + 11
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                list_c[i]['num_pick'] = list_c[i]['num_pick'] + 11
                 bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
@@ -434,10 +434,10 @@ def pickall(card_member, list_c):
                 list_c[i]['card'] = card_set
                 list_c[i]['pt_total'] = new_pt
                 list_c[i]['medal'] = new_unlock
+                list_c[i]['num_pick'] = list_c[i]['num_pick'] + pick_time * 11
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                list_c[i]['num_pick'] = list_c[i]['num_pick'] + pick_time * 11
                 bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
@@ -477,10 +477,10 @@ def fly1(card_member, list_c):
                 list_c[i]['card'] = card_set
                 list_c[i]['pt_total'] = new_pt
                 list_c[i]['medal'] = new_unlock
+                list_c[i]['num_fly'] = list_c[i]['num_fly'] + 1
                 (lucky, lucky_rate) = European(list_c[i])
                 list_c[i]['lucky'] = lucky
                 list_c[i]['lucky_rate'] = lucky_rate
-                list_c[i]['num_fly'] = list_c[i]['num_fly'] + 1
                 bot_IOfile.write_pkl_data(list_c, 'data/data_card_game_list.pkl')
             return msg
     msg = '此玩家并未参与活动'
