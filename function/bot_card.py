@@ -179,7 +179,7 @@ def userRank(card_member, list_c):
     for i in range(len(list_card)):
         if card_member == list_card[i]['qq']:
             msg = '排名信息如下:\nname: %s\n金币榜: 第%s名 (%s)\n' % (list_card[i]['name'], i+1, list_card[i]['money_total'])
-            list_card.sort(key=lambda x: x['pt'], reverse=True)
+            list_card.sort(key=lambda x: x['pt_total'], reverse=True)
             for j in range(len(list_card)):
                 if card_member == list_card[j]['qq']:
                     lucky_msg = '%.2f (期望%s)' % (float(list_card[j]['lucky_rate']), list_card[j]['lucky'])
