@@ -498,18 +498,19 @@ def dalou(user_qq):
         avg_pc_info = 1000 * user_info["pc"] / (6.75 * user_info["pp"] - 8000)
     # 开始计算最终指标
     acc_level = ((acclist[2] + acclist[3] + acclist[4]) / 3) ** 5
-    bp_level = user_info["pp"] / (4 * user_bp[0]["pp"] - 1.5 * user_bp[4]["pp"] - 1 * user_bp[9]["pp"] - 0.5 * user_bp[19]["pp"])
+    bp_level_temp = 4 * float(user_bp[0]["pp"]) - 1.5 * float(user_bp[4]["pp"]) - float(user_bp[9]["pp"]) - 0.5 * float(user_bp[19]["pp"])
+    bp_level = (user_info["pp"] / bp_level_temp) * 2 / 3 + 4
     if avg_tth_info < 60:
         tth_level = 0
     else:
-        tth_level = math.log(avg_tth_info - 50, 24) * 5 / 3 - 1
+        tth_level = math.log(avg_tth_info - 50, 24) * 5 / 3 - 0.9
     if avg_pc_info < 333:
         pc_level = 0
     else:
         pc_level = math.log(avg_pc_info - 300, 32) + 0.011
     total_level = bp_level * pc_level * tth_level * acc_level
-    msg = '%s的指标如下:'
-    msg = msg + '\nBP指标:%.2f 参考值12.50\nPC指标:%.2f 参考值2.00\nTTH指标:%.2f 参考值2.00\nACC指标:%.3f 参考值0.900' % \
+    msg = '%s的指标如下:' % user_info["name"]
+    msg = msg + '\nBP指标:%.2f 参考值12.00\nPC指标:%.2f 参考值2.00\nTTH指标:%.2f 参考值2.00\nACC指标:%.2f 参考值0.90' % \
                 (bp_level, pc_level, tth_level, acc_level)
     msg = msg + '\n综合指标:%.2f' % total_level
     return msg
