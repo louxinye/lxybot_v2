@@ -3,6 +3,7 @@
 import requests
 import json
 import re
+import math
 from function import bot_IOfile
 from function import bot_SQL
 from center import bot_global
@@ -36,7 +37,7 @@ def setCare(list_b, content, group):
             else:
                 msg = '您的!set_bp指令使用错误'
                 return msg
-        (osu_id, real_name, pp, pc, tth, acc) = getUserInfo(osu_name, osu_mode)
+        (osu_id, real_name, pp, pc, tth, acc, sec) = getUserInfo(osu_name, osu_mode)
         if not osu_id:
             msg = '查不到这个人哎'
         elif pp < 500:
@@ -96,7 +97,7 @@ def stopCare(list_b, content, group):
             else:
                 msg = '您的!reset_bp指令使用错误'
                 return msg
-        (osu_id, real_name, pp, pc, tth, acc) = getUserInfo(osu_name, osu_mode)
+        (osu_id, real_name, pp, pc, tth, acc, sec) = getUserInfo(osu_name, osu_mode)
         if not osu_id:
             msg = '查不到这个人哎'
         else:
@@ -130,10 +131,10 @@ def getUserInfo(osu_name, osu_mode, type_mode='string'):
     url = 'https://osu.ppy.sh/api/get_user?k=%s&u=%s&type=%s&m=%s&limit=1' % (osu_api_key, osu_name, type_mode, osu_mode)
     res = getUrl(url)
     if not res:
-        return 0, 0, 0, 0, 0, 0
+        return 0, 0, 0, 0, 0, 0, 0
     result = json.loads(res.text)
     if len(result) == 0:
-        return 0, 0, 0, 0, 0, 0
+        return 0, 0, 0, 0, 0, 0, 0
     else:
         uid = result[0]['user_id']
         name = result[0]['username']
@@ -141,7 +142,8 @@ def getUserInfo(osu_name, osu_mode, type_mode='string'):
         pc = int(valueChange(result[0]['playcount']))
         tth = int(valueChange(result[0]['count300'])) + int(valueChange(result[0]['count100'])) + int(valueChange(result[0]['count50']))
         acc = float(valueChange(result[0]['accuracy']))
-        return uid, name, pp, pc, tth, acc
+        sec = int(valueChange(result[0]['total_seconds_played']))
+        return uid, name, pp, pc, tth, acc, sec
 
 
 # 输入uid，输出bp前50
@@ -149,10 +151,10 @@ def getUserBp(uid, osu_mode, max_num=50):
     url = 'https://osu.ppy.sh/api/get_user_best?k=%s&u=%s&type=id&m=%s&limit=%s' % (osu_api_key, uid, osu_mode, max_num)
     res = getUrl(url)
     if not res:
-        return 0
+        return []
     result = json.loads(res.text)
     if len(result) == 0:
-        return 0
+        return []
     else:
         return result
 
@@ -223,7 +225,7 @@ def getRank(content):
 
 
 # acc计算
-def getAcc(num_33, num_22, num_11, num_00):
+def getAcc(num_33, num_22, num_11, num_00, type='string'):
     num_300 = int(num_33)
     num_100 = int(num_22)
     num_50 = int(num_11)
@@ -232,8 +234,12 @@ def getAcc(num_33, num_22, num_11, num_00):
     real = 6 * num_300 + 2 * num_100 + num_50
     if total > 0:
         acc = real / total
+        if type == 'float':
+            return acc
         msg = '%.2f' % (acc * 100)
     else:
+        if type == 'float':
+            return -1
         msg = '???'
     return msg
 
@@ -350,7 +356,7 @@ def setSQL(user_qq, content):
         check_id = re.match(r'^!myid (.*)$', content)
         if check_id:
             name = check_id.group(1)
-            (uid, name, pp, pc, tth, acc) = getUserInfo(name, '0')
+            (uid, name, pp, pc, tth, acc, sec) = getUserInfo(name, '0')
             if not uid:
                 msg = 'pp查询出错,请稍后再试'
                 return msg
@@ -399,12 +405,12 @@ def searchUserInfo(user_qq, update=True):
     result = bot_SQL.select(sql)
     if not result:
         msg = '您未绑定! (请使用!myid)'
-        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sql': False}
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sec': 0, 'sql': False}
     uid = result[0][1]
-    (uid, name, pp, pc, tth, acc) = getUserInfo(uid, '0', type_mode='id')
+    (uid, name, pp, pc, tth, acc, sec) = getUserInfo(uid, '0', type_mode='id')
     if not uid:
         msg = 'pp查询出错,请稍后再试'
-        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sql': True}
+        return {'msg': msg, 'uid': 0, 'name': '0', 'pp': 0, 'sec': 0, 'sql': True}
     pp_up = addCal(pp - result[0][3], floatnum=2)
     pc_up = addCal(pc - result[0][4])
     tth_up = addCal(tth - result[0][5])
@@ -417,7 +423,7 @@ def searchUserInfo(user_qq, update=True):
         success = bot_SQL.action(sql)
         if not success:
             msg = '数据库记录出错，请联系Dalou!'
-    return {'msg': msg, 'uid': uid, 'name': name, 'pp': pp, 'sql': True}
+    return {'msg': msg, 'uid': uid, 'name': name, 'pp': pp, 'pc': pc, 'tth': tth, 'sec': sec, 'sql': True}
 
 
 # 增量显示
@@ -458,4 +464,52 @@ def searchUserRecent(user_qq):
     acc = getAcc(c300, c100, c50, c0)
     msg = '您的最新游戏记录如下:\n谱面bid: %s\n%s\n' % (bid, map_msg)
     msg = msg + '%s' % console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank, maxcombo_now=combo)
+    return msg
+
+
+def dalou(user_qq):
+    user_info = searchUserInfo(user_qq, update=False)
+    if not user_info['sql']:
+        msg = '您未绑定! (请使用!myid)'
+        return msg
+    if not user_info['uid']:
+        msg = '查询玩家信息失败……'
+        return msg
+    user_bp = getUserBp(user_info['uid'], 0, max_num=20)
+    if not user_bp:
+        msg = '查询玩家成绩失败……'
+        return msg
+    if len(user_bp) < 20:
+        msg = 'bp数量过少,拒绝评分……'
+        return msg
+    # 给玩家bp前10的歌曲acc排序
+    acclist = []
+    for i in range(10):
+        acc = getAcc(user_bp[i]["count300"], user_bp[i]["count100"], user_bp[i]["count50"], user_bp[i]["countmiss"], type='float')
+        acclist.append(acc)
+    acclist.sort(reverse=True)
+    # 计算打图情况
+    avg_tth_info = (user_info["sec"] + user_info["tth"]) / user_info["pc"]
+    if user_info["pp"] < 1582:
+        avg_pc_info = 1000 * user_info["pc"] / (user_info["pp"] * 2.162)
+    elif user_info["pp"] < 6000:
+        avg_pc_info = 1000 * user_info["pc"] / (0.001 * (user_info["pp"] ** 2) - user_info["pp"] + 2500)
+    else:
+        avg_pc_info = 1000 * user_info["pc"] / (6.75 * user_info["pp"] - 8000)
+    # 开始计算最终指标
+    acc_level = ((acclist[2] + acclist[3] + acclist[4]) / 3) ** 5
+    bp_level = user_info["pp"] / (4 * user_bp[0]["pp"] - 1.5 * user_bp[4]["pp"] - 1 * user_bp[9]["pp"] - 0.5 * user_bp[19]["pp"])
+    if avg_tth_info < 60:
+        tth_level = 0
+    else:
+        tth_level = math.log(avg_tth_info - 50, 24) * 5 / 3 - 1
+    if avg_pc_info < 333:
+        pc_level = 0
+    else:
+        pc_level = math.log(avg_pc_info - 300, 32) + 0.011
+    total_level = bp_level * pc_level * tth_level * acc_level
+    msg = '%s的指标如下:'
+    msg = msg + '\nBP指标:%.2f 参考值12.50\nPC指标:%.2f 参考值2.00\nTTH指标:%.2f 参考值2.00\nACC指标:%.3f 参考值0.900' % \
+                (bp_level, pc_level, tth_level, acc_level)
+    msg = msg + '\n综合指标:%.2f' % total_level
     return msg

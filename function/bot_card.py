@@ -65,7 +65,7 @@ def startCard(card_member, list_c, content):
             tth = [0, 0, 0, 0]
             medal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             for i in range(4):
-                (osu_id, real_name, pp, pc[i], tth[i], acc) = bot_osu.getUserInfo(osu_name, i)
+                (osu_id, real_name, pp, pc[i], tth[i], acc, sec) = bot_osu.getUserInfo(osu_name, i)
                 if not osu_id:
                     msg = '查询失败,可能为输入错误或网络延迟'
                     return msg
@@ -209,7 +209,7 @@ def GameUpdate(user):
     tth = [0, 0, 0, 0]
     add_money = 0
     for i in range(4):
-        (osu_id, name, pp, pc[i], tth[i], acc) = bot_osu.getUserInfo(osu_uid, i, type_mode='id')
+        (osu_id, name, pp, pc[i], tth[i], acc, sec) = bot_osu.getUserInfo(osu_uid, i, type_mode='id')
         if not osu_id:
             print('%s的mode%s查询失败' % (osu_name, i))
             pc[i] = user['pc'][i]

@@ -30,7 +30,7 @@ def bpCareCenter(bot, maxcount):
                     for i in range(0, 20):
                         if new_bp[i] != user[i]:
                             msg = '某人bp%s有变化,但是细节查询失败,将等待至下次查询' % (i+1)
-                            (a1, user_name, a3, a4, a5, a6) = bot_osu.getUserInfo(user_id, score_mode, type_mode='id')
+                            (a1, user_name, a3, a4, a5, a6, a7) = bot_osu.getUserInfo(user_id, score_mode, type_mode='id')
                             mode_name = bot_osu.getMode(score_mode)
                             if float(user[i]["pp"]) > float(new_bp[i]["pp"]):
                                 map_id = user[i]["beatmap_id"]

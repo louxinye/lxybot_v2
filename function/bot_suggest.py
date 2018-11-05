@@ -122,11 +122,11 @@ def searchMap(user_qq, content, contact='group'):
         (input_mod, input_user) = allCal(content)
         if input_mod < 0:
             return '您输入的Mod有误!'
-        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(input_user, '0')
+        (uid, name, pp, pc, tth, acc, sec) = bot_osu.getUserInfo(input_user, '0')
     elif check_msg2:
         input_mod = -999
         input_user = nameCal(content)
-        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(input_user, '0')
+        (uid, name, pp, pc, tth, acc, sec) = bot_osu.getUserInfo(input_user, '0')
     elif check_msg3 or check_msg4:
         if check_msg3:
             input_mod = modCal(content)
@@ -140,7 +140,7 @@ def searchMap(user_qq, content, contact='group'):
             msg = '您未绑定 (请使用!myid)'
             return msg
         uid = result[0][1]
-        (uid, name, pp, pc, tth, acc) = bot_osu.getUserInfo(uid, '0', type_mode='id')
+        (uid, name, pp, pc, tth, acc, sec) = bot_osu.getUserInfo(uid, '0', type_mode='id')
     else:
         return '您的!getmap指令使用错误'
     if not uid:
