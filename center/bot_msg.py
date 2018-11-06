@@ -122,9 +122,9 @@ def MsgCenter(bot, context):
             msg = bot_osu.searchUserRecent(context['user_id'])
             # bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
-        elif content == '!dalou':
+        elif content == '!mylevel':
             bot_global.sql_action_lock.acquire()
-            msg = bot_osu.dalou(context['user_id'])
+            msg = bot_osu.searchUserLevel(context['user_id'])
             bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
 
