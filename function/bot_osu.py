@@ -467,15 +467,18 @@ def searchUserRecent(user_qq):
     return msg
 
 
-def dalou(user_qq):
+def searchUserLevel(user_qq):
     user_info = searchUserInfo(user_qq, update=False)
-    if not user_info['sql']:
+    if not user_info["sql"]:
         msg = '您未绑定! (请使用!myid)'
         return msg
-    if not user_info['uid']:
+    if not user_info["uid"]:
         msg = '查询玩家信息失败……'
         return msg
-    user_bp = getUserBp(user_info['uid'], 0, max_num=20)
+    if user_info["pp"] < 1:
+        msg = '请先进行一次游戏……'
+        return msg
+    user_bp = getUserBp(user_info["uid"], 0, max_num=20)
     if not user_bp:
         msg = '查询玩家成绩失败……'
         return msg
@@ -498,19 +501,43 @@ def dalou(user_qq):
         avg_pc_info = 1000 * user_info["pc"] / (6.75 * user_info["pp"] - 8000)
     # 开始计算最终指标
     acc_level = ((acclist[2] + acclist[3] + acclist[4]) / 3) ** 5
-    bp_level_temp = 4 * float(user_bp[0]["pp"]) - 1.5 * float(user_bp[4]["pp"]) - float(user_bp[9]["pp"]) - 0.5 * float(user_bp[19]["pp"])
+    bp_level_temp = 4 * float(user_bp[0]["pp"]) - 1.8 * float(user_bp[4]["pp"]) - 0.9 * float(user_bp[9]["pp"]) - 0.3 * float(user_bp[19]["pp"])
     bp_level = (user_info["pp"] / bp_level_temp) * 2 / 3 + 4
     if avg_tth_info < 60:
         tth_level = 0
     else:
-        tth_level = math.log(avg_tth_info - 50, 24) * 5 / 3 - 0.9
+        tth_level = math.log(avg_tth_info - 50, 24) * 1.67 - 0.9
     if avg_pc_info < 333:
         pc_level = 0
     else:
-        pc_level = math.log(avg_pc_info - 300, 32) + 0.011
+        pc_level = math.log(avg_pc_info - 300, 32) + 0.11
     total_level = bp_level * pc_level * tth_level * acc_level
     msg = '%s的指标如下:' % user_info["name"]
     msg = msg + '\nBP指标:%.2f 参考值12.00\nPC指标:%.2f 参考值2.00\nTTH指标:%.2f 参考值2.00\nACC指标:%.2f 参考值0.90' % \
                 (bp_level, pc_level, tth_level, acc_level)
     msg = msg + '\n综合指标:%.2f' % total_level
+    msg = msg + '\n' + getUserComment(user_info["pp"], bp_level, pc_level, tth_level, acc_level, total_level)
+    return msg
+
+
+def getUserComment(pp, bp, pc, tth, acc, total):
+    if pp < 500:
+        msg = '该号pp较低,不做出评价'
+        return msg
+    if total > 60:
+        msg = '这是人?大家快出来看神仙啦'
+    elif total > 50:
+        msg = '该号成绩卓越,同分段中的王者'
+    elif total > 42:
+        msg = '该号成绩优秀,标准的正常玩家'
+    elif total > 35:
+        msg = '亚健康 (详细评价功能暂未开放)'
+    elif total > 28:
+        msg = '略微失衡,请多注意 (详细评价功能暂未开放)'
+    elif total > 21:
+        msg = '极度失衡,你真的不是小号? (详细评价功能暂未开放)'
+    elif total > 14:
+        msg = '如果不是小号那只能说明你不适合屙屎,建议退群'
+    else:
+        msg = '直接踢吧'
     return msg
