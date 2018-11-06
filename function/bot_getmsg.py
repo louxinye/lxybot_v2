@@ -12,6 +12,7 @@ def getHelp():
 !myid   绑定id
 !mypp   速查信息
 !myrct  查询最新游戏记录
+!mylevel 查询健康度
 !欢送系统
 !抽烟系统
 !找图系统
