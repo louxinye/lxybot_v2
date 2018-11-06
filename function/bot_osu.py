@@ -502,7 +502,7 @@ def searchUserLevel(user_qq):
     # 开始计算最终指标
     acc_level = ((acclist[2] + acclist[3] + acclist[4]) / 3) ** 5
     bp_level_temp = 4 * float(user_bp[0]["pp"]) - 1.8 * float(user_bp[4]["pp"]) - 0.9 * float(user_bp[9]["pp"]) - 0.3 * float(user_bp[19]["pp"])
-    bp_level = (user_info["pp"] / bp_level_temp) * 2 / 3 + 4
+    bp_level = (user_info["pp"] / bp_level_temp) * 2 / 3 + 5
     if avg_tth_info < 60:
         tth_level = 0
     else:
