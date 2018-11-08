@@ -467,8 +467,12 @@ def searchUserRecent(user_qq):
     return msg
 
 
-def searchUserLevel(user_qq):
-    user_info = searchUserInfo(user_qq, update=False)
+def searchUserLevel(user_qq, user_name=''):
+    if not user_name:
+        user_info = searchUserInfo(user_qq, update=False)
+    else:
+        (uid, name, pp, pc, tth, acc, sec) = getUserInfo(user_name, '0')
+        user_info = {'sql': True, 'uid': uid, 'name': name, 'pp': pp, 'pc': pc, 'tth': tth, 'acc': acc, 'sec': sec}
     if not user_info["sql"]:
         msg = '您未绑定! (请使用!myid)'
         return msg
@@ -540,4 +544,18 @@ def getUserComment(pp, bp, pc, tth, acc, total):
         msg = '如果不是小号那只能说明你不适合屙屎,建议退群'
     else:
         msg = '直接踢吧'
+    return msg
+
+
+def searchOtherLevel(content):
+    check_qq = re.match(r'^!level\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+    check_name = re.match(r'^!level (.*)$', content)
+    if check_qq:
+        qq = int(check_qq.group(1))
+        msg = searchUserLevel(qq)
+    elif check_name:
+        name = str(check_name.group(1))
+        msg = searchUserLevel(0, user_name=name)
+    else:
+        msg = '您的!level指令使用错误'
     return msg

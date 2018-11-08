@@ -12,7 +12,7 @@ def getHelp():
 !myid   绑定id
 !mypp   速查信息
 !myrct  查询最新游戏记录
-!mylevel 查询健康度
+!mylevel 查询评价
 !欢送系统
 !抽烟系统
 !找图系统
@@ -24,7 +24,7 @@ def getHelp():
 !dog   查询bot权限者
 !kill  查询踢人列表
 帮助文档 https://github.com/louxinye/lxybot_v2/wiki
-v2.70 正式版'''
+v2.71 正式版'''
     return txt
 
 

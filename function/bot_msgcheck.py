@@ -153,7 +153,7 @@ def removeSmoke(content):
 
 def sendKill(bot, list_k, group, content):
     success = True
-    check_user = re.match(r'!kill\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+    check_user = re.match(r'^!kill\[CQ:at,qq=([1-9][0-9]*)\] $', content)
     if check_user:
         qq = int(check_user.group(1))
         if qq in bot_global.dog_list:
@@ -181,7 +181,7 @@ def sendKill(bot, list_k, group, content):
 
 def stopKill(list_k, group, content):
     success = False
-    check_user = re.match(r'!stop_k\[CQ:at,qq=([1-9][0-9]*)\] $', content)
+    check_user = re.match(r'^!stop_k\[CQ:at,qq=([1-9][0-9]*)\] $', content)
     if check_user:
         qq = int(check_user.group(1))
         for i in range(len(list_k)):

@@ -127,6 +127,12 @@ def MsgCenter(bot, context):
             msg = bot_osu.searchUserLevel(context['user_id'])
             bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
+        elif '!level' in content:
+            bot_global.sql_action_lock.acquire()
+            msg = bot_osu.searchOtherLevel(content)
+            bot_global.sql_action_lock.release()
+            reply(bot, context, msg, atPeople=False)
+
 
         # 月常活动
         elif '!start_card' in content:
