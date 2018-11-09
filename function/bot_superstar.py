@@ -37,7 +37,7 @@ def maxPPCheck(group):
 		return 99999, 99999, 99999
 	num = bot_global.group_main_list.index(group)
 	if num == 0:
-		return 2000, 2500, 2
+		return 2000, 2500, 3
 	elif num == 1:
 		return 4400, 4500, 1
 	else:

@@ -488,17 +488,12 @@ def MsgCenter(bot, context):
 
             # 私聊解禁
             if context['message_type'] == 'private' and '!remove' in content:
-                '''
-                if context['user_id'] in bot_global.dog_list:
-                    (msg, remove_group_i) = bot_msgcheck.remove(content)
-                    if remove_group_i > -1:
-                        if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
-                            msg = '臣妾做不到啊(不是管理员)'
-                        else:
-                            bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
-                else:
-                '''
-                msg = '此功能暂时关闭'
+                (msg, remove_group_i) = bot_msgcheck.remove(content)
+                if remove_group_i > -1:
+                    if bot_global.group_total_list[remove_group_i] not in bot_global.group_dog_list:
+                        msg = '臣妾做不到啊(不是管理员)'
+                    else:
+                        bot.set_group_ban(group_id=bot_global.group_total_list[remove_group_i], user_id=context['user_id'], duration=0)
                 reply(bot, context, msg, atPeople=False)
 
             # 群发公告
