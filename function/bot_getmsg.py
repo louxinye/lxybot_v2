@@ -288,4 +288,7 @@ def getGroupName(i):
         return '分群'
     if i == 2:
         return '后花园'
-    return '鬼知道什么群'
+    if i == 3:
+        return '主群候补群'
+    else:
+        return '鬼知道什么群'

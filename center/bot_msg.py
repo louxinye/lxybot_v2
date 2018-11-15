@@ -119,9 +119,17 @@ def MsgCenter(bot, context):
         elif content == '!myrct':
             # 此指令存在bug，为了避免死锁暂时先取消加锁
             # bot_global.sql_action_lock.acquire()
-            msg = bot_osu.searchUserRecent(context['user_id'])
+            if context['message_type'] == 'group':
+                group_qq = context['group_id']
+            else:
+                group_qq = 0
+            (msg, smoke) = bot_osu.searchUserRecent(context['user_id'], group_qq=group_qq)
             # bot_global.sql_action_lock.release()
             reply(bot, context, msg, atPeople=True)
+            if smoke > 0:
+                bot.set_group_ban(group_id=context['group_id'], user_id=context['user_id'], duration=smoke)
+                msg = '核能侦测启动成功: %s秒' % smoke
+                reply(bot, context, msg, atPeople=False)
         elif content == '!mylevel':
             bot_global.sql_action_lock.acquire()
             msg = bot_osu.searchUserLevel(context['user_id'])
@@ -390,7 +398,7 @@ def MsgCenter(bot, context):
                     max_diff = bot_superstar.maxDiffCheck(context['group_id'])
                     (now_diff, user_qq) = bot_superstar.nowDiffCheck(content)
                     if now_diff > max_diff:
-                        smoke = min(2591940, (now_diff - max_diff) * 10 * 60)
+                        smoke = min(2591940, (now_diff - max_diff) * 5 * 60)
                         msg = '核能侦测启动成功: %s秒' % smoke
                         bot.set_group_ban(group_id=context['group_id'], user_id=user_qq, duration=smoke)
                         reply(bot, context, msg, atPeople=False)
@@ -418,6 +426,7 @@ def MsgCenter(bot, context):
                     reply(bot, context, msg, atPeople=False)
 
             # 新人群彩蛋
+            '''
             if context['message_type'] == 'group' and context['group_id'] in bot_global.group_main_list:
                 for egg in egg_list:
                     if '[CQ:' not in content:
@@ -445,6 +454,7 @@ def MsgCenter(bot, context):
                                     reply(bot, context, msg1, atPeople=False)
                             bot_global.sql_action_lock.release()
                             break
+            '''
 
             # 健康系统计算
             if context['message_type'] == 'group' and context['user_id'] in health_list:
@@ -524,8 +534,8 @@ def MsgCenter(bot, context):
                     msg = '请绑定本bot以便获取更好的服务\n指令格式为!myid x (x为您的osu!账号)'
                 elif not now_user_info['uid']:
                     pass
-                elif now_user_info['pp'] < 1:
-                    msg = '您的pp低于1,请先进行一次游戏'
+                elif now_user_info['pp'] < 0.1:
+                    msg = '您的pp低于0.1,请先进行一次游戏'
                 elif now_user_info['pp'] > out_pp:
                     days = max((max_pp-now_user_info['pp'])//step_pp+1, 1)
                     bot_global.super_star_lock.acquire()

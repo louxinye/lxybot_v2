@@ -28,33 +28,31 @@ def getGroupList(list_g):
 	return list_g
 
 
-# 适用群列表: 0主群,1分群,2后花园,3粉丝群,4要饭,5队群,6娱乐群,7贫民窟,8管理群
-group_total_list = [614892339, 758120648, 514661057, 669361496, 641236878, 693657455, 102171745, 204124585, 695600319]
+# 适用群列表: 0主群,1分群,2后花园,3主群候补,4粉丝群,5队群,6娱乐群,7贫民窟,8管理群,9测试群
+group_total_list = [614892339, 758120648, 514661057, 885984366, 669361496, 693657455, 102171745, 204124585, 695600319, 939344921]
 discuss_total_list = []
 # 新人群代号:
-group_main_list = getGroupList([0, 1, 2])
+group_main_list = getGroupList([0, 1, 2, 3])
 # chart群代号:
-group_chart_list = getGroupList([0, 8])
+group_chart_list = getGroupList([0, 3, 8])
 # 新人群管理群代号:
 group_main_admin_list = getGroupList([8])
-# bp监视适用群代号:
-group_bp_list = getGroupList([2, 3, 4, 6])
 # 管理员存在的群代号:
-group_dog_list = getGroupList([0, 1, 2, 3, 6])
+group_dog_list = getGroupList([0, 1, 2, 3, 4, 6, 8, 9])
 # 权限者qq号
-dog_list = [3082577334, 1061566571, 3059841053, 1208604740, 962549599, 178039743, 2575009695, 1094452372]
+dog_list = [1061566571, 3059841053, 1208604740, 962549599, 178039743, 1094452372, 986176546, 447503971]
 # 本bot的qq号
 host_list = [3082577334]
 # 屏蔽qq号,群聊时无视这些人的发言
 ignore_list = [1677323371, 122866607, 1394932996, 1335734629, 2839098896, 1091569752, 2478057279, 3527783823]
 # 白名单qq号,群聊时无视这些人的pp超限检测
-white_list = [2680306741, 1149483077, 2636027237, 2429299722, 2643555740, 2307282906, 2639140005, 2308394636]
+white_list = [2680306741, 1149483077, 2636027237, 2429299722, 2643555740, 2307282906, 2639140005, 2308394636, 1559449817]
 # 主群临时回家qq号
 white_temp_list = [759609157, 97512825]
 # 当前复读次数, 若大于等于100则表示没有开启复读惩罚,和适用群一一对应
-repeat_num = [100, 100, 100, 0, 0, 0, 0, 100, 100]
+repeat_num = [100, 100, 100, 0, 0, 0, 0, 100, 100, 0]
 # 当前复读语句, 和适用群一一对应
-repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message', 'message', 'message']
+repeat_list = ['message', 'message', 'message', 'message', 'message', 'message', 'message', 'message', 'message', 'message']
 # 踢人列表
 kill_list = []
 

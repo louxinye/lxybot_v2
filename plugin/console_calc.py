@@ -133,7 +133,7 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
         msg = msg + '--------------------\n'
         msg = msg + '详细表(横轴acc,纵轴连击):\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  ---\n%.1f  %.1f  %.1f  %.1f' % \
                     (pp[0][0], pp[0][1], pp[0][2], pp[1][0], pp[1][1], pp[1][2], pp[2][0], pp[2][1], pp[2][2], pp[3][0], pp[3][1], pp[3][2], pp[3][3])
-    return msg
+    return {'msg': msg, 'stars': stars}
 
 '''
     pippy_output = {

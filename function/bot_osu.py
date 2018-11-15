@@ -6,6 +6,7 @@ import re
 import math
 from function import bot_IOfile
 from function import bot_SQL
+from function import bot_superstar
 from center import bot_global
 from plugin import console_calc
 
@@ -440,17 +441,18 @@ def addCal(num, floatnum=0):
 
 
 # 获取玩家最新的游戏成绩信息
-def searchUserRecent(user_qq):
+def searchUserRecent(user_qq, group_qq=0):
+    smoke = 0
     sql = 'SELECT * FROM user WHERE qq = \'%s\' AND mode = 0' % user_qq
     result = bot_SQL.select(sql)
     if not result:
         msg = '您未绑定! (请使用!myid)'
-        return msg
+        return msg, smoke
     uid = result[0][1]
     recent = getUserRecent(uid, 0, max_num=20)
     if not recent:
         msg = '查询游戏记录失败……'
-        return msg
+        return msg, smoke
     mod = recent[0]["enabled_mods"]
     bid = recent[0]["beatmap_id"]
     c300 = int(recent[0]["count300"])
@@ -463,8 +465,13 @@ def searchUserRecent(user_qq):
     mod_name = getMod(mod)
     acc = getAcc(c300, c100, c50, c0)
     msg = '您的最新游戏记录如下:\n谱面bid: %s\n%s\n' % (bid, map_msg)
-    msg = msg + '%s' % console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank, maxcombo_now=combo)
-    return msg
+    beatmap_play_info = console_calc.gogogo(bid, c300=c300, c100=c100, c50=c50, c0=c0, acc=acc, mod_name=mod_name, rank=rank, maxcombo_now=combo)
+    msg = msg + '%s' % beatmap_play_info["msg"]
+    max_diff = bot_superstar.maxDiffCheck(group_qq)
+    now_diff = int(beatmap_play_info["stars"] * 100)
+    if now_diff > max_diff:
+        smoke = min(2591940, (now_diff - max_diff) * 5 * 60)
+    return msg, smoke
 
 
 def searchUserLevel(user_qq, user_name=''):
@@ -532,14 +539,14 @@ def getUserComment(pp, bp, pc, tth, acc, total):
         msg = '这是人?大家快出来看神仙啦'
     elif total > 50:
         msg = '该号成绩卓越,同分段中的王者'
-    elif total > 42:
+    elif total > 40:
         msg = '该号成绩优秀,标准的正常玩家'
     elif total > 35:
         msg = '亚健康 (详细评价功能暂未开放)'
     elif total > 28:
-        msg = '略微失衡,请多注意 (详细评价功能暂未开放)'
+        msg = '数据略微失衡,请多注意 (详细评价功能暂未开放)'
     elif total > 21:
-        msg = '极度失衡,你真的不是小号? (详细评价功能暂未开放)'
+        msg = '数据极度失衡,你真的不是小号? (详细评价功能暂未开放)'
     elif total > 14:
         msg = '如果不是小号那只能说明你不适合屙屎,建议退群'
     else:
