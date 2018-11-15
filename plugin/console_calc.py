@@ -40,7 +40,6 @@ def gogogo(bid, file_pass="", acc="", c300=0, c100=0, c50=0, c0=0, maxcombo_now=
     pp = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]  # 在当前combo、多连一半的combo、fc的情况下，当前acc、多打一半acc、ss的成绩
     if link:
         data = requests.get("https://osu.ppy.sh/osu/{}".format(bid)).content.decode('utf8')
-        print(data)
     else:
         data = open(file_pass, 'r').read()
     btmap = Beatmap(data)
