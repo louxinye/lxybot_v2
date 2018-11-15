@@ -47,8 +47,8 @@ def farewellSystem():
 ☆!farewell: 查询欢送情况
 ☆!whitelist: 查询安全名单
 注意事项:
-1.为了维护新人群环境,主群达到2000pp,分群达到4400pp的玩家将会进入离群倒计时
-2.时间由玩家当前pp决定,主群每提升3pp减少一天倒计时,其余群每提升1pp减少一天倒计时
+1.为了维护新人群环境,主群2000-2500pp,分群4400-4500pp,候补群2500-3000pp的玩家将会进入离群倒计时
+2.时间由玩家当前pp决定,主群每提升3pp,分群每提升1pp,候补群每提升5pp则减少一天倒计时
 3.安全名单内的成员不会受到本系统影响
 4.如果进入倒计时后该玩家成为了上述人员,则时间结束后不会触发踢人,欢送名单会自动删去'''
     return txt
@@ -166,7 +166,7 @@ def suitL(list_g):
     for group in list_g:
         msg = msg + '%s\n' % group
     msg = msg + '群代码从上往下依次记为1,2,3,…… (私聊解除禁言时候会用到)'
-    msg = msg + '\n【注】部分指令的适用范围更小,例如!start_card只允许在新人群主群或分群内使用'
+    msg = msg + '\n【注】部分指令的适用范围更小,例如!start_card只允许在新人群内使用'
     return msg
 
 
@@ -205,7 +205,7 @@ def eggL(list_e):
                 msg = msg + '\n%s, %s, %s' % (egg['id'], egg['keyword'], egg['unlock_name'])
             else:
                 msg = msg + '\n%s, %s, QQ号%s' % (egg['id'], egg['keyword'], egg['unlock_qq'])
-    msg = msg + '\n群聊如果带有关键词则会解锁彩蛋，但请注意，若含有图片、表情、艾特人则不会触发。本期彩蛋总数: %s' % len(list_e)
+    msg = msg + '\n目前彩蛋系统已经永久关闭。本期彩蛋总数: %s' % len(list_e)
     return msg
 
 
