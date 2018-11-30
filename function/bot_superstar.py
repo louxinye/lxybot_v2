@@ -16,7 +16,7 @@ def maxDiffCheck(group):
 	elif num == 1:
 		return 650
 	elif num == 3:
-		return 525
+		return 550
 	else:
 		return 99999
 
@@ -45,7 +45,7 @@ def maxPPCheck(group):
 	elif num == 2:
 		return 99999, 99999, 1
 	else:
-		return 2500, 3000, 5
+		return 3100, 3110, 1
 
 
 # 超限检测:执行倒计时操作
