@@ -19,32 +19,32 @@ tth_Val = [150, 200, 240, 240]  # 更新打图记录时候,四个mode的tth系�
 card_n = ['shadowsocksR'] * 60 + \
          ['Hatsuki Yuraaaa', '591695318', 'xiaoxi654', 'SHZshenhuazai', 'majesticlegend', 'Neptsun', '- ElementOp -',
           'Tacmyw', 'Dango_YwY', '1716153665', 'KPC123', 'salt-fish', 'glitter-', 'Nikoace', 'Rei_Rin', 'dullwolf',
-          'ink rhyme', 'zawde', 'Crunchyroll', 'Genius_Cirno', 'C4H5NO3', 'SuperDalouBot', '[ Morion ]', 'interbot',
+          'ink rhyme', 'zawde', 'Crunchyroll', 'Genius_Cirno', 'C4H5NO3', 'Tkyyyy', '[ Morion ]', 'interbot',
           'zhaoqx1996', '_Phoenix', 'zipated', 'QingChen', 'Scarlets', 'blue_c', 'claemmm', '[ Snow Neko ]', 'heroqwq',
           'Ntauch', 'Cang Tian', 'kss233', 'ilineko', 'ccchimaki', 'Buan-', 'bibiubi'] * 20 + \
-         ['Yami Sun', 'Segami', 'K_vAE', '[SHIYU]', 'whiteseason2018', 'Liliaceae213', '[Saigetsu]'] * 3 + \
+         ['Yami Sun', 'Segami', 'K_vAE', '[SHIYU]', 'SuperDalouBot', 'Liliaceae213', '[Saigetsu]'] * 3 + \
          ['Mathi', '-GN', 'Vaxei', 'Rafis', 'cookiezi']
 
 card_r = ['- Se Tsu Nya -'] * 6 + \
-         ['[ Kuon ]', 'skyhook17', 'Sora_w', 'newplayre', 'Kazami-Menhera', '-Hermit-', 'CappuccinoChino', 'LITEON',
+         ['[ Kuon ]', 'skyhook17', 'whiteseason2018', 'newplayre', 'Kazami-Menhera', '-Hermit-', 'CappuccinoChino', 'LITEON',
           '_Star', 'Trustless532', 'Nasuki', 'CoCo-OuO', 'flush', 'X_fire233', 'bleatingsheep', 'na-gi', 'chao_ww',
           'My Angel-Asher-', 'Aleafy', 'Fyu_Neru', 'osu happy', 'NECROkuang', 'Mindlessness', 'Inf1nity7788'] * 3 + \
          ['ChongZi', 'Veroinca', 'IronWitness', 'SkyInTheFifteen', 'C8N16O32']
 
 card_sr = ['Sakura miku'] * 6 + \
           ['whirleeve', 'KA MI NA', 'wdwdwww', 'D_D', 'tanwanlanyue', 'Brave New World', '- Q', 'end_ting', '-Angel Beats',
-           'Sonoaoi', 'ShirohimeKanata', 'IaKis', '-FKai-', 'Arcareh', 'my angel kotori'] * 3 + \
+           'Sonoaoi', 'ShirohimeKanata', 'IaKis', '-FKai-', 'Sora_w', 'my angel kotori'] * 3 + \
           ['Dullahan-Arsene', 'lonelyling', 'yimoQWQ', 'Archer9']
 
-card_ur = ['2313261467', 'taolex', 'AyaSakura', 'Kutouzi', 'Cookeazy', 'Mafuyu Shiina', 'AdorableCubCat', 'GAddict',
+card_ur = ['2313261467', 'Arcareh', 'AyaSakura', 'Kutouzi', 'Cookeazy', 'Mafuyu Shiina', 'AdorableCubCat', 'GAddict',
            'Yizeda', 'MyAngelJackWang', '-Artemis', 'ye__ow'] * 3 + \
           ['heisiban', 'Pata-Mon', 'Imouto koko']
 
-card_mr = ['DalouBot',  'Sayori_yui', 'Hibikom', 'bless_von', 'Firika', '84461810', 'myangelzfxggg', 'zfxggg'] * 3 + \
+card_mr = ['taolex',  'Sayori_yui', 'Hibikom', 'bless_von', 'Firika', '84461810', 'myangelzfxggg', 'zfxggg'] * 3 + \
           ['PandaCattle', 'Jack_Wang_']
 
 card_fly_sr = ['Sakura miku', 'whirleeve', 'KA MI NA', 'wdwdwww', 'D_D', 'tanwanlanyue', 'Brave New World', '- Q', 'end_ting',
-               '-Angel Beats', 'Sonoaoi', 'ShirohimeKanata', 'IaKis', '-FKai-', 'Arcareh', 'my angel kotori'] * 3 + \
+               '-Angel Beats', 'Sonoaoi', 'ShirohimeKanata', 'IaKis', '-FKai-', 'Sora_w', 'my angel kotori'] * 3 + \
               ['Dullahan-Arsene', 'lonelyling', 'yimoQWQ', 'Archer9']
 
 # 注册并开始活动
@@ -577,8 +577,6 @@ def medalUnlock(card_set):
     for card in card_set[0]:
         if card['card_name'] == 'Jack_Wang_' or card['card_name'] == 'PandaCattle':
             unlock[0] = unlock[0] + 50
-        if card['card_name'] == 'DalouBot':
-            unlock[8] = unlock[8] + 20
     for card in card_set[1]:
         if card['card_name'] == 'Imouto koko' or card['card_name'] == 'Pata-Mon' or card['card_name'] == 'heisiban':
             unlock[1] = unlock[1] + 34
@@ -605,6 +603,8 @@ def medalUnlock(card_set):
             else:
                 unlock[5] = (100 * card['card_number']) // 30
         if card['card_name'] == '[ Morion ]':
+            unlock[8] = unlock[8] + 20
+        if card['card_name'] == 'SuperDalouBot':
             unlock[8] = unlock[8] + 20
     if unlock[1] >= 100:
         unlock[1] = 100

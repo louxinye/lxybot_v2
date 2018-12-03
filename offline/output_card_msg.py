@@ -22,7 +22,7 @@ def outputExcel():
     sheet.col(7).width = 256*9
     sheet.col(8).width = 256*9
     sheet.col(9).width = 256*9
-    sheet.col(10).width = 256*12
+    sheet.col(10).width = 256*9
     sheet.col(11).width = 256*12
     sheet.col(12).width = 256*12
     sheet.col(13).width = 256*12
@@ -32,12 +32,12 @@ def outputExcel():
     sheet.write(0, 2, '总金币', style)
     sheet.write(0, 3, '总积分', style)
     sheet.write(0, 4, '爆炸费', style)
-    sheet.write(0, 5, 'MR总数', style)
-    sheet.write(0, 6, 'UR总数', style)
-    sheet.write(0, 7, 'SR总数', style)
-    sheet.write(0, 8, 'R总数', style)
-    sheet.write(0, 9, 'N总数', style)
-    sheet.write(0, 10, '水王之王', style)  # 统计抽到whir卡的数量
+    sheet.write(0, 5, '解烟费', style)
+    sheet.write(0, 6, 'MR总数', style)
+    sheet.write(0, 7, 'UR总数', style)
+    sheet.write(0, 8, 'SR总数', style)
+    sheet.write(0, 9, 'R总数', style)
+    sheet.write(0, 10, 'N总数', style)
     sheet.write(0, 11, '欧皇系数', style)
     sheet.write(0, 12, '金币排名', style)
     sheet.write(0, 13, '积分排名', style)
@@ -45,15 +45,15 @@ def outputExcel():
     for i in range(len(user_card_list)):
         sheet.write(i+1, 0, '%s' % user_card_list[i]['qq'], style)
         sheet.write(i+1, 1, user_card_list[i]['name'], style)
-        sheet.write(i+1, 2, user_card_list[i]['total_money'], style)
-        sheet.write(i+1, 3, user_card_list[i]['pt'], style)
-        sheet.write(i+1, 4, user_card_list[i]['boom_money'], style)
-        sheet.write(i+1, 5, eachCardNum(user_card_list[i]['card'], 0), style)
-        sheet.write(i+1, 6, eachCardNum(user_card_list[i]['card'], 1), style)
-        sheet.write(i+1, 7, eachCardNum(user_card_list[i]['card'], 2), style)
-        sheet.write(i+1, 8, eachCardNum(user_card_list[i]['card'], 3), style)
-        sheet.write(i+1, 9, eachCardNum(user_card_list[i]['card'], 4), style)
-        sheet.write(i+1, 10, certainCardNum(user_card_list[i]['card'][4], 'whirLeeve'), style)  # 如果没有此成就请删掉这行即可
+        sheet.write(i+1, 2, user_card_list[i]['money_total'], style)
+        sheet.write(i+1, 3, user_card_list[i]['pt_total'], style)
+        sheet.write(i+1, 4, user_card_list[i]['money_boom_total'], style)
+        sheet.write(i+1, 5, user_card_list[i]['money_smoke'], style)
+        sheet.write(i+1, 6, eachCardNum(user_card_list[i]['card'], 0), style)
+        sheet.write(i+1, 7, eachCardNum(user_card_list[i]['card'], 1), style)
+        sheet.write(i+1, 8, eachCardNum(user_card_list[i]['card'], 2), style)
+        sheet.write(i+1, 9, eachCardNum(user_card_list[i]['card'], 3), style)
+        sheet.write(i+1, 10, eachCardNum(user_card_list[i]['card'], 4), style)
         if totalCardNum(user_card_list[i]['card']) > 0:
             sheet.write(i+1, 11, '%.3f' % user_card_list[i]['lucky_rate'], style)
         else:
